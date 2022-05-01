@@ -9,7 +9,7 @@ interface LoginProps {
   password: string;
 }
 
-export default function index() {
+export default function LoginForm() {
   const [values, setValues] = useState<LoginProps>();
   const onSubmit = (data: LoginProps) => {
     setValues(data);

@@ -9,7 +9,7 @@ interface SubNavItemProps {
   setOpen: any;
 }
 
-export default function index(props: SubNavItemProps) {
+export default function SubNavItem(props: SubNavItemProps) {
   const { subItem, setOpen } = props;
   const { href, icon, title } = subItem;
   const router = useRouter();

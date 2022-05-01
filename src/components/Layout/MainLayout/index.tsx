@@ -15,7 +15,7 @@ const MainLayoutRoot = styled("div")(({ theme }) => ({
   },
 }));
 
-export default function index({ children, ...other }: BoxProps) {
+export default function MainLayout({ children, ...other }: BoxProps) {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   return (
     <Box {...other}>

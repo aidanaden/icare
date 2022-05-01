@@ -5,7 +5,7 @@ import ErrorStyledMenuItem from "../ErrorStyledMenuItem";
 import StyledMenu from "../StyledMenu";
 import StyledMenuItem from "../StyledMenuItem";
 
-export default function index() {
+export default function Menu() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {

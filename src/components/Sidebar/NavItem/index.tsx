@@ -15,7 +15,7 @@ import { ExpandMore, ExpandLess } from "@mui/icons-material";
 import { NavItemProps } from "@/interfaces";
 import SubNavItem from "../SubNavItem";
 
-export const NavItem = (props: NavItemProps) => {
+export default function NavItem(props: NavItemProps) {
   const [open, setOpen] = useState(false);
   const { href, icon, title, items } = props;
   const router = useRouter();
@@ -102,4 +102,4 @@ export const NavItem = (props: NavItemProps) => {
       )}
     </>
   );
-};
+}

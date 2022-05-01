@@ -3,7 +3,7 @@ import { Article, Person, Dashboard, Login } from "@mui/icons-material";
 import { Box, Drawer, List, useMediaQuery } from "@mui/material";
 import { useRouter } from "next/router";
 import LogoutNavItem from "./LogoutNavItem";
-import { NavItem } from "./NavItem";
+import NavItem from "./NavItem";
 import NextImage from "next/image";
 
 const items: NavItemProps[] = [
@@ -88,10 +88,10 @@ const content = (
 
 interface SidebarProps {
   open: boolean;
-  onClose: (event: {}, reason: "backdropClick" | "escapeKeyDown") => void;
+  onClose: (event: unknown, reason: "backdropClick" | "escapeKeyDown") => void;
 }
 
-export default function index(props: SidebarProps) {
+export default function Sidebar(props: SidebarProps) {
   const { open, onClose } = props;
   const router = useRouter();
   const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up("lg"), {

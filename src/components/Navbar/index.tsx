@@ -50,7 +50,7 @@ const UserBox = styled(Box)(({ theme }) => ({
   },
 }));
 
-export default function index() {
+export default function Navbar() {
   const [open, setOpen] = useState(false);
   return (
     <DashboardNavbarRoot

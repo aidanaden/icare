@@ -162,7 +162,9 @@ const DataTableTabPanel = ({ status, data }: DataTableTabPanelProps) => {
               }}
             >
               {Object.values(DepartmentType).map((dept) => (
-                <StyledMenuItem value={dept.toString()}>{dept}</StyledMenuItem>
+                <StyledMenuItem key={dept} value={dept.toString()}>
+                  {dept}
+                </StyledMenuItem>
               ))}
             </Select>
           </FormControl>

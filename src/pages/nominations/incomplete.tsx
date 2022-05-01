@@ -7,20 +7,64 @@ import ShadowBox from "@/components/Common/ShadowBox";
 import DataTable from "@/components/Table/DataTable";
 import NextMuiLink from "@/components/Common/NextMuiLink";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
-import { NominationFormStatus } from "@/enums";
+import { DepartmentType, NominationFormStatus } from "@/enums";
 import { createData } from "@/utils";
 
 const data = [
-  createData("Jolynn", "IT", NominationFormStatus.INCOMPLETE, new Date()),
-  createData("Jolynn", "AUDIT", NominationFormStatus.INCOMPLETE, new Date()),
-  createData("Jolynn", "SFIT", NominationFormStatus.INCOMPLETE, new Date()),
-  createData("Jolynn", "AUDIT", NominationFormStatus.INCOMPLETE, new Date()),
-  createData("Jolynn", "IT", NominationFormStatus.INCOMPLETE, new Date()),
-  createData("Jolynn", "IT", NominationFormStatus.INCOMPLETE, new Date()),
-  createData("Jolynn", "AUDIT", NominationFormStatus.INCOMPLETE, new Date()),
-  createData("Jolynn", "SFIT", NominationFormStatus.INCOMPLETE, new Date()),
-  createData("Jolynn", "AUDIT", NominationFormStatus.INCOMPLETE, new Date()),
-  createData("Jolynn", "IT", NominationFormStatus.INCOMPLETE, new Date()),
+  createData(
+    "Jolynn",
+    DepartmentType.SFIT,
+    NominationFormStatus.INCOMPLETE,
+    new Date()
+  ),
+  createData(
+    "Jolynn",
+    DepartmentType.AUDIT,
+    NominationFormStatus.INCOMPLETE,
+    new Date()
+  ),
+  createData(
+    "Jolynn",
+    DepartmentType.SFIT,
+    NominationFormStatus.INCOMPLETE,
+    new Date()
+  ),
+  createData(
+    "Jolynn",
+    DepartmentType.AUDIT,
+    NominationFormStatus.INCOMPLETE,
+    new Date()
+  ),
+  createData(
+    "Jolynn",
+    DepartmentType.AUDIT,
+    NominationFormStatus.INCOMPLETE,
+    new Date()
+  ),
+  createData(
+    "Jolynn",
+    DepartmentType.IT,
+    NominationFormStatus.INCOMPLETE,
+    new Date()
+  ),
+  createData(
+    "Jolynn",
+    DepartmentType.IT,
+    NominationFormStatus.INCOMPLETE,
+    new Date()
+  ),
+  createData(
+    "Jolynn",
+    DepartmentType.IT,
+    NominationFormStatus.INCOMPLETE,
+    new Date()
+  ),
+  createData(
+    "Jolynn",
+    DepartmentType.IT,
+    NominationFormStatus.INCOMPLETE,
+    new Date()
+  ),
 ];
 
 const Incomplete: NextPage = () => {

@@ -1,4 +1,5 @@
 export enum NominationFormStatus {
+  ALL = "all",
   ENDORSED = "endorsed",
   SUBMITTED = "submitted",
   INCOMPLETE = "incomplete",

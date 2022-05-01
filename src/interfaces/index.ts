@@ -2,7 +2,7 @@ import { DepartmentType, NominationFormStatus } from "@/enums";
 import { Url } from "url";
 
 export interface NavItemProps {
-  href?: Url;
+  href?: string;
   icon: any;
   title: string;
   items?: NavItemProps[];

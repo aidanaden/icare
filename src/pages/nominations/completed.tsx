@@ -7,25 +7,100 @@ import ShadowBox from "@/components/Common/ShadowBox";
 import DataTable from "@/components/Table/DataTable";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import NextMuiLink from "@/components/Common/NextMuiLink";
-import { NominationFormStatus } from "@/enums";
+import { DepartmentType, NominationFormStatus } from "@/enums";
 import { createData } from "@/utils";
 
 const data = [
-  createData("Jolynn", "IT", NominationFormStatus.ENDORSED, new Date()),
-  createData("Jolynn", "AUDIT", NominationFormStatus.SUBMITTED, new Date()),
-  createData("Jolynn", "SFIT", NominationFormStatus.ENDORSED, new Date()),
-  createData("Jolynn", "AUDIT", NominationFormStatus.SUBMITTED, new Date()),
-  createData("Jolynn", "IT", NominationFormStatus.SUBMITTED, new Date()),
-  createData("Jolynn", "IT", NominationFormStatus.SUBMITTED, new Date()),
-  createData("Jolynn", "AUDIT", NominationFormStatus.ENDORSED, new Date()),
-  createData("Jolynn", "SFIT", NominationFormStatus.SUBMITTED, new Date()),
-  createData("Jolynn", "AUDIT", NominationFormStatus.ENDORSED, new Date()),
-  createData("Jolynn", "IT", NominationFormStatus.SUBMITTED, new Date()),
-  createData("Jolynn", "IT", NominationFormStatus.ENDORSED, new Date()),
-  createData("Jolynn", "AUDIT", NominationFormStatus.SUBMITTED, new Date()),
-  createData("Jolynn", "SFIT", NominationFormStatus.ENDORSED, new Date()),
-  createData("Jolynn", "AUDIT", NominationFormStatus.SUBMITTED, new Date()),
-  createData("Jolynn", "IT", NominationFormStatus.SUBMITTED, new Date()),
+  createData(
+    "Jolynn",
+    DepartmentType.IT,
+    NominationFormStatus.ENDORSED,
+    new Date()
+  ),
+  createData(
+    "Jolynn",
+    DepartmentType.AUDIT,
+    NominationFormStatus.SUBMITTED,
+    new Date()
+  ),
+  createData(
+    "Jolynn",
+    DepartmentType.SFIT,
+    NominationFormStatus.ENDORSED,
+    new Date()
+  ),
+  createData(
+    "Jolynn",
+    DepartmentType.AUDIT,
+    NominationFormStatus.SUBMITTED,
+    new Date()
+  ),
+  createData(
+    "Jolynn",
+    DepartmentType.IT,
+    NominationFormStatus.SUBMITTED,
+    new Date()
+  ),
+  createData(
+    "Jolynn",
+    DepartmentType.IT,
+    NominationFormStatus.SUBMITTED,
+    new Date()
+  ),
+  createData(
+    "Jolynn",
+    DepartmentType.AUDIT,
+    NominationFormStatus.ENDORSED,
+    new Date()
+  ),
+  createData(
+    "Jolynn",
+    DepartmentType.SFIT,
+    NominationFormStatus.SUBMITTED,
+    new Date()
+  ),
+  createData(
+    "Jolynn",
+    DepartmentType.AUDIT,
+    NominationFormStatus.ENDORSED,
+    new Date()
+  ),
+  createData(
+    "Jolynn",
+    DepartmentType.IT,
+    NominationFormStatus.SUBMITTED,
+    new Date()
+  ),
+  createData(
+    "Jolynn",
+    DepartmentType.IT,
+    NominationFormStatus.ENDORSED,
+    new Date()
+  ),
+  createData(
+    "Jolynn",
+    DepartmentType.AUDIT,
+    NominationFormStatus.SUBMITTED,
+    new Date()
+  ),
+  createData(
+    "Jolynn",
+    DepartmentType.SFIT,
+    NominationFormStatus.ENDORSED,
+    new Date()
+  ),
+  createData(
+    "Jolynn",
+    DepartmentType.AUDIT,
+    NominationFormStatus.SUBMITTED,
+    new Date()
+  ),
+  createData(
+    "Jolynn",
+    DepartmentType.IT,
+    NominationFormStatus.SUBMITTED,
+    new Date()
+  ),
 ];
 
 const Completed: NextPage = () => {

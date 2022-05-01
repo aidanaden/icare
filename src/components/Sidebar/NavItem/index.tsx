@@ -49,7 +49,7 @@ export default function NavItem(props: NavItemProps) {
           onClick={handleClick}
           // disableRipple
           sx={{
-            backgroundColor: active && "secondary.main",
+            backgroundColor: active ? "secondary.main" : "white",
             borderRadius: 2,
             color: active ? "white" : "secondary.main",
             justifyContent: "flex-start",

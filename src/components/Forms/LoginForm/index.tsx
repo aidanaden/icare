@@ -1,5 +1,5 @@
 import { FormContainer } from "react-hook-form-mui";
-import { Stack } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import { useState } from "react";
 import StyledTextField from "@/components/Common/FormTextField";
 import PrimaryButton from "@/components/Common/PrimaryButton";
@@ -13,18 +13,22 @@ export default function LoginForm() {
   const [values, setValues] = useState<LoginProps>();
   const onSubmit = (data: LoginProps) => {
     setValues(data);
+    console.log("submitted data: ", values);
   };
   const defaultValues: LoginProps = {
     username: "",
     password: "",
   };
   return (
-    <FormContainer defaultValues={defaultValues} onSuccess={onSubmit}>
-      <>
+    <Box>
+      {/*
+      // @ts-ignore */}
+      <FormContainer defaultValues={defaultValues} onSuccess={onSubmit}>
         <Stack direction={"column"} spacing={2} mb={4}>
           <StyledTextField
             size="medium"
             color="secondary"
+            id="username"
             name={"username"}
             label={"Username"}
             required
@@ -32,6 +36,7 @@ export default function LoginForm() {
           <StyledTextField
             size="medium"
             color="secondary"
+            id="password"
             name={"password"}
             label={"Password"}
             type="password"
@@ -41,7 +46,7 @@ export default function LoginForm() {
         <PrimaryButton type={"submit"} size="large" fullWidth>
           Submit
         </PrimaryButton>
-      </>
-    </FormContainer>
+      </FormContainer>
+    </Box>
   );
 }

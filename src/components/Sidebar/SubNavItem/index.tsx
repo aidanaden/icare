@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { NavItemProps } from "@/interfaces";
 import { ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 import SidebarListItem from "../SidebarListItem";
+import { Url } from "url";
 
 interface SubNavItemProps {
   subItem: NavItemProps;
@@ -25,7 +26,7 @@ export default function SubNavItem(props: SubNavItemProps) {
     <SidebarListItem>
       <ListItemButton
         sx={{
-          backgroundColor: active && "grey.100",
+          backgroundColor: active ? "grey.100" : "white",
           borderRadius: 2,
           color: active ? "grey.700" : "grey.500",
           justifyContent: "flex-start",
@@ -39,7 +40,7 @@ export default function SubNavItem(props: SubNavItemProps) {
             mr: -3,
           },
           "& .MuiListItemText-primary": {
-            fontWeight: active && "bold",
+            fontWeight: active ? "bold" : "regular",
             fontSize: 14,
           },
           "&:hover": {
@@ -51,7 +52,7 @@ export default function SubNavItem(props: SubNavItemProps) {
             transitionDuration: 300,
           },
         }}
-        onClick={() => router.push(href)}
+        onClick={() => router.push(href!)}
       >
         <ListItemIcon>{icon}</ListItemIcon>
         <ListItemText primary={title} />

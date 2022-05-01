@@ -127,7 +127,7 @@ export default function SimpleTable({ ...other }: BoxProps) {
                         align={column.align}
                         sx={{ px: 4 }}
                       >
-                        {column.format
+                        {column.format && value instanceof Date
                           ? column.format(value)
                           : value.toString()}
                       </StyledTableCell>

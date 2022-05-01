@@ -66,7 +66,10 @@ const columns: readonly Column[] = [
 ];
 
 interface DataTableTabPanelProps {
-  status: "all" | "incomplete" | "completed";
+  status:
+    | NominationFormStatus.ALL
+    | NominationFormStatus.INCOMPLETE
+    | "completed";
   data: DataTableData[];
 }
 
@@ -253,7 +256,7 @@ const DataTableTabPanel = ({ status, data }: DataTableTabPanelProps) => {
                               align={column.align}
                               sx={{ px: 4 }}
                             >
-                              {column.format
+                              {column.format && value instanceof Date
                                 ? column.format(value)
                                 : value.toString()}
                             </StyledTableCell>
@@ -320,7 +323,9 @@ interface DataTableProps {
 }
 
 export default function DataTable({ data, ...other }: DataTableProps) {
-  const [nominationValue, setNominationValue] = useState("all");
+  const [nominationValue, setNominationValue] = useState<NominationFormStatus>(
+    NominationFormStatus.ALL
+  );
 
   const incompleteData = data.filter(
     (row) => row.status === NominationFormStatus.INCOMPLETE
@@ -331,7 +336,7 @@ export default function DataTable({ data, ...other }: DataTableProps) {
 
   const TabPanelData: DataTableTabPanelProps[] = [
     {
-      status: "all",
+      status: NominationFormStatus.ALL,
       data: data,
     },
     {
@@ -339,12 +344,15 @@ export default function DataTable({ data, ...other }: DataTableProps) {
       data: completedData,
     },
     {
-      status: "incomplete",
+      status: NominationFormStatus.INCOMPLETE,
       data: incompleteData,
     },
   ];
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (
+    event: React.SyntheticEvent,
+    newValue: NominationFormStatus
+  ) => {
     setNominationValue(newValue);
   };
 

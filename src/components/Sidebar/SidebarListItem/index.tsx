@@ -1,6 +1,6 @@
-import { ListItem } from "@mui/material";
+import { ListItem, ListItemProps } from "@mui/material";
 
-export default function index({ children, ...others }) {
+export default function index({ children, ...others }: ListItemProps) {
   return (
     <ListItem
       disableGutters

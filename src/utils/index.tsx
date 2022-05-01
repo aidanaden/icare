@@ -1,4 +1,4 @@
-import { NominationFormStatus } from "@/enums";
+import { DepartmentType, NominationFormStatus } from "@/enums";
 import { DataTableData } from "@/interfaces";
 
 export function formatDateToString(value: Date) {
@@ -7,7 +7,7 @@ export function formatDateToString(value: Date) {
 
 export function createData(
   nominee: string,
-  department: string,
+  department: DepartmentType,
   status: NominationFormStatus,
   date: Date
 ): DataTableData {

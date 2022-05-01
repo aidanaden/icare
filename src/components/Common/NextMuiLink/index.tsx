@@ -12,7 +12,8 @@ export default function index({ href, children, ...other }: NextMuiLinkProps) {
       <MuiLink
         color="secondary.main"
         underline="hover"
-        fontSize={{ xs: "small", md: "medium" }}
+        fontSize={{ xs: "medium", md: "medium" }}
+        minWidth="64px"
         {...other}
       >
         {children}

@@ -28,17 +28,25 @@ const Dashboard: NextPage = () => {
           <Statistic title="Nominations endorsed" value={42} />
         </Grid>
         <Grid item xs={12} md={6}>
-          <ShadowBox p={4}>
-            <SectionHeader mb={4}>Incompleted nominations</SectionHeader>
+          <ShadowBox p={3}>
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="start"
+              mb={4}
+            >
+              <SectionHeader>Incompleted nominations</SectionHeader>
+              <NextMuiLink href="/nominations/incomplete">View all</NextMuiLink>
+            </Stack>
             <SimpleTable />
           </ShadowBox>
         </Grid>
         <Grid item xs={12} md={6}>
-          <ShadowBox p={4}>
+          <ShadowBox p={3}>
             <Stack
               direction="row"
               justifyContent="space-between"
-              alignItems="center"
+              alignItems="start"
               mb={4}
             >
               <SectionHeader>Completed nominations</SectionHeader>

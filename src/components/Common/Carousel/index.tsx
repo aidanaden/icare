@@ -22,6 +22,7 @@ export default function index({ images }: { images: string[] }) {
             height: "400px",
             width: "100%",
             objectFit: "cover",
+            borderRadius: "12px",
             // maxHeight: { xs: 233, md: 167 },
             // maxWidth: { xs: 350, md: 250 },
           }}

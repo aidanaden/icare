@@ -1,6 +1,6 @@
-import Box from "@mui/material/Box";
+import Box, { BoxProps } from "@mui/material/Box";
 
-export default function index({ children }) {
+export default function index({ children }: BoxProps) {
   return (
     <Box
       sx={{

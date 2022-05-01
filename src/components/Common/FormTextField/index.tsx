@@ -4,9 +4,10 @@ import styled from "@emotion/styled";
 const StyledTextField = styled(TextFieldElement)({
   "& .MuiOutlinedInput-root": {
     borderRadius: "6px",
+    backgroundColor: "white",
   },
   color: "secondary",
-  backgroundColor: "white",
+  backgroundColor: "transparent",
 });
 
 export default function index({
@@ -14,5 +15,9 @@ export default function index({
   children,
   ...other
 }: TextFieldElementProps) {
-  return <StyledTextField name={name} {...other}>{children}</StyledTextField>;
+  return (
+    <StyledTextField name={name} {...other}>
+      {children}
+    </StyledTextField>
+  );
 }

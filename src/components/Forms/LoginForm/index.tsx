@@ -20,26 +20,28 @@ export default function index() {
   };
   return (
     <FormContainer defaultValues={defaultValues} onSuccess={onSubmit}>
-      <Stack direction={"column"} spacing={2} mb={4}>
-        <StyledTextField
-          size="medium"
-          color="secondary"
-          name={"username"}
-          label={"Username"}
-          required
-        />
-        <StyledTextField
-          size="medium"
-          color="secondary"
-          name={"password"}
-          label={"Password"}
-          type="password"
-          required
-        />
-      </Stack>
-      <PrimaryButton type={"submit"} size="large" fullWidth>
-        Submit
-      </PrimaryButton>
+      <>
+        <Stack direction={"column"} spacing={2} mb={4}>
+          <StyledTextField
+            size="medium"
+            color="secondary"
+            name={"username"}
+            label={"Username"}
+            required
+          />
+          <StyledTextField
+            size="medium"
+            color="secondary"
+            name={"password"}
+            label={"Password"}
+            type="password"
+            required
+          />
+        </Stack>
+        <PrimaryButton type={"submit"} size="large" fullWidth>
+          Submit
+        </PrimaryButton>
+      </>
     </FormContainer>
   );
 }

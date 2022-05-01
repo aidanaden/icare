@@ -63,7 +63,7 @@ export const NavItem = (props: NavItemProps) => {
               mr: -2,
             },
             "& .MuiListItemText-primary": {
-              fontWeight: active && "bold",
+              fontWeight: active ? "bold" : 500,
               fontSize: 14,
             },
             "&:hover": {

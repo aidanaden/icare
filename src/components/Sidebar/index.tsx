@@ -1,5 +1,5 @@
 import { NavItemProps } from "@/interfaces";
-import { Article, Person, Dashboard } from "@mui/icons-material";
+import { Article, Person, Dashboard, Login } from "@mui/icons-material";
 import { Box, Drawer, List, useMediaQuery } from "@mui/material";
 import { useRouter } from "next/router";
 import LogoutNavItem from "./LogoutNavItem";
@@ -43,6 +43,11 @@ const items: NavItemProps[] = [
     href: "/endorsements",
     icon: <Person fontSize="small" />,
     title: "Endorsements",
+  },
+  {
+    href: "/login",
+    icon: <Login fontSize="small" />,
+    title: "Login",
   },
 ];
 

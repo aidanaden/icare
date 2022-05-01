@@ -40,7 +40,7 @@ const App = (props: MyAppProps) => {
         <CssBaseline />
         <ThemeProvider theme={theme}>
           <Box bgcolor={"grey.100"} color="text.primary">
-            {user ? (
+            {!router.pathname.includes("login") ? (
               <MainLayout>
                 <Component {...pageProps} />
               </MainLayout>

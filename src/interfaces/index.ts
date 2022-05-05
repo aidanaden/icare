@@ -1,13 +1,6 @@
 import { DepartmentType, NominationFormStatus } from "@/enums";
 import { Url } from "url";
 
-export interface NavItemProps {
-  href?: string;
-  icon: any;
-  title: string;
-  items?: NavItemProps[];
-}
-
 export interface ChildrenProps {
   children?: React.ReactNode;
 }

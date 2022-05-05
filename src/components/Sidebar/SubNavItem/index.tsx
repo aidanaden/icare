@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useEffect } from "react";
 import { useRouter } from "next/router";
-import { NavItemProps } from "@/interfaces";
+import { NavItemProps } from "../NavItem";
 import { ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 import SidebarListItem from "../SidebarListItem";
 import { Url } from "url";

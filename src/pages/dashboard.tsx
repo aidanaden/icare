@@ -10,7 +10,7 @@ import NextMuiLink from "@/components/Common/NextMuiLink";
 
 const Dashboard: NextPage = () => {
   return (
-    <Box height="200vh">
+    <Box>
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <Typography mb={2} fontWeight={500}>
@@ -18,21 +18,21 @@ const Dashboard: NextPage = () => {
           </Typography>
           <DashboardCarousel />
         </Grid>
-        <Grid item xs={12} md={4}>
-          <Statistic title="Nominations made" value={42} />
+        <Grid item xs={12} sm={4}>
+          <Statistic title="Nominations created" value={42} />
         </Grid>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} sm={4}>
           <Statistic title="Nominations incomplete" value={42} />
         </Grid>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} sm={4}>
           <Statistic title="Nominations endorsed" value={42} />
         </Grid>
         <Grid item xs={12} md={6}>
-          <ShadowBox p={3}>
+          <ShadowBox px={3} py={4}>
             <Stack
               direction="row"
               justifyContent="space-between"
-              alignItems="start"
+              alignItems="center"
               mb={4}
             >
               <SectionHeader>Incompleted nominations</SectionHeader>
@@ -42,11 +42,11 @@ const Dashboard: NextPage = () => {
           </ShadowBox>
         </Grid>
         <Grid item xs={12} md={6}>
-          <ShadowBox p={3}>
+          <ShadowBox px={3} py={4}>
             <Stack
               direction="row"
               justifyContent="space-between"
-              alignItems="start"
+              alignItems="center"
               mb={4}
             >
               <SectionHeader>Completed nominations</SectionHeader>

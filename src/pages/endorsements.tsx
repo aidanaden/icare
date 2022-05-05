@@ -159,7 +159,7 @@ const data = [
 
 const Endorsements: NextPage = () => {
   return (
-    <Box sx={{ height: "200vh", backgroundColor: "grey.100" }}>
+    <Box sx={{ backgroundColor: "grey.100" }}>
       <Box mb={4}>
         <SectionHeader mb={1}>Endorsements</SectionHeader>
         <Breadcrumbs

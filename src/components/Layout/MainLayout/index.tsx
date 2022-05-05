@@ -9,6 +9,7 @@ const MainLayoutRoot = styled("div")(({ theme }) => ({
   flex: "1 1 auto",
   maxWidth: "100%",
   paddingTop: 100,
+  paddingBottom: 16,
   [theme.breakpoints.up("lg")]: {
     paddingLeft: 280,
     paddingTop: 148,
@@ -16,7 +17,7 @@ const MainLayoutRoot = styled("div")(({ theme }) => ({
 }));
 
 export default function MainLayout({ children, ...other }: BoxProps) {
-  const [isSidebarOpen, setSidebarOpen] = useState(true);
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
   return (
     <Box {...other}>
       <MainLayoutRoot>
@@ -31,8 +32,8 @@ export default function MainLayout({ children, ...other }: BoxProps) {
           {children}
         </Container>
       </MainLayoutRoot>
-      <Navbar />
-      <Sidebar open={false} onClose={() => console.log("close")} />
+      <Navbar handleClick={() => setSidebarOpen(true)} />
+      <Sidebar open={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
       {/* <Navbar onSidebarOpen={() => setSidebarOpen(true)} /> */}
       {/* <Sidebar onClose={() => setSidebarOpen(false)} open={isSidebarOpen} /> */}
     </Box>

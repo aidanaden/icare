@@ -6,8 +6,7 @@ import Statistic from "@/components/Statistic";
 import SectionHeader from "@/components/Common/SectionHeader";
 import DashboardCarousel from "@/components/Common/Carousel/DashboardCarousel";
 import SimpleTable from "@/components/Table/SimpleTable/";
-import NextMuiLink from "@/components/Common/NextMuiLink";
-import SimpleTableLink from "@/components/Table/SimpleTableLink";
+import SimpleTableLink from "@/components/Table/Common/SimpleTableLink";
 
 const Dashboard: NextPage = () => {
   return (

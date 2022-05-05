@@ -1,4 +1,10 @@
-import { Article, Person, Dashboard, Login } from "@mui/icons-material";
+import {
+  Article,
+  ThumbUp,
+  Dashboard,
+  Login,
+  People,
+} from "@mui/icons-material";
 import { Box, Drawer, List, useMediaQuery } from "@mui/material";
 import { useRouter } from "next/router";
 import LogoutNavItem from "./LogoutNavItem";
@@ -63,8 +69,13 @@ const items = [
   },
   {
     href: "/endorsements",
-    icon: <Person fontSize="small" />,
+    icon: <ThumbUp fontSize="small" />,
     title: "Endorsements",
+  },
+  {
+    href: "/committee",
+    icon: <People fontSize="small" />,
+    title: "Committee",
   },
   {
     href: "/login",

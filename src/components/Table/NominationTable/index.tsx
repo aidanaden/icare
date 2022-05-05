@@ -1,6 +1,5 @@
 import { NominationFormStatus } from "@/enums";
 import { DataTableData } from "@/interfaces";
-import React from "react";
 import { DataTableTabPanelProps } from "../Common/DataTableTabPanel";
 import DataTable from "../DataTable";
 
@@ -16,7 +15,7 @@ export default function NominationTable({ data }: TableProps) {
     (row) => row.status !== NominationFormStatus.INCOMPLETE
   );
 
-  const TabPanelData: DataTableTabPanelProps[] = [
+  const tabPanelData: DataTableTabPanelProps[] = [
     {
       headerLabel: NominationFormStatus.ALL.toString(),
       status: NominationFormStatus.ALL,
@@ -33,5 +32,5 @@ export default function NominationTable({ data }: TableProps) {
       data: incompleteData,
     },
   ];
-  return <DataTable tabPanelData={TabPanelData} />;
+  return <DataTable tabPanelData={tabPanelData} />;
 }

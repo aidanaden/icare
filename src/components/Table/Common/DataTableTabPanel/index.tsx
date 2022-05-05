@@ -18,7 +18,7 @@ import {
   TablePagination,
 } from "@mui/material";
 import { useState, useEffect } from "react";
-import { columns, Column } from "../Columns";
+import { columns } from "../Columns";
 import DepartmentSelect from "../DepartmentSelect";
 import { StyledTableCell, TextTableCell, DateTableCell } from "../TableCells";
 

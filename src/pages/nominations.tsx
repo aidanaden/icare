@@ -159,7 +159,7 @@ const data = [
 
 const Nominations: NextPage = () => {
   return (
-    <Box sx={{ height: "200vh", backgroundColor: "grey.100" }}>
+    <Box sx={{ pb: 4, backgroundColor: "grey.100" }}>
       <Box mb={4}>
         <SectionHeader mb={1}>Nominations</SectionHeader>
         <Breadcrumbs

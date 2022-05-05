@@ -9,7 +9,13 @@ interface StatisticProps {
 export default function index(props: StatisticProps) {
   const { title, value } = props;
   return (
-    <ShadowBox p={3}>
+    <ShadowBox
+      display="flex"
+      flexDirection={"column"}
+      p={3}
+      height="100%"
+      justifyContent="space-between"
+    >
       <Typography
         variant="body1"
         mb={2}

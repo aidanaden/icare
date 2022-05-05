@@ -76,7 +76,7 @@ interface DataTableTabPanelProps {
 const DataTableTabPanel = ({ status, data }: DataTableTabPanelProps) => {
   const [displayedData, setDisplayedData] = useState(data);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(20);
   const [departmentType, setDepartmentType] = useState<DepartmentType>(
     DepartmentType.ALL
   );
@@ -186,7 +186,7 @@ const DataTableTabPanel = ({ status, data }: DataTableTabPanelProps) => {
             fullWidth
           />
         </Stack>
-        <TableContainer sx={{ maxHeight: 440, px: 1 }}>
+        <TableContainer sx={{ maxHeight: 480, px: 1 }}>
           <Table
             stickyHeader
             aria-label="sticky table"

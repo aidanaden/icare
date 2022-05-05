@@ -9,7 +9,7 @@ const MainLayoutRoot = styled("div")(({ theme }) => ({
   flex: "1 1 auto",
   maxWidth: "100%",
   paddingTop: 100,
-  paddingBottom: 16,
+  paddingBottom: 32,
   [theme.breakpoints.up("lg")]: {
     paddingLeft: 280,
     paddingTop: 148,

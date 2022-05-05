@@ -39,7 +39,7 @@ const App = (props: MyAppProps) => {
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
         <ThemeProvider theme={theme}>
-          <Box bgcolor={"grey.100"} color="text.primary">
+          <Box bgcolor={"grey.100"} minHeight="100vh" color="text.primary">
             {!router.pathname.includes("login") ? (
               <MainLayout>
                 <Component {...pageProps} />

@@ -184,7 +184,7 @@ const All: NextPage = () => {
         </Breadcrumbs>
       </Box>
       <ShadowBox borderRadius="20px">
-        <DataTable data={data} />
+        <NominationTable data={data} />
       </ShadowBox>
     </Box>
   );

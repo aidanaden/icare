@@ -9,6 +9,7 @@ import NextMuiLink from "@/components/Common/NextMuiLink";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import { DepartmentType, NominationFormStatus } from "@/enums";
 import { createData } from "@/utils";
+import NominationTable from "@/components/Table/NominationTable";
 
 const data = [
   createData(
@@ -94,7 +95,7 @@ const Incomplete: NextPage = () => {
         </Breadcrumbs>
       </Box>
       <ShadowBox borderRadius="20px">
-        <DataTable data={data} />
+        <NominationTable data={data} />
       </ShadowBox>
     </Box>
   );

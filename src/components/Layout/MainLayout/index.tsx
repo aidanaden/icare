@@ -32,7 +32,11 @@ export default function MainLayout({ children, ...other }: BoxProps) {
           {children}
         </Container>
       </MainLayoutRoot>
-      <Navbar handleClick={() => setSidebarOpen(true)} />
+      <Navbar
+        handleSidebar={() => setSidebarOpen(true)}
+        handleNomination={() => console.log("handling nomination!")}
+        handleLogin={() => console.log("handling login!")}
+      />
       <Sidebar open={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
       {/* <Navbar onSidebarOpen={() => setSidebarOpen(true)} /> */}
       {/* <Sidebar onClose={() => setSidebarOpen(false)} open={isSidebarOpen} /> */}

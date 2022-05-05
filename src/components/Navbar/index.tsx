@@ -38,10 +38,17 @@ const Search = styled("div")(({ theme }) => ({
 }));
 
 interface NavbarProps extends AppBarProps {
-  handleClick: () => void;
+  handleSidebar: () => void;
+  handleNomination: () => void;
+  handleLogin: () => void;
 }
 
-export default function Navbar({ handleClick, ...other }: NavbarProps) {
+export default function Navbar({
+  handleSidebar,
+  handleLogin,
+  handleNomination,
+  ...other
+}: NavbarProps) {
   return (
     <DashboardNavbarRoot
       sx={{
@@ -58,7 +65,7 @@ export default function Navbar({ handleClick, ...other }: NavbarProps) {
             justifyContent: "center",
           }}
           aria-label="open-sidebar"
-          onClick={handleClick}
+          onClick={handleSidebar}
         >
           <DensityMedium />
         </IconButton>
@@ -69,7 +76,6 @@ export default function Navbar({ handleClick, ...other }: NavbarProps) {
           maxWidth="1150px"
           mx="auto"
         >
-          {/* <Box>Search</Box> */}
           <PrimaryButton
             sx={{
               marginLeft: { xs: "auto" },

@@ -4,7 +4,7 @@ import type { NextPage } from "next";
 import Box from "@mui/material/Box";
 import SectionHeader from "@/components/Common/SectionHeader";
 import ShadowBox from "@/components/Common/ShadowBox";
-import DataTable from "@/components/Table/DataTable";
+import DataTable from "@/components/Table/DataTable/";
 import { Breadcrumbs } from "@mui/material";
 import NextMuiLink from "@/components/Common/NextMuiLink";
 import { DepartmentType, NominationFormStatus } from "@/enums";

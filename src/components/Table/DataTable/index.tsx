@@ -35,14 +35,14 @@ import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import { formatDateToString } from "@/utils";
-import BlueBadge from "../Common/Badge/BlueBadge";
-import GreenBadge from "../Common/Badge/GreenBadge";
-import TableMenu from "../Common/Menu/TableMenu";
+import BlueBadge from "../../Common/Badge/BlueBadge";
+import GreenBadge from "../../Common/Badge/GreenBadge";
+import TableMenu from "../../Common/Menu/TableMenu";
 import theme from "@/styles/theme";
-import StyledMenuItem from "../Common/Menu/StyledMenuItem";
+import StyledMenuItem from "../../Common/Menu/StyledMenuItem";
 import { DataTableData } from "@/interfaces";
 import { DepartmentType, NominationFormStatus } from "@/enums";
-import RedBadge from "../Common/Badge/RedBadge";
+import RedBadge from "../../Common/Badge/RedBadge";
 
 interface Column {
   id: "nominee" | "department" | "date" | "status";

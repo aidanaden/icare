@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { MouseEventHandler, useState } from "react";
 import { useRouter } from "next/router";
 import {
   Collapse,
@@ -11,29 +11,23 @@ import { ExpandMore, ExpandLess } from "@mui/icons-material";
 
 import SubNavItem from "../SubNavItem";
 import StyledListItemButton from "../StyledListItemButton";
+import NextMuiLink from "@/components/Common/NextMuiLink";
 
 export interface NavItemProps {
-  href?: string;
+  href: string;
   icon: any;
   title: string;
   items?: NavItemProps[];
+  onClose: (event: unknown, reason: "backdropClick" | "escapeKeyDown") => void;
 }
 
 export default function NavItem(props: NavItemProps) {
   const [open, setOpen] = useState(false);
-  const { href, icon, title, items } = props;
+  const { href, icon, title, items, onClose } = props;
   const router = useRouter();
   const active = href
     ? router.pathname.replace("/", "").includes(href.replace("/", ""))
     : false;
-
-  const handleClick = () => {
-    if (items) {
-      setOpen(!open);
-    } else {
-      router.push(href!);
-    }
-  };
 
   return (
     <>
@@ -47,17 +41,22 @@ export default function NavItem(props: NavItemProps) {
         }}
         //   {...others}
       >
-        <StyledListItemButton onClick={handleClick} active={active}>
-          <ListItemIcon>{icon}</ListItemIcon>
-          <ListItemText sx={{ flexGrow: 1, py: 0.5 }} primary={title} />
-          {items && open ? (
-            <ExpandLess />
-          ) : items && !open ? (
-            <ExpandMore />
-          ) : (
-            <></>
-          )}
-        </StyledListItemButton>
+        <NextMuiLink href={href} width="100%" variant="button" borderRadius={2}>
+          <StyledListItemButton
+            active={active}
+            onClick={onClose as MouseEventHandler<HTMLDivElement>}
+          >
+            <ListItemIcon>{icon}</ListItemIcon>
+            <ListItemText sx={{ flexGrow: 1, py: 0.5 }} primary={title} />
+            {items && open ? (
+              <ExpandLess />
+            ) : items && !open ? (
+              <ExpandMore />
+            ) : (
+              <></>
+            )}
+          </StyledListItemButton>
+        </NextMuiLink>
       </ListItem>
       {items && (
         <Collapse in={open} timeout="auto">

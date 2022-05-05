@@ -50,7 +50,7 @@ import NextImage from "next/image";
 //   },
 // ];
 
-const items: NavItemProps[] = [
+const items = [
   {
     href: "/dashboard",
     icon: <Dashboard fontSize="small" />,
@@ -73,39 +73,45 @@ const items: NavItemProps[] = [
   },
 ];
 
-const content = (
-  <Box
-    sx={{
-      borderRight: 1,
-      borderColor: "rgb(255,255,255,.5)",
-      height: "100%",
-    }}
-  >
+interface ContentProps {
+  onClose: (event: unknown, reason: "backdropClick" | "escapeKeyDown") => void;
+}
+
+const Content = ({ onClose }: ContentProps) => {
+  return (
     <Box
       sx={{
-        pt: { xs: 6, md: 2 },
-        mb: { xs: 4, md: 2 },
-        justifyItems: "center",
-        alignItems: "center",
-        textAlign: "center",
+        borderRight: 1,
+        borderColor: "rgb(255,255,255,.5)",
+        height: "100%",
       }}
     >
-      <NextImage src={"/logo.svg"} alt="icare logo" width={242} height={94} />
+      <Box
+        sx={{
+          pt: { xs: 6, md: 2 },
+          mb: { xs: 4, md: 2 },
+          justifyItems: "center",
+          alignItems: "center",
+          textAlign: "center",
+        }}
+      >
+        <NextImage src={"/logo.svg"} alt="icare logo" width={242} height={94} />
+      </Box>
+      <List>
+        {items.map((item, i) => (
+          <NavItem
+            href={item.href}
+            icon={item.icon}
+            title={item.title}
+            key={i}
+            onClose={onClose}
+          />
+        ))}
+      </List>
+      <LogoutNavItem />
     </Box>
-    <List>
-      {items.map((item, i) => (
-        <NavItem
-          href={item.href}
-          icon={item.icon}
-          title={item.title}
-          items={item.items}
-          key={i}
-        />
-      ))}
-    </List>
-    <LogoutNavItem />
-  </Box>
-);
+  );
+};
 
 interface SidebarProps {
   open: boolean;
@@ -134,7 +140,7 @@ export default function Sidebar(props: SidebarProps) {
         }}
         variant="permanent"
       >
-        {content}
+        <Content onClose={onClose} />
       </Drawer>
     );
   }
@@ -154,7 +160,7 @@ export default function Sidebar(props: SidebarProps) {
       sx={{ zIndex: (theme: any) => theme.zIndex.appBar + 100 }}
       variant="temporary"
     >
-      {content}
+      <Content onClose={onClose} />
     </Drawer>
   );
 }

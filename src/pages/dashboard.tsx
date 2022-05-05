@@ -5,8 +5,9 @@ import ShadowBox from "@/components/Common/ShadowBox";
 import Statistic from "@/components/Statistic";
 import SectionHeader from "@/components/Common/SectionHeader";
 import DashboardCarousel from "@/components/Common/Carousel/DashboardCarousel";
-import SimpleTable from "@/components/Table/SimpleTable";
+import SimpleTable from "@/components/Table/SimpleTable/";
 import NextMuiLink from "@/components/Common/NextMuiLink";
+import SimpleTableLink from "@/components/Table/SimpleTableLink";
 
 const Dashboard: NextPage = () => {
   return (
@@ -36,7 +37,9 @@ const Dashboard: NextPage = () => {
               mb={4}
             >
               <SectionHeader>Incompleted nominations</SectionHeader>
-              <NextMuiLink href="/nominations/incomplete">View all</NextMuiLink>
+              <SimpleTableLink href="/nominations/incomplete">
+                View all
+              </SimpleTableLink>
             </Stack>
             <SimpleTable />
           </ShadowBox>
@@ -50,7 +53,9 @@ const Dashboard: NextPage = () => {
               mb={4}
             >
               <SectionHeader>Completed nominations</SectionHeader>
-              <NextMuiLink href="/nominations/completed">View all</NextMuiLink>
+              <SimpleTableLink href="/nominations/completed">
+                View all
+              </SimpleTableLink>
             </Stack>
             <SimpleTable />
           </ShadowBox>

@@ -8,7 +8,10 @@ import {
   Toolbar,
   Typography,
   IconButton,
+  Stack,
+  Container,
 } from "@mui/material";
+import PrimaryButton from "../Common/PrimaryButton";
 
 const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
   // backgroundColor: theme.palette.background.paper,
@@ -59,9 +62,25 @@ export default function Navbar({ handleClick, ...other }: NavbarProps) {
         >
           <DensityMedium />
         </IconButton>
-        {/* <Search>
-          <InputBase placeholder="search..." />
-        </Search> */}
+        <Stack
+          justifyContent="space-between"
+          flexDirection="row"
+          width="100%"
+          maxWidth="1150px"
+          mx="auto"
+        >
+          {/* <Box>Search</Box> */}
+          <PrimaryButton
+            sx={{
+              marginLeft: { xs: "auto" },
+              textTransform: "capitalize",
+              borderRadius: "6px",
+            }}
+            size="large"
+          >
+            Create nomination
+          </PrimaryButton>
+        </Stack>
       </StyledToolbar>
     </DashboardNavbarRoot>
   );

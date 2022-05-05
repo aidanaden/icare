@@ -9,6 +9,7 @@ import { Breadcrumbs } from "@mui/material";
 import NextMuiLink from "@/components/Common/NextMuiLink";
 import { DepartmentType, NominationFormStatus } from "@/enums";
 import { createData } from "@/utils";
+import EndorsementTable from "@/components/Table/EndorsementTable";
 
 const data = [
   createData(
@@ -19,12 +20,6 @@ const data = [
   ),
   createData(
     "Jolynn",
-    DepartmentType.SFIT,
-    NominationFormStatus.INCOMPLETE,
-    new Date()
-  ),
-  createData(
-    "Jolynn",
     DepartmentType.AUDIT,
     NominationFormStatus.SUBMITTED,
     new Date()
@@ -39,18 +34,6 @@ const data = [
     "Jolynn",
     DepartmentType.AUDIT,
     NominationFormStatus.SUBMITTED,
-    new Date()
-  ),
-  createData(
-    "Jolynn",
-    DepartmentType.AUDIT,
-    NominationFormStatus.INCOMPLETE,
-    new Date()
-  ),
-  createData(
-    "Jolynn",
-    DepartmentType.SFIT,
-    NominationFormStatus.INCOMPLETE,
     new Date()
   ),
   createData(
@@ -73,12 +56,6 @@ const data = [
   ),
   createData(
     "Jolynn",
-    DepartmentType.AUDIT,
-    NominationFormStatus.INCOMPLETE,
-    new Date()
-  ),
-  createData(
-    "Jolynn",
     DepartmentType.SFIT,
     NominationFormStatus.SUBMITTED,
     new Date()
@@ -93,18 +70,6 @@ const data = [
     "Jolynn",
     DepartmentType.IT,
     NominationFormStatus.SUBMITTED,
-    new Date()
-  ),
-  createData(
-    "Jolynn",
-    DepartmentType.AUDIT,
-    NominationFormStatus.INCOMPLETE,
-    new Date()
-  ),
-  createData(
-    "Jolynn",
-    DepartmentType.IT,
-    NominationFormStatus.INCOMPLETE,
     new Date()
   ),
   createData(
@@ -127,12 +92,6 @@ const data = [
   ),
   createData(
     "Jolynn",
-    DepartmentType.IT,
-    NominationFormStatus.INCOMPLETE,
-    new Date()
-  ),
-  createData(
-    "Jolynn",
     DepartmentType.AUDIT,
     NominationFormStatus.SUBMITTED,
     new Date()
@@ -141,18 +100,6 @@ const data = [
     "Jolynn",
     DepartmentType.IT,
     NominationFormStatus.SUBMITTED,
-    new Date()
-  ),
-  createData(
-    "Jolynn",
-    DepartmentType.IT,
-    NominationFormStatus.INCOMPLETE,
-    new Date()
-  ),
-  createData(
-    "Jolynn",
-    DepartmentType.IT,
-    NominationFormStatus.INCOMPLETE,
     new Date()
   ),
 ];
@@ -181,7 +128,7 @@ const Endorsements: NextPage = () => {
         </Breadcrumbs>
       </Box>
       <ShadowBox borderRadius="20px">
-        <DataTable data={data} />
+        <EndorsementTable data={data} />
       </ShadowBox>
     </Box>
   );

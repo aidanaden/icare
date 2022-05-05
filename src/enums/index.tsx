@@ -3,6 +3,8 @@ export enum NominationFormStatus {
   ENDORSED = "endorsed",
   SUBMITTED = "submitted",
   INCOMPLETE = "incomplete",
+  SHORTLISTED = "shortlisted",
+  AWARDED = "awarded",
 }
 
 export enum DepartmentType {

@@ -1,5 +1,7 @@
 import BlueBadge from "@/components/Common/Badge/BlueBadge";
 import GreenBadge from "@/components/Common/Badge/GreenBadge";
+import OrangeBadge from "@/components/Common/Badge/OrangeBadge";
+import PurpleBadge from "@/components/Common/Badge/PurpleBadge";
 import RedBadge from "@/components/Common/Badge/RedBadge";
 import { NominationFormStatus } from "@/enums";
 import styled from "@emotion/styled";
@@ -31,6 +33,10 @@ export const TextTableCell = ({ value, column }: TextTableCellProps) => {
         <GreenBadge>{value.toString()}</GreenBadge>
       ) : value === NominationFormStatus.SUBMITTED ? (
         <BlueBadge>{value.toString()}</BlueBadge>
+      ) : value === NominationFormStatus.SHORTLISTED ? (
+        <PurpleBadge>{value.toString()}</PurpleBadge>
+      ) : value === NominationFormStatus.AWARDED ? (
+        <OrangeBadge>{value.toString()}</OrangeBadge>
       ) : (
         <RedBadge>{value.toString()}</RedBadge>
       )}

@@ -1,13 +1,6 @@
-import { Box } from "@mui/material";
-import { useEffect, useState } from "react";
-import TabContext from "@mui/lab/TabContext";
-import TabList from "@mui/lab/TabList";
 import { DataTableData } from "@/interfaces";
-import { DepartmentType, NominationFormStatus } from "@/enums";
-import DataTableTabPanel, {
-  DataTableTabPanelProps,
-} from "../Common/DataTableTabPanel";
-import { StyledTab } from "../Common/StyledTab";
+import { NominationFormStatus } from "@/enums";
+import { DataTableTabPanelProps } from "../Common/DataTableTabPanel";
 import DataTable from "../DataTable";
 
 interface DataTableProps {
@@ -22,7 +15,7 @@ export default function EndorsementTable({ data, ...other }: DataTableProps) {
     (row) => row.status === NominationFormStatus.SUBMITTED
   );
 
-  const TabPanelData: DataTableTabPanelProps[] = [
+  const tabPanelData: DataTableTabPanelProps[] = [
     {
       headerLabel: NominationFormStatus.ALL.toString(),
       status: NominationFormStatus.ALL,
@@ -40,5 +33,5 @@ export default function EndorsementTable({ data, ...other }: DataTableProps) {
     },
   ];
 
-  return <DataTable tabPanelData={TabPanelData} />;
+  return <DataTable tabPanelData={tabPanelData} />;
 }

@@ -76,7 +76,7 @@ interface DataTableTabPanelProps {
 const DataTableTabPanel = ({ status, data }: DataTableTabPanelProps) => {
   const [displayedData, setDisplayedData] = useState(data);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(20);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [departmentType, setDepartmentType] = useState<DepartmentType>(
     DepartmentType.ALL
   );

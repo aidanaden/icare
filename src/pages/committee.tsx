@@ -9,6 +9,7 @@ import NextMuiLink from "@/components/Common/NextMuiLink";
 import { DepartmentType, NominationFormStatus } from "@/enums";
 import { createData } from "@/utils";
 import CommitteeTable from "@/components/Table/CommitteeTable";
+import theme from "@/styles/theme";
 
 const data = [
   createData(
@@ -183,9 +184,9 @@ const data = [
 
 const Nominations: NextPage = () => {
   return (
-    <Box sx={{ pb: 4, backgroundColor: "grey.100" }}>
+    <Box>
       <Box mb={4}>
-        <SectionHeader mb={1}>Nominations</SectionHeader>
+        <SectionHeader mb={2}>Nominations</SectionHeader>
         <Breadcrumbs
           separator="•"
           aria-label="breadcrumb"
@@ -193,13 +194,14 @@ const Nominations: NextPage = () => {
             "& .MuiBreadcrumbs-separator": {
               color: "#637381",
               opacity: 0.8,
+              px: 1,
             },
           }}
         >
-          <NextMuiLink href="/dashboard" fontSize="14px">
+          <NextMuiLink color="#212B36" href="/dashboard" fontSize="14px">
             Dashboard
           </NextMuiLink>
-          <NextMuiLink href="/committee" fontSize="14px">
+          <NextMuiLink color="#919EAB" href="/committee" fontSize="14px">
             Committee
           </NextMuiLink>
         </Breadcrumbs>

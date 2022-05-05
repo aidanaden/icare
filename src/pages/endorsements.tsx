@@ -10,6 +10,7 @@ import NextMuiLink from "@/components/Common/NextMuiLink";
 import { DepartmentType, NominationFormStatus } from "@/enums";
 import { createData } from "@/utils";
 import EndorsementTable from "@/components/Table/EndorsementTable";
+import theme from "@/styles/theme";
 
 const data = [
   createData(
@@ -106,9 +107,9 @@ const data = [
 
 const Endorsements: NextPage = () => {
   return (
-    <Box sx={{ backgroundColor: "grey.100" }}>
+    <Box>
       <Box mb={4}>
-        <SectionHeader mb={1}>Endorsements</SectionHeader>
+        <SectionHeader mb={2}>Endorsements</SectionHeader>
         <Breadcrumbs
           separator="•"
           aria-label="breadcrumb"
@@ -116,13 +117,14 @@ const Endorsements: NextPage = () => {
             "& .MuiBreadcrumbs-separator": {
               color: "#637381",
               opacity: 0.8,
+              px: 1,
             },
           }}
         >
-          <NextMuiLink href="/dashboard" fontSize="14px">
+          <NextMuiLink color="#212B36" href="/dashboard" fontSize="14px">
             Dashboard
           </NextMuiLink>
-          <NextMuiLink href="/endorsements" fontSize="14px">
+          <NextMuiLink color="#919EAB" href="/endorsements" fontSize="14px">
             Endorsements
           </NextMuiLink>
         </Breadcrumbs>

@@ -1,15 +1,11 @@
-import { DensityMedium } from "@mui/icons-material";
+import { Add, DensityMedium } from "@mui/icons-material";
 import {
   AppBar,
   AppBarProps,
-  Box,
-  InputBase,
   styled,
   Toolbar,
-  Typography,
   IconButton,
   Stack,
-  Container,
 } from "@mui/material";
 import PrimaryButton from "../Common/PrimaryButton";
 
@@ -83,6 +79,7 @@ export default function Navbar({
               borderRadius: "6px",
             }}
             size="large"
+            endIcon={<Add />}
           >
             Create nomination
           </PrimaryButton>

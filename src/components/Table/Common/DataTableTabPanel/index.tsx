@@ -127,15 +127,23 @@ export default function DataTableTabPanel({
                 .map((row, i) => {
                   return (
                     <TableRow hover role="checkbox" tabIndex={-1} key={i}>
-                      {columns.map((column) => {
+                      {columns.map((column, i) => {
                         const value = row[column.id];
                         if (column.id === "status") {
                           return (
-                            <TextTableCell value={value} column={column} />
+                            <TextTableCell
+                              key={`table-cell ${i}`}
+                              value={value}
+                              column={column}
+                            />
                           );
                         } else {
                           return (
-                            <DateTableCell value={value} column={column} />
+                            <DateTableCell
+                              key={`table-cell ${i}`}
+                              value={value}
+                              column={column}
+                            />
                           );
                         }
                       })}

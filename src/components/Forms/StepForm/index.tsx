@@ -21,7 +21,7 @@ const handleSteps = (
   handleNext: () => void,
   handleBack: () => void,
   formData: NominationFormData,
-  setFormData: () => void
+  setFormData: Dispatch<NominationFormData>
 ) => {
   switch (step) {
     case 0:
@@ -75,7 +75,7 @@ export interface NominationFormDetails {
 }
 
 export interface NominationFormData extends NominationFormDetails {
-  answers: Map<string, string> | undefined;
+  answers: Map<string, string>;
 }
 
 const StepForm = () => {
@@ -83,7 +83,7 @@ const StepForm = () => {
     email: "",
     department: DepartmentType.AUDIT,
     description: "",
-    answers: undefined,
+    answers: new Map<string, string>(null),
   });
   const [activeStep, setActiveStep] = useState<number>(0);
   const handleNext = () => {

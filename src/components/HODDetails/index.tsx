@@ -62,7 +62,9 @@ export default function index(props: HODDetailProps) {
           </Box>
           <Box>
             <DetailSubHeader>Endorsement date</DetailSubHeader>
-            <DetailText>{formatDateToString(endorsement_date)}</DetailText>
+            {endorsement_date && (
+              <DetailText>{formatDateToString(endorsement_date)}</DetailText>
+            )}
           </Box>
         </Stack>
         <Box>

@@ -20,7 +20,7 @@ import { NominationFormDetails, NominationFormData } from "../../StepForm";
 
 interface FirstStepProp {
   formData: NominationFormData;
-  setFormData: () => void;
+  setFormData: Dispatch<NominationFormData>;
   handleNext: () => void;
 }
 

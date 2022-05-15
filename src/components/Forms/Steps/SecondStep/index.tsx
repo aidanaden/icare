@@ -1,5 +1,5 @@
 import { TextField, Box, Button, Grid, Stack } from "@mui/material";
-import { useContext, useCallback, useState } from "react";
+import { useContext, useCallback, useState, Dispatch } from "react";
 import { FormContainer } from "react-hook-form-mui";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -14,7 +14,7 @@ import { NominationFormData } from "../../StepForm";
 
 interface SecondStepProp {
   formData: NominationFormData;
-  setFormData: () => void;
+  setFormData: Dispatch<NominationFormData>;
   handleNext: () => void;
   handleBack: () => void;
 }

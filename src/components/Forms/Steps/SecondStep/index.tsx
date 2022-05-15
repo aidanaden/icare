@@ -25,21 +25,6 @@ export default function SecondStep({
   formData,
   setFormData,
 }: SecondStepProp) {
-  //   const { formValues, handleChange, handleNext, variant, margin } =
-  //     useContext(AppContext);
-  //   const { firstName, lastName, email, gender } = formValues;
-
-  //   // Check if all values are not empty and if there are some errors
-  //   const isError = useCallback(
-  //     () =>
-  //       Object.keys({ firstName, lastName, email, gender }).some(
-  //         (name) =>
-  //           (formValues[name].required && !formValues[name].value) ||
-  //           formValues[name].error
-  //       ),
-  //     [formValues, firstName, lastName, email, gender]
-  //   );
-
   const [values, setValues] = useState<NominationFormData>();
   const onSubmit = (data: Map<string, string>) => {
     const newFormData = { ...formData, answers: data };
@@ -49,7 +34,7 @@ export default function SecondStep({
     handleNext();
   };
   const formContext = useForm<NominationFormData>({
-    defaultValues: formData.answers,
+    defaultValues: Object.fromEntries(formData.answers),
     // resolver: yupResolver(nominationDetailSchema),
   });
 

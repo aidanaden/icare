@@ -1,4 +1,5 @@
 import BlueBadge from "@/components/Common/Badge/BlueBadge";
+import GrayBadge from "@/components/Common/Badge/GrayBadge";
 import GreenBadge from "@/components/Common/Badge/GreenBadge";
 import OrangeBadge from "@/components/Common/Badge/OrangeBadge";
 import PurpleBadge from "@/components/Common/Badge/PurpleBadge";
@@ -31,6 +32,8 @@ export const TextTableCell = ({ value, column }: TextTableCellProps) => {
     <StyledTableCell key={column.id} align={column.align} sx={{ px: 4 }}>
       {value === NominationFormStatus.ENDORSED ? (
         <GreenBadge>{value.toString()}</GreenBadge>
+      ) : value === NominationFormStatus.PENDING ? (
+        <GrayBadge>{value.toString()}</GrayBadge>
       ) : value === NominationFormStatus.SUBMITTED ? (
         <BlueBadge>{value.toString()}</BlueBadge>
       ) : value === NominationFormStatus.SHORTLISTED ? (

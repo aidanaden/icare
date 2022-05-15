@@ -1,10 +1,7 @@
 import type { NextPage } from "next";
 // import Head from "next/head";
 // import Image from "next/image"
-import { useRouter } from "next/router";
-import { useEffect } from "react";
 import { CircularProgress, Box } from "@mui/material";
-import CenterBox from "@/components/Common/CenterBox";
 
 const Home: NextPage = () => {
   return (

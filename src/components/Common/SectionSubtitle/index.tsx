@@ -4,8 +4,9 @@ export default function index({ children, ...other }: TypographyProps) {
   return (
     <Typography
       variant="subtitle2"
-      color="grey.500"
-      fontSize={"14px"}
+      color="#637381"
+      fontSize={"16px"}
+      fontWeight={400}
       {...other}
     >
       {children}

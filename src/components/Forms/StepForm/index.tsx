@@ -83,7 +83,7 @@ const StepForm = () => {
     email: "",
     department: DepartmentType.AUDIT,
     description: "",
-    answers: null,
+    answers: undefined,
   });
   const [activeStep, setActiveStep] = useState<number>(0);
   const handleNext = () => {

@@ -11,7 +11,10 @@ export default function EndorsementTable({ data, ...other }: DataTableProps) {
   const endorsedData = data.filter(
     (row) => row.status === NominationFormStatus.ENDORSED
   );
-  const completedData = data.filter(
+  const pendingData = data.filter(
+    (row) => row.status === NominationFormStatus.PENDING
+  );
+  const submittedData = data.filter(
     (row) => row.status === NominationFormStatus.SUBMITTED
   );
 
@@ -22,9 +25,14 @@ export default function EndorsementTable({ data, ...other }: DataTableProps) {
       data: data,
     },
     {
-      headerLabel: "Pending",
+      headerLabel: NominationFormStatus.PENDING.toString(),
+      status: NominationFormStatus.PENDING,
+      data: pendingData,
+    },
+    {
+      headerLabel: NominationFormStatus.SUBMITTED.toString(),
       status: NominationFormStatus.SUBMITTED,
-      data: completedData,
+      data: submittedData,
     },
     {
       headerLabel: NominationFormStatus.ENDORSED.toString(),
@@ -33,5 +41,5 @@ export default function EndorsementTable({ data, ...other }: DataTableProps) {
     },
   ];
 
-  return <DataTable tabPanelData={tabPanelData} />;
+  return <DataTable tabPanelData={tabPanelData} {...other} />;
 }

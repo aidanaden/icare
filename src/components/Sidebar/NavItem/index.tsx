@@ -26,7 +26,7 @@ export default function NavItem(props: NavItemProps) {
   const { href, icon, title, items, onClose } = props;
   const router = useRouter();
   const active = href
-    ? router.pathname.replace("/", "").includes(href.replace("/", ""))
+    ? router.pathname.replace("/", "") === href.replace("/", "")
     : false;
 
   return (

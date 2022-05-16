@@ -1,4 +1,5 @@
 import {
+  Create,
   Article,
   ThumbUp,
   Dashboard,
@@ -61,6 +62,11 @@ const items = [
     href: "/dashboard",
     icon: <Dashboard fontSize="small" />,
     title: "Dashboard",
+  },
+  {
+    href: "/nominations/new",
+    icon: <Create fontSize="small" />,
+    title: "New Nomination",
   },
   {
     href: "/nominations",

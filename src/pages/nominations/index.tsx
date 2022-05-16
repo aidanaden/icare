@@ -7,14 +7,13 @@ import ShadowBox from "@/components/Common/ShadowBox";
 import { Breadcrumbs } from "@mui/material";
 import NextMuiLink from "@/components/Common/NextMuiLink";
 import { data } from "@/utils";
-import EndorsementTable from "@/components/Table/EndorsementTable";
-import theme from "@/styles/theme";
+import NominationTable from "@/components/Table/NominationTable";
 
-const Endorsements: NextPage = () => {
+const Nominations: NextPage = () => {
   return (
     <Box>
       <Box mb={4}>
-        <SectionHeader mb={2}>Endorsements</SectionHeader>
+        <SectionHeader mb={2}>Nominations</SectionHeader>
         <Breadcrumbs
           separator="•"
           aria-label="breadcrumb"
@@ -29,16 +28,16 @@ const Endorsements: NextPage = () => {
           <NextMuiLink color="#212B36" href="/dashboard" fontSize="14px">
             Dashboard
           </NextMuiLink>
-          <NextMuiLink color="#919EAB" href="/endorsements" fontSize="14px">
-            Endorsements
+          <NextMuiLink color="#919EAB" href="/nominations" fontSize="14px">
+            Nominations
           </NextMuiLink>
         </Breadcrumbs>
       </Box>
       <ShadowBox borderRadius="20px">
-        <EndorsementTable data={data} />
+        <NominationTable data={data} />
       </ShadowBox>
     </Box>
   );
 };
 
-export default Endorsements;
+export default Nominations;

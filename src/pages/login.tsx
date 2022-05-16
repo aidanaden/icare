@@ -8,7 +8,7 @@ import NextImage from "next/image";
 export default function login() {
   return (
     <CenterBox sx={{ width: "100%" }}>
-      <Box mb={4}>
+      <Box mb={2}>
         <NextImage
           src={"/logo.svg"}
           alt="icare logo"
@@ -21,8 +21,8 @@ export default function login() {
           width: { xs: "100%", sm: "100%", md: "75%" },
         }}
       >
-        <SectionHeader mb={1}>Sign in</SectionHeader>
-        <SectionSubtitle mb={2}>Sign in to iCare</SectionSubtitle>
+        <SectionHeader mb={1.5}>Sign in</SectionHeader>
+        <SectionSubtitle mb={3}>Sign in to iCare</SectionSubtitle>
         <LoginForm />
       </Box>
     </CenterBox>

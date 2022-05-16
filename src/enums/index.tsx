@@ -1,5 +1,6 @@
 export enum NominationFormStatus {
   ALL = "all",
+  PENDING = "pending",
   ENDORSED = "endorsed",
   SUBMITTED = "submitted",
   INCOMPLETE = "incomplete",
@@ -13,4 +14,9 @@ export enum DepartmentType {
   IT = "IT",
   SALES = "Sales",
   SFIT = "SFIT",
+}
+
+export enum ShortlistStatus {
+  TRUE = 170740000,
+  FALSE = 170740001,
 }

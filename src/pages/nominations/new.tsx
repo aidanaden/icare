@@ -6,15 +6,17 @@ import SectionHeader from "@/components/Common/SectionHeader";
 import ShadowBox from "@/components/Common/ShadowBox";
 import { Breadcrumbs } from "@mui/material";
 import NextMuiLink from "@/components/Common/NextMuiLink";
-import { data } from "@/utils";
+import { DepartmentType, NominationFormStatus } from "@/enums";
+import { createData } from "@/utils";
 import EndorsementTable from "@/components/Table/EndorsementTable";
 import theme from "@/styles/theme";
+import StepForm from "@/components/Forms/StepForm";
 
-const Endorsements: NextPage = () => {
+const Nomination: NextPage = () => {
   return (
     <Box>
       <Box mb={4}>
-        <SectionHeader mb={2}>Endorsements</SectionHeader>
+        <SectionHeader mb={2}>New Nomination</SectionHeader>
         <Breadcrumbs
           separator="•"
           aria-label="breadcrumb"
@@ -29,16 +31,16 @@ const Endorsements: NextPage = () => {
           <NextMuiLink color="#212B36" href="/dashboard" fontSize="14px">
             Dashboard
           </NextMuiLink>
-          <NextMuiLink color="#919EAB" href="/endorsements" fontSize="14px">
-            Endorsements
+          <NextMuiLink color="#919EAB" href="/nomination" fontSize="14px">
+            Nomination
           </NextMuiLink>
         </Breadcrumbs>
       </Box>
-      <ShadowBox borderRadius="20px">
-        <EndorsementTable data={data} />
+      <ShadowBox p={{ xs: 4, md: 8 }}>
+        <StepForm />
       </ShadowBox>
     </Box>
   );
 };
 
-export default Endorsements;
+export default Nomination;

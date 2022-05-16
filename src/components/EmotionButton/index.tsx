@@ -1,6 +1,5 @@
 /** @jsxRuntime classic /
 /* @jsx jsx */
-import React from "react";
 import { css, jsx } from "@emotion/react";
 
 const buttonStyle = css({

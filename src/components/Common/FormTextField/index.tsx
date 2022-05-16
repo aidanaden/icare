@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 
 const StyledTextField = styled(TextFieldElement)({
   "& .MuiOutlinedInput-root": {
-    borderRadius: "6px",
+    borderRadius: "8px",
     backgroundColor: "white",
   },
   color: "secondary",

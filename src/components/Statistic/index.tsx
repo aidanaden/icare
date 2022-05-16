@@ -19,15 +19,14 @@ export default function index(props: StatisticProps) {
       <Typography
         variant="body1"
         mb={2}
-        sx={{
-          fontSize: 14,
-          textTransform: "capitalize",
-          fontWeight: 600,
-        }}
+        fontSize="14px"
+        color="#212b36"
+        textTransform="capitalize"
+        fontWeight={600}
       >
         {title}
       </Typography>
-      <Typography variant="h4" fontWeight={600}>
+      <Typography variant="h4" fontWeight={600} color="#212b36">
         {value}
       </Typography>
     </ShadowBox>

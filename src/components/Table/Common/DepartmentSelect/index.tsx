@@ -27,7 +27,7 @@ export default function DepartmentSelect({
   return (
     <FormControl sx={{ width: { xs: "full", sm: "240px" } }}>
       <InputLabel id="demo-simple-select-label" sx={{ color: "black" }}>
-        Nomination
+        Department
       </InputLabel>
       <Select
         labelId="demo-simple-select-helper-label"

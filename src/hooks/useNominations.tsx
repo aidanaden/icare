@@ -53,7 +53,7 @@ export const NominationsProvider = ({ children }: NominationsProviderProps) => {
     NominationQueryData[] | undefined
   >(undefined);
   const [error, setError] = useState(undefined);
-  const [initialLoading, setInitialLoading] = useState(true);
+  const [initialLoading, setInitialLoading] = useState(false);
   const [loading, setLoading] = useState(false);
 
   // useEffect(

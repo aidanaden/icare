@@ -37,11 +37,11 @@ const NominationsContext = createContext<INominations>({
   loading: false,
 });
 
-interface NominationsProvider {
+interface NominationsProviderProps {
   children: React.ReactNode;
 }
 
-export const NominationsProvider = ({ children }: NominationsProvider) => {
+export const NominationsProvider = ({ children }: NominationsProviderProps) => {
   const router = useRouter();
   const [nominations, setNominations] = useState<
     NominationQueryData[] | undefined

@@ -6,7 +6,7 @@
 //   User,
 // } from "firebase/auth";
 
-import { NominationQueryData, User } from "../interfaces";
+import { NominationQueryData, User } from "@/interfaces";
 import { useRouter } from "next/router";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
@@ -37,11 +37,11 @@ const NominationsContext = createContext<INominations>({
   loading: false,
 });
 
-interface NominationsProvider {
+interface NominationsProviderProps {
   children: React.ReactNode;
 }
 
-export const NominationsProvider = ({ children }: NominationsProvider) => {
+export const NominationsProvider = ({ children }: NominationsProviderProps) => {
   const router = useRouter();
   const [nominations, setNominations] = useState<
     NominationQueryData[] | undefined

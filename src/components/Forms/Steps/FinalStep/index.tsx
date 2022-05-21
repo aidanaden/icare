@@ -10,11 +10,11 @@ import SectionSubtitle from "@/components/Common/SectionSubtitle";
 import { nominationDetailSchema } from "../../Schemas";
 import { DepartmentType } from "@/enums";
 import NominationQuestion from "../../Common/NominationQuestion";
-import { NominationFormData } from "../../StepForm";
+import { NominationFormSubmissionData } from "../../StepForm";
 
 interface FinalStepProp {
-  formData: NominationFormData;
-  setFormData: Dispatch<NominationFormData>;
+  formData: NominationFormSubmissionData;
+  setFormData: Dispatch<NominationFormSubmissionData>;
   handleSubmit: () => void;
   handleBack: () => void;
 }
@@ -25,22 +25,7 @@ export default function FinalStep({
   formData,
   setFormData,
 }: FinalStepProp) {
-  //   const { formValues, handleChange, handleNext, variant, margin } =
-  //     useContext(AppContext);
-  //   const { firstName, lastName, email, gender } = formValues;
-
-  //   // Check if all values are not empty and if there are some errors
-  //   const isError = useCallback(
-  //     () =>
-  //       Object.keys({ firstName, lastName, email, gender }).some(
-  //         (name) =>
-  //           (formValues[name].required && !formValues[name].value) ||
-  //           formValues[name].error
-  //       ),
-  //     [formValues, firstName, lastName, email, gender]
-  //   );
-
-  const [values, setValues] = useState<NominationFormData>();
+  const [values, setValues] = useState<NominationFormSubmissionData>();
   const onSubmit = (data: Map<string, string>) => {
     const newFormData = { ...formData, answers: data };
     setFormData(newFormData);
@@ -48,7 +33,7 @@ export default function FinalStep({
     console.log("new form data: ", newFormData);
     handleSubmit();
   };
-  const formContext = useForm<NominationFormData>({
+  const formContext = useForm<NominationFormSubmissionData>({
     defaultValues: {
       // email: "",
       // department: DepartmentType.AUDIT,

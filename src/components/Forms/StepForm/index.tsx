@@ -20,8 +20,8 @@ const handleSteps = (
   step: number,
   handleNext: () => void,
   handleBack: () => void,
-  formData: NominationFormData,
-  setFormData: Dispatch<NominationFormData>
+  formData: NominationFormSubmissionData,
+  setFormData: Dispatch<NominationFormSubmissionData>
 ) => {
   switch (step) {
     case 0:
@@ -68,18 +68,19 @@ const Success = () => {
   );
 };
 
-export interface NominationFormDetails {
+export interface NominationFormSubmissionDetails {
   email: string | undefined;
   department: DepartmentType | undefined;
   description: string | undefined;
 }
 
-export interface NominationFormData extends NominationFormDetails {
+export interface NominationFormSubmissionData
+  extends NominationFormSubmissionDetails {
   answers: Map<string, string>;
 }
 
 const StepForm = () => {
-  const [formData, setFormData] = useState<NominationFormData>({
+  const [formData, setFormData] = useState<NominationFormSubmissionData>({
     email: "",
     department: DepartmentType.AUDIT,
     description: "",

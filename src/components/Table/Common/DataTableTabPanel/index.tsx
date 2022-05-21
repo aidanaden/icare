@@ -168,7 +168,11 @@ export default function DataTableTabPanel({
             </TableHead>
             <TableBody>
               {displayedData
+<<<<<<< HEAD
                 .sort(getComparator(order, orderBy))
+=======
+                // .sort(getComparator(order, orderBy))
+>>>>>>> branch-Add-Types
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, i) => {
                   return (

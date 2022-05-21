@@ -10,11 +10,11 @@ import SectionSubtitle from "@/components/Common/SectionSubtitle";
 import { nominationDetailSchema } from "../../Schemas";
 import { DepartmentType } from "@/enums";
 import NominationQuestion from "../../Common/NominationQuestion";
-import { NominationFormData } from "../../StepForm";
+import { NominationFormSubmissionData } from "../../StepForm";
 
 interface SecondStepProp {
-  formData: NominationFormData;
-  setFormData: Dispatch<NominationFormData>;
+  formData: NominationFormSubmissionData;
+  setFormData: Dispatch<NominationFormSubmissionData>;
   handleNext: () => void;
   handleBack: () => void;
 }
@@ -25,7 +25,7 @@ export default function SecondStep({
   formData,
   setFormData,
 }: SecondStepProp) {
-  const [values, setValues] = useState<NominationFormData>();
+  const [values, setValues] = useState<NominationFormSubmissionData>();
   const onSubmit = (data: Map<string, string>) => {
     const newFormData = { ...formData, answers: data };
     setFormData(newFormData);
@@ -33,7 +33,7 @@ export default function SecondStep({
     console.log("new form data: ", newFormData);
     handleNext();
   };
-  const formContext = useForm<NominationFormData>({
+  const formContext = useForm<NominationFormSubmissionData>({
     defaultValues: Object.fromEntries(formData.answers),
     // resolver: yupResolver(nominationDetailSchema),
   });

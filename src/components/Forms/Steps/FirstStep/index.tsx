@@ -16,11 +16,14 @@ import SectionSubtitle from "@/components/Common/SectionSubtitle";
 import { nominationDetailSchema } from "../../Schemas";
 import { DepartmentType } from "@/enums";
 import { AddBoxOutlined } from "@mui/icons-material";
-import { NominationFormDetails, NominationFormData } from "../../StepForm";
+import {
+  NominationFormSubmissionDetails,
+  NominationFormSubmissionData,
+} from "../../StepForm";
 
 interface FirstStepProp {
-  formData: NominationFormData;
-  setFormData: Dispatch<NominationFormData>;
+  formData: NominationFormSubmissionData;
+  setFormData: Dispatch<NominationFormSubmissionData>;
   handleNext: () => void;
 }
 
@@ -44,14 +47,14 @@ export default function FirstStep({
   //     [formValues, firstName, lastName, email, gender]
   //   );
 
-  const onSubmit = (data: NominationFormDetails) => {
+  const onSubmit = (data: NominationFormSubmissionDetails) => {
     const newFormData = { ...formData, ...data };
     setFormData(newFormData);
     console.log("submitted data: ", data);
     console.log("new form data: ", newFormData);
     handleNext();
   };
-  const formContext = useForm<NominationFormDetails>({
+  const formContext = useForm<NominationFormSubmissionDetails>({
     defaultValues: {
       email: formData.email,
       department: formData.department,

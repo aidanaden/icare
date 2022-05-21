@@ -6,8 +6,10 @@ import SectionHeader from "@/components/Common/SectionHeader";
 import ShadowBox from "@/components/Common/ShadowBox";
 import { Breadcrumbs } from "@mui/material";
 import NextMuiLink from "@/components/Common/NextMuiLink";
-import { data } from "@/utils";
+import { DataTableSampleData } from "@/constants";
 import NominationTable from "@/components/Table/NominationTable";
+
+// ALL nominations made by staff (draft AND completed)
 
 const Nominations: NextPage = () => {
   return (
@@ -34,7 +36,7 @@ const Nominations: NextPage = () => {
         </Breadcrumbs>
       </Box>
       <ShadowBox borderRadius="20px">
-        <NominationTable data={data} />
+        <NominationTable data={DataTableSampleData} />
       </ShadowBox>
     </Box>
   );

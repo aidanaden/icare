@@ -20,3 +20,11 @@ export enum ShortlistStatus {
   TRUE = 170740000,
   FALSE = 170740001,
 }
+
+export enum ServiceLevel {
+  UNBELIEVABLE = 170740000,
+  SURPRISING = 170740001,
+  DESIRED = 170740002,
+  EXPECTED = 170740003,
+  BASIC = 170740004,
+}

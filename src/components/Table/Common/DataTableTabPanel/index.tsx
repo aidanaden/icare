@@ -16,11 +16,33 @@ import {
   TableCell,
   Divider,
   TablePagination,
+  TableSortLabel,
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { columns } from "../Columns";
 import DepartmentSelect from "../DepartmentSelect";
 import { StyledTableCell, TextTableCell, DateTableCell } from "../TableCells";
+
+function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
+  if (b[orderBy] < a[orderBy]) {
+    return -1;
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1;
+  }
+  return 0;
+}
+
+type Order = "asc" | "desc";
+
+function getComparator<Key extends keyof DataTableData>(
+  order: Order,
+  orderBy: Key
+): (a: DataTableData, b: DataTableData) => number {
+  return order === "desc"
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy);
+}
 
 export interface DataTableTabPanelProps {
   headerLabel: string;
@@ -33,12 +55,28 @@ export default function DataTableTabPanel({
   status,
   data,
 }: DataTableTabPanelProps) {
-  const [displayedData, setDisplayedData] = useState(data);
+  const [displayedData, setDisplayedData] = useState<DataTableData[]>(data);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [order, setOrder] = useState<Order>("asc");
+  const [orderBy, setOrderBy] = useState<keyof DataTableData>("date");
   const [departmentType, setDepartmentType] = useState<DepartmentType>(
     DepartmentType.ALL
   );
+
+  const handleRequestSort = (
+    event: React.MouseEvent<unknown>,
+    property: keyof DataTableData
+  ) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  };
+
+  const createSortHandler =
+    (property: keyof DataTableData) => (event: React.MouseEvent<unknown>) => {
+      handleRequestSort(event, property);
+    };
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -114,8 +152,15 @@ export default function DataTableTabPanel({
                     key={column.id}
                     align={column.align}
                     style={{ minWidth: column.minWidth }}
+                    sortDirection={orderBy === column.id ? order : false}
                   >
-                    {column.label}
+                    <TableSortLabel
+                      active={orderBy === column.id}
+                      direction={orderBy === column.id ? order : "asc"}
+                      onClick={createSortHandler(column.id)}
+                    >
+                      {column.label}
+                    </TableSortLabel>
                   </StyledTableCell>
                 ))}
                 <StyledTableCell />
@@ -123,6 +168,7 @@ export default function DataTableTabPanel({
             </TableHead>
             <TableBody>
               {displayedData
+                .sort(getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, i) => {
                   return (

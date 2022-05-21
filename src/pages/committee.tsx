@@ -10,6 +10,8 @@ import { DepartmentType, NominationFormStatus } from "@/enums";
 import { createData } from "@/utils";
 import CommitteeTable from "@/components/Table/CommitteeTable";
 import theme from "@/styles/theme";
+import useNominations from "@/hooks/useNominations";
+import useAuth from "@/hooks/useAuth";
 
 const data = [
   createData(
@@ -182,7 +184,18 @@ const data = [
   ),
 ];
 
+// ALL nominations (endorsed, submitted/not endorsed,
+// service level award shortlisted, service level award winners,
+// top winner shortlisted, top winners)
+
 const Nominations: NextPage = () => {
+  const { user } = useAuth();
+  const { committeeNominations, fetchCommitteeNominations } = useNominations();
+
+  if (committeeNominations === undefined && user) {
+    fetchCommitteeNominations(user.staff_id);
+  }
+
   return (
     <Box>
       <Box mb={4}>

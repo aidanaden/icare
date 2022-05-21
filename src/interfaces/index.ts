@@ -1,8 +1,16 @@
-import { DepartmentType, NominationFormStatus, ShortlistStatus } from "@/enums";
-import { Url } from "url";
+import {
+  DepartmentType,
+  NominationFormStatus,
+  ServiceLevel,
+  ShortlistStatus,
+} from "@/enums";
 
-export interface ChildrenProps {
-  children?: React.ReactNode;
+export interface User {
+  staff_id: string;
+  name: string;
+  department: string;
+  designation: string;
+  role: string;
 }
 
 export interface DataTableData {
@@ -12,6 +20,7 @@ export interface DataTableData {
   date: Date;
 }
 
+// nomination form detail committee member data
 export interface CommitteeMemberQueryData {
   staff_id: number;
   committee_name: string;
@@ -21,6 +30,7 @@ export interface CommitteeMemberQueryData {
   committee_department: string;
 }
 
+// nomination form detail data
 export interface NominationQueryData {
   nominee_name: string;
   nominee_designation: string;
@@ -30,13 +40,42 @@ export interface NominationQueryData {
   nominator_designation: string;
   nominator_department: string;
   description: string;
+  quiz_service_level: ServiceLevel;
+  quiz_score: number;
+  draft_status: boolean;
+  is_service_level_shortlist_result: boolean;
+  is_top_winner_shortlist_result: boolean;
+  is_top_winner_result: boolean;
   hod_name: string;
   hod_designation: string;
   endorsement_status: string;
   hod_comments: string;
   committee_total_score: number;
-  quiz_service_level: string;
-  quiz_score: number;
+  committee_service_level: ServiceLevel;
+  committee_comment: CommitteeMemberQueryData[];
   total_top_winner_status: boolean;
-  committee_comment: CommitteeMemberQueryData;
+}
+
+// nomination form answers
+export interface NominationQuestionAnswerData {
+  answer_id: number;
+  answer_name: string;
+}
+
+// nomination form questions
+export interface NominationQuestionData {
+  quiz_question_name: string;
+  answers: NominationQuestionAnswerData[];
+}
+
+// nomination form senior questions data
+export interface RatingQuestionData {
+  quiz_question_data: string;
+  rating_child_quiz_questions: NominationQuestionData[];
+}
+
+// nomination form data
+export interface NominationQuestionsQueryData {
+  qna_questions: NominationQuestionData[];
+  rating_questions?: RatingQuestionData[] | undefined;
 }

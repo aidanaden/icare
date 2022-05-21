@@ -12,6 +12,9 @@ import EndorsementTable from "@/components/Table/EndorsementTable";
 import theme from "@/styles/theme";
 import StepForm from "@/components/Forms/StepForm";
 
+// 1. ALL junior service level quiz questions
+// 2. senior level quiz questions
+
 const Nomination: NextPage = () => {
   return (
     <Box>

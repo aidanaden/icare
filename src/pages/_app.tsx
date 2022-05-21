@@ -10,6 +10,8 @@ import createEmotionCache from "../../src/lib/createEmotionCache";
 import MainLayout from "@/components/Layout/MainLayout";
 import { Box } from "@mui/material";
 import LoginLayout from "@/components/Layout/LoginLayout";
+import useAuth, { AuthProvider } from "@/hooks/useAuth";
+import { NominationsProvider } from "@/hooks/useNominations";
 
 interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;
@@ -21,13 +23,13 @@ const clientSideEmotionCache = createEmotionCache();
 const App = (props: MyAppProps) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
   const router = useRouter();
-  const [user, setUser] = useState(true);
+  const { user } = useAuth();
 
-  useEffect(() => {
-    if (!user) {
-      router.push("/login");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (!user) {
+  //     router.push("/login");
+  //   }
+  // }, []);
 
   return (
     <CacheProvider value={emotionCache}>
@@ -35,12 +37,13 @@ const App = (props: MyAppProps) => {
         <title>NextJS MUI Typescript starter</title>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
-      <ThemeProvider theme={theme}>
-        {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-        <CssBaseline />
+      {/* <AuthProvider> */}
+      <NominationsProvider>
         <ThemeProvider theme={theme}>
+          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+          <CssBaseline />
           <Box bgcolor={"grey.100"} minHeight="100vh" color="text.primary">
-            {!router.pathname.includes("login") ? (
+            {!user ? (
               <MainLayout>
                 <Component {...pageProps} />
               </MainLayout>
@@ -51,7 +54,8 @@ const App = (props: MyAppProps) => {
             )}
           </Box>
         </ThemeProvider>
-      </ThemeProvider>
+      </NominationsProvider>
+      {/* </AuthProvider> */}
     </CacheProvider>
   );
 };

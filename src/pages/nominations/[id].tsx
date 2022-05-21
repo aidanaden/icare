@@ -6,7 +6,7 @@ import SectionHeader from "@/components/Common/SectionHeader";
 import ShadowBox from "@/components/Common/ShadowBox";
 import { Breadcrumbs, Grid, Stack } from "@mui/material";
 import NextMuiLink from "@/components/Common/NextMuiLink";
-import { data } from "@/utils";
+import { DataTableSampleData, SampleNominationQueryData } from "@/constants";
 import EndorsementTable from "@/components/Table/EndorsementTable";
 import theme from "@/styles/theme";
 import UserDetails from "@/components/UserDetails";
@@ -14,8 +14,24 @@ import HODDetails from "@/components/HODDetails";
 import NominationDetails from "@/components/NominationDetails";
 import CommitteeDetails from "@/components/CommitteeDetails";
 import CommitteeMemberDetails from "@/components/CommitteeMemberDetails";
+import { NominationQueryData } from "@/interfaces";
 
-const View: NextPage = () => {
+// ALL nomination data (based on nomination ID)
+
+export async function getInitialProps() {
+  // Return as props
+  return {
+    props: {
+      SampleNominationQueryData,
+    },
+  };
+}
+
+interface NominationDetailProps {
+  nominationFormData: NominationQueryData;
+}
+
+const View: NextPage<NominationDetailProps> = ({ nominationFormData }) => {
   return (
     <Box>
       <Box mb={4}>

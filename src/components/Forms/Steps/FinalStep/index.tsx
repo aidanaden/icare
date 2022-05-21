@@ -25,21 +25,6 @@ export default function FinalStep({
   formData,
   setFormData,
 }: FinalStepProp) {
-  //   const { formValues, handleChange, handleNext, variant, margin } =
-  //     useContext(AppContext);
-  //   const { firstName, lastName, email, gender } = formValues;
-
-  //   // Check if all values are not empty and if there are some errors
-  //   const isError = useCallback(
-  //     () =>
-  //       Object.keys({ firstName, lastName, email, gender }).some(
-  //         (name) =>
-  //           (formValues[name].required && !formValues[name].value) ||
-  //           formValues[name].error
-  //       ),
-  //     [formValues, firstName, lastName, email, gender]
-  //   );
-
   const [values, setValues] = useState<NominationFormSubmissionData>();
   const onSubmit = (data: Map<string, string>) => {
     const newFormData = { ...formData, answers: data };

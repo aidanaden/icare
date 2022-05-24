@@ -19,37 +19,15 @@ const labels = ["Nomination Details", "Nomination Form", "Submit"];
 const handleSteps = (
   step: number,
   handleNext: () => void,
-  handleBack: () => void,
-  formData: NominationFormSubmissionData,
-  setFormData: Dispatch<NominationFormSubmissionData>
+  handleBack: () => void
 ) => {
   switch (step) {
     case 0:
-      return (
-        <FirstStep
-          handleNext={handleNext}
-          formData={formData}
-          setFormData={setFormData}
-        />
-      );
+      return <FirstStep handleNext={handleNext} />;
     case 1:
-      return (
-        <SecondStep
-          handleNext={handleNext}
-          handleBack={handleBack}
-          formData={formData}
-          setFormData={setFormData}
-        />
-      );
+      return <SecondStep handleNext={handleNext} handleBack={handleBack} />;
     case 2:
-      return (
-        <FinalStep
-          handleSubmit={handleNext}
-          handleBack={handleBack}
-          formData={formData}
-          setFormData={setFormData}
-        />
-      );
+      return <FinalStep handleSubmit={handleNext} handleBack={handleBack} />;
     default:
       throw new Error("Unknown step");
   }
@@ -68,24 +46,7 @@ const Success = () => {
   );
 };
 
-export interface NominationFormSubmissionDetails {
-  email: string | undefined;
-  department: DepartmentType | undefined;
-  description: string | undefined;
-}
-
-export interface NominationFormSubmissionData
-  extends NominationFormSubmissionDetails {
-  answers: Map<string, string>;
-}
-
 const StepForm = () => {
-  const [formData, setFormData] = useState<NominationFormSubmissionData>({
-    email: "",
-    department: DepartmentType.AUDIT,
-    description: "",
-    answers: new Map<string, string>(null),
-  });
   const [activeStep, setActiveStep] = useState<number>(0);
   const handleNext = () => {
     setActiveStep(activeStep + 1);
@@ -105,6 +66,7 @@ const StepForm = () => {
             orientation={"vertical"}
             sx={{
               // backgroundColor: "",
+              display: { xs: "none", md: "flex" },
               height: 480,
               position: { md: "sticky" },
               top: { md: 72 },
@@ -140,13 +102,7 @@ const StepForm = () => {
               </Step>
             ))}
           </Stepper>
-          {handleSteps(
-            activeStep,
-            handleNext,
-            handleBack,
-            formData,
-            setFormData
-          )}
+          {handleSteps(activeStep, handleNext, handleBack)}
         </Stack>
       )}
     </>

@@ -1,7 +1,7 @@
 import { FormContainer } from "react-hook-form-mui";
 import { Box, Stack } from "@mui/material";
 import { useState } from "react";
-import StyledTextField from "@/components/Common/FormTextField";
+import StyledTextField from "@/components/Common/StyledTextField";
 import PrimaryButton from "@/components/Common/PrimaryButton";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";

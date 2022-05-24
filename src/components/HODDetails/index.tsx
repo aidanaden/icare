@@ -4,13 +4,15 @@ import ShadowBox from "../Common/ShadowBox";
 import DetailHeader from "../Common/DetailBox/DetailHeader";
 import DetailSubHeader from "../Common/DetailBox/DetailSubHeader";
 import DetailText from "../Common/DetailBox/DetailText";
+import { EndorsementStatus } from "@/enums";
+import EndorsementForm from "../Forms/EndorsementForm";
 
 interface HODDetailProps {
   title: string;
   name: string;
   designation: string;
   department?: string | undefined;
-  endorsement_status?: string | undefined;
+  endorsement_status?: EndorsementStatus | undefined;
   endorsement_date?: Date | undefined;
   comments?: string | undefined;
 }
@@ -25,6 +27,7 @@ export default function index(props: HODDetailProps) {
     endorsement_date,
     comments,
   } = props;
+
   return (
     <ShadowBox
       display="flex"
@@ -52,7 +55,8 @@ export default function index(props: HODDetailProps) {
             <DetailText>{department}</DetailText>
           </Box>
         </Stack>
-        <Stack
+        <EndorsementForm />
+        {/* <Stack
           direction={{ xs: "column", md: "row" }}
           spacing={{ xs: 4, md: 12 }}
         >
@@ -72,7 +76,7 @@ export default function index(props: HODDetailProps) {
           <DetailText noWrap={false} maxWidth="100%">
             {comments}
           </DetailText>
-        </Box>
+        </Box> */}
       </Stack>
     </ShadowBox>
   );

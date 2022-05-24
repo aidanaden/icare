@@ -14,7 +14,7 @@ export const columns: readonly Column[] = [
   { id: "status", label: "Status", align: "center", minWidth: 100 },
   {
     id: "date",
-    label: "Created on",
+    label: "Created",
     minWidth: 100,
     align: "right",
     format: formatDateToString,

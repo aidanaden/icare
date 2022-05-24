@@ -84,7 +84,7 @@ export default function SimpleTable({ ...other }: BoxProps) {
               "& th": {
                 px: 4,
               },
-              "& th:first-child": {
+              "& th:first-of-type": {
                 borderRadius: "12px 0 0 12px",
               },
               "& th:last-child": {

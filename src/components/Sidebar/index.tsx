@@ -5,6 +5,7 @@ import {
   Dashboard,
   Login,
   People,
+  Person,
 } from "@mui/icons-material";
 import { Box, Drawer, List, useMediaQuery } from "@mui/material";
 import { useRouter } from "next/router";
@@ -72,6 +73,11 @@ const items = [
     href: "/nominations",
     icon: <Article fontSize="small" />,
     title: "My Nominations",
+  },
+  {
+    href: "/nominations/1",
+    icon: <Person fontSize="small" />,
+    title: "View Nomination Detail",
   },
   {
     href: "/endorsements",

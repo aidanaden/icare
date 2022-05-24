@@ -1,4 +1,4 @@
-import { Box, Stack } from "@mui/material";
+import { Box, BoxProps, Stack } from "@mui/material";
 import ShadowBox from "../ShadowBox";
 import DetailHeader from "./DetailHeader";
 import DetailSubHeader from "./DetailSubHeader";
@@ -10,14 +10,14 @@ export interface DetailAttribute {
   isMultiLine?: boolean | undefined;
 }
 
-interface DetailBoxProps {
+interface DetailBoxProps extends BoxProps {
   title: string;
   data: DetailAttribute[];
   isColumn?: boolean;
 }
 
 export default function index(props: DetailBoxProps) {
-  const { title, data, isColumn } = props;
+  const { title, data, isColumn, ...other } = props;
   return (
     <ShadowBox
       display="flex"
@@ -25,10 +25,12 @@ export default function index(props: DetailBoxProps) {
       p={3}
       height="100%"
       justifyContent="space-between"
+      {...other}
     >
       <DetailHeader>{title}</DetailHeader>
       <Stack
-        direction={{ xs: "column", md: isColumn ? "column" : "row" }}
+        flexGrow={1}
+        direction={{ xs: "column", md: isColumn ? "column" : "column" }}
         spacing={{ xs: 4 }}
       >
         {data.map((attribute: DetailAttribute, i) => (

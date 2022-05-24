@@ -17,7 +17,7 @@ export default function index({
       color="#212b36"
       textTransform="capitalize"
       noWrap={!isMultiLine}
-      maxWidth={isMultiLine ? "100%" : 160}
+      // maxWidth={isMultiLine ? "100%" : 160}
       {...props}
     >
       {children}

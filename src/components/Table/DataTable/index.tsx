@@ -36,7 +36,18 @@ export default function DataTable({ tabPanelData, ...other }: DataTableProps) {
           borderTopRightRadius: "20px",
         }}
       >
-        <TabList onChange={handleTabChange} aria-label="nomination-table-tabs">
+        <TabList
+          onChange={handleTabChange}
+          aria-label="nomination-table-tabs"
+          scrollButtons="auto"
+          variant="scrollable"
+          allowScrollButtonsMobile={true}
+          sx={{
+            "& .MuiTabs-scrollButtons.Mui-disabled": {
+              opacity: 0.3,
+            },
+          }}
+        >
           {tabPanelData.map((panelData, i) => (
             <StyledTab
               key={`panel header ${i}`}

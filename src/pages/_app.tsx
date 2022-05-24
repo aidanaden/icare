@@ -12,6 +12,7 @@ import { Box } from "@mui/material";
 import LoginLayout from "@/components/Layout/LoginLayout";
 import useAuth, { AuthProvider } from "@/hooks/useAuth";
 import { NominationsProvider } from "@/hooks/useNominations";
+import { RecoilRoot } from "recoil";
 
 interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;
@@ -37,25 +38,27 @@ const App = (props: MyAppProps) => {
         <title>NextJS MUI Typescript starter</title>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
-      {/* <AuthProvider> */}
-      <NominationsProvider>
-        <ThemeProvider theme={theme}>
-          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-          <CssBaseline />
-          <Box bgcolor={"grey.100"} minHeight="100vh" color="text.primary">
-            {!user ? (
-              <MainLayout>
-                <Component {...pageProps} />
-              </MainLayout>
-            ) : (
-              <LoginLayout>
-                <Component {...pageProps} />
-              </LoginLayout>
-            )}
-          </Box>
-        </ThemeProvider>
-      </NominationsProvider>
-      {/* </AuthProvider> */}
+      <RecoilRoot>
+        {/* <AuthProvider> */}
+        <NominationsProvider>
+          <ThemeProvider theme={theme}>
+            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+            <CssBaseline />
+            <Box bgcolor={"grey.100"} minHeight="100vh" color="text.primary">
+              {!user ? (
+                <MainLayout>
+                  <Component {...pageProps} />
+                </MainLayout>
+              ) : (
+                <LoginLayout>
+                  <Component {...pageProps} />
+                </LoginLayout>
+              )}
+            </Box>
+          </ThemeProvider>
+        </NominationsProvider>
+        {/* </AuthProvider> */}
+      </RecoilRoot>
     </CacheProvider>
   );
 };

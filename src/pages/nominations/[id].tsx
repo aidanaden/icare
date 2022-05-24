@@ -15,6 +15,7 @@ import NominationDetails from "@/components/NominationDetails";
 import CommitteeDetails from "@/components/CommitteeDetails";
 import CommitteeMemberDetails from "@/components/CommitteeMemberDetails";
 import { NominationQueryData } from "@/interfaces";
+import { EndorsementStatus, ServiceLevel, ShortlistStatus } from "@/enums";
 
 // ALL nomination data (based on nomination ID)
 
@@ -88,7 +89,7 @@ const View: NextPage<NominationDetailProps> = ({ nominationFormData }) => {
             name="Eileen"
             designation="COO"
             department="Tech"
-            endorsement_status="Commendable"
+            endorsement_status={EndorsementStatus.COMMENDABLE}
             endorsement_date={new Date()}
             comments="Lots of comments!"
           />
@@ -105,24 +106,27 @@ const View: NextPage<NominationDetailProps> = ({ nominationFormData }) => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <CommitteeMemberDetails
-                  title="Johnny's score"
-                  service_level="Super"
-                  feedback="Bunch of feedback comments here..."
+                  name="Larry"
+                  designation="CEO"
+                  department="IT"
+                  service_level={ServiceLevel.BASIC}
+                  award_shortlist_status={false}
+                  champion_shortlist_status={false}
+                  comments="Bunch of feedback comments here..."
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <CommitteeMemberDetails
-                  title="Johnny's score"
-                  service_level="Super"
-                  feedback="Bunch of feedback comments here..."
+                  name="Johnny"
+                  designation="CEO"
+                  department="IT"
+                  service_level={ServiceLevel.BASIC}
+                  award_shortlist_status={false}
+                  champion_shortlist_status={false}
+                  comments="Bunch of feedback comments here..."
                 />
               </Grid>
             </Grid>
-            <CommitteeMemberDetails
-              title="Your score"
-              service_level="Super amazing"
-              feedback="Bunch of MY feedback comments here..."
-            />
           </Stack>
         </Grid>
       </Grid>

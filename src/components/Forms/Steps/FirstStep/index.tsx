@@ -1,71 +1,64 @@
-import { TextField, Box, Button, Grid, Stack } from "@mui/material";
 import {
-  useContext,
-  useCallback,
-  useState,
-  Dispatch,
-  SetStateAction,
-} from "react";
-import { FormContainer } from "react-hook-form-mui";
-import { useForm } from "react-hook-form";
+  Box,
+  Stack,
+  OutlinedInput,
+  Select,
+  InputLabel,
+  SelectChangeEvent,
+} from "@mui/material";
 import { yupResolver } from "@hookform/resolvers/yup";
-import StyledTextField from "@/components/Common/FormTextField";
+import StyledTextField from "@/components/Common/StyledTextField";
 import PrimaryButton from "@/components/Common/PrimaryButton";
 import SectionHeader from "@/components/Common/SectionHeader";
 import SectionSubtitle from "@/components/Common/SectionSubtitle";
 import { nominationDetailSchema } from "../../Schemas";
-import { DepartmentType } from "@/enums";
-import { AddBoxOutlined } from "@mui/icons-material";
+import { useRecoilState } from "recoil";
+import { nominationFormState } from "@/atoms/nominationFormAtom";
 import {
-  NominationFormSubmissionDetails,
   NominationFormSubmissionData,
-} from "../../StepForm";
+  NominationFormSubmissionDetails,
+} from "@/interfaces";
+import FileUploadButton from "@/components/Forms/Common/FileUploadButton";
+import FormDepartmentSelect from "@/components/Forms/Common/FormDepartmentSelect";
+import AutocompleteTextField from "../../Common/AutocompleteTextField";
+
+import { useForm, Controller, SubmitHandler } from "react-hook-form";
+import StyledMenuItem from "@/components/Common/Menu/StyledMenuItem";
+import FormTextField from "../../Common/FormTextField";
 
 interface FirstStepProp {
-  formData: NominationFormSubmissionData;
-  setFormData: Dispatch<NominationFormSubmissionData>;
   handleNext: () => void;
 }
 
-export default function FirstStep({
-  formData,
-  setFormData,
-  handleNext,
-}: FirstStepProp) {
-  //   const { formValues, handleChange, handleNext, variant, margin } =
-  //     useContext(AppContext);
-  //   const { firstName, lastName, email, gender } = formValues;
+export default function FirstStep({ handleNext }: FirstStepProp) {
+  const [getNominationFormState, setNominationFormState] =
+    useRecoilState(nominationFormState);
 
-  //   // Check if all values are not empty and if there are some errors
-  //   const isError = useCallback(
-  //     () =>
-  //       Object.keys({ firstName, lastName, email, gender }).some(
-  //         (name) =>
-  //           (formValues[name].required && !formValues[name].value) ||
-  //           formValues[name].error
-  //       ),
-  //     [formValues, firstName, lastName, email, gender]
-  //   );
-
-  const onSubmit = (data: NominationFormSubmissionDetails) => {
-    const newFormData = { ...formData, ...data };
-    setFormData(newFormData);
+  const onSubmit = (data: Omit<NominationFormSubmissionDetails, "files">) => {
+    console.log("first step submit called!");
+    const newFormData = {
+      ...getNominationFormState,
+      ...data,
+    };
+    setNominationFormState(newFormData);
     console.log("submitted data: ", data);
     console.log("new form data: ", newFormData);
     handleNext();
   };
-  const formContext = useForm<NominationFormSubmissionDetails>({
+
+  const {
+    control,
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Omit<NominationFormSubmissionDetails, "files">>({
     defaultValues: {
-      email: formData.email,
-      department: formData.department,
-      description: formData.description,
+      user: getNominationFormState.user,
+      department: getNominationFormState.department,
+      description: getNominationFormState.description,
     },
     resolver: yupResolver(nominationDetailSchema),
   });
-
-  const {
-    formState: { errors },
-  } = formContext;
 
   return (
     <Box width="100%">
@@ -77,49 +70,28 @@ export default function FirstStep({
           Enter the details of the staff member you want to nominate.
         </SectionSubtitle>
       </Box>
-      {/*
-      // @ts-ignore */}
-      <FormContainer formContext={formContext} onSuccess={onSubmit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Box
           display="flex"
           flexDirection="column"
           justifyContent="space-between"
           height="100%"
-          minHeight={"380px"}
+          minHeight={{ sm: "380px" }}
         >
-          <Stack direction={"column"} spacing={3} height="100%" mb={"auto"}>
+          <Stack direction={"column"} spacing={3} height="100%" mb={{ xs: 4 }}>
             <Stack direction={{ xs: "column", md: "row" }} spacing={3}>
-              <StyledTextField
-                size="medium"
-                color="secondary"
-                id="email"
-                name={"email"}
-                label={"Email"}
-                helperText={errors.email?.message}
-                fullWidth
-                required
-              />
-              <StyledTextField
-                size="medium"
-                color="secondary"
-                id="department"
-                name={"department"}
-                label={"Department"}
-                helperText={errors.department?.message}
-                required
-              />
+              <AutocompleteTextField control={control} />
+              <FormDepartmentSelect control={control} />
             </Stack>
-            <StyledTextField
-              multiline
-              rows={5}
-              size="medium"
-              color="secondary"
-              id="description"
-              name={"description"}
-              label={"Description"}
-              helperText={errors.description?.message}
-              required
+            <FormTextField
+              control={control}
+              name="description"
+              label="Description"
+              defaultValue=""
+              error={errors.description?.message}
+              multiLine={true}
             />
+            <FileUploadButton />
           </Stack>
           <Box display="flex" justifyContent="flex-end">
             <PrimaryButton
@@ -128,13 +100,14 @@ export default function FirstStep({
               sx={{
                 borderRadius: "8px",
                 textTransform: "capitalize",
+                width: { xs: "100%", sm: "auto" },
               }}
             >
               Submit
             </PrimaryButton>
           </Box>
         </Box>
-      </FormContainer>
+      </form>
     </Box>
   );
 }

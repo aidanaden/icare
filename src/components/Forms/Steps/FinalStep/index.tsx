@@ -2,37 +2,34 @@ import { TextField, Box, Button, Grid, Stack } from "@mui/material";
 import { useContext, useCallback, useState, Dispatch } from "react";
 import { FormContainer } from "react-hook-form-mui";
 import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import StyledTextField from "@/components/Common/FormTextField";
 import PrimaryButton from "@/components/Common/PrimaryButton";
 import SectionHeader from "@/components/Common/SectionHeader";
 import SectionSubtitle from "@/components/Common/SectionSubtitle";
 import { nominationDetailSchema } from "../../Schemas";
 import { DepartmentType } from "@/enums";
 import NominationQuestion from "../../Common/NominationQuestion";
-import { NominationFormSubmissionData } from "../../StepForm";
+import { useRecoilState } from "recoil";
+import { nominationFormState } from "@/atoms/nominationFormAtom";
+import { NominationFormSubmissionData } from "@/interfaces";
 
 interface FinalStepProp {
-  formData: NominationFormSubmissionData;
-  setFormData: Dispatch<NominationFormSubmissionData>;
   handleSubmit: () => void;
   handleBack: () => void;
 }
 
-export default function FinalStep({
-  handleSubmit,
-  handleBack,
-  formData,
-  setFormData,
-}: FinalStepProp) {
-  const [values, setValues] = useState<NominationFormSubmissionData>();
+export default function FinalStep({ handleSubmit, handleBack }: FinalStepProp) {
+  const [getNominationFormState, setNominationFormState] =
+    useRecoilState(nominationFormState);
+
   const onSubmit = (data: Map<string, string>) => {
-    const newFormData = { ...formData, answers: data };
-    setFormData(newFormData);
+    console.log("final step submit called!");
+    const newFormData = { ...getNominationFormState, answers: data };
+    setNominationFormState(newFormData);
     console.log("submitted data: ", data);
     console.log("new form data: ", newFormData);
     handleSubmit();
   };
+
   const formContext = useForm<NominationFormSubmissionData>({
     defaultValues: {
       // email: "",
@@ -88,36 +85,40 @@ export default function FinalStep({
         flexDirection="column"
         justifyContent="flex-end"
         // height="100%"
-        minHeight={"340px"}
+        minHeight={{ sm: "340px" }}
       >
-        <Stack justifyContent={"space-between"} flexDirection="row">
+        <Stack
+          justifyContent={{ sm: "space-between" }}
+          flexDirection={{ xs: "column-reverse", sm: "row" }}
+        >
           <PrimaryButton
             size="large"
+            variant={"outlined"}
             sx={{
               borderRadius: "8px",
               textTransform: "capitalize",
+              marginTop: { xs: 1, sm: "auto" },
             }}
             onClick={handleBack}
           >
             Back
           </PrimaryButton>
-          <Box
+          <PrimaryButton
+            type={"submit"}
+            size="large"
             sx={{
+              borderRadius: "8px",
+              textTransform: "capitalize",
+              width: { xs: "100%", sm: "auto" },
               display: "flex",
-              justifyContent: "flex-end",
+              justifyContent: { xs: "center", sm: "flex-end" },
             }}
+            onClick={() =>
+              console.log("final form state: ", getNominationFormState)
+            }
           >
-            <PrimaryButton
-              type={"submit"}
-              size="large"
-              sx={{
-                borderRadius: "8px",
-                textTransform: "capitalize",
-              }}
-            >
-              Submit
-            </PrimaryButton>
-          </Box>
+            Submit
+          </PrimaryButton>
         </Stack>
       </Box>
     </Box>

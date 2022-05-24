@@ -28,3 +28,8 @@ export enum ServiceLevel {
   EXPECTED = 170740003,
   BASIC = 170740004,
 }
+
+export enum EndorsementStatus {
+  COMMENDABLE = 170740000,
+  NEUTRAL = 170740001,
+}

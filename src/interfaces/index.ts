@@ -79,3 +79,15 @@ export interface NominationQuestionsQueryData {
   qna_questions: NominationQuestionData[];
   rating_questions?: RatingQuestionData[] | undefined;
 }
+
+export interface NominationFormSubmissionDetails {
+  user: User | undefined;
+  department: DepartmentType | undefined;
+  description: string | undefined;
+  files: File[] | undefined;
+}
+
+export interface NominationFormSubmissionData
+  extends NominationFormSubmissionDetails {
+  answers: Map<string, string>;
+}

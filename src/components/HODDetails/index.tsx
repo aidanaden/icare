@@ -6,15 +6,18 @@ import DetailSubHeader from "../Common/DetailBox/DetailSubHeader";
 import DetailText from "../Common/DetailBox/DetailText";
 import { EndorsementStatus } from "@/enums";
 import EndorsementForm from "../Forms/EndorsementForm";
+import GreenBadge from "../Common/Badge/GreenBadge";
+import RedBadge from "../Common/Badge/RedBadge";
 
 interface HODDetailProps {
   title: string;
   name: string;
   designation: string;
-  department?: string | undefined;
-  endorsement_status?: EndorsementStatus | undefined;
-  endorsement_date?: Date | undefined;
-  comments?: string | undefined;
+  department?: string;
+  endorsement_status?: EndorsementStatus;
+  endorsement_date?: Date;
+  comments?: string;
+  isEditable?: boolean;
 }
 
 export default function index(props: HODDetailProps) {
@@ -26,6 +29,7 @@ export default function index(props: HODDetailProps) {
     endorsement_status,
     endorsement_date,
     comments,
+    isEditable,
   } = props;
 
   return (
@@ -55,28 +59,42 @@ export default function index(props: HODDetailProps) {
             <DetailText>{department}</DetailText>
           </Box>
         </Stack>
-        <EndorsementForm />
-        {/* <Stack
-          direction={{ xs: "column", md: "row" }}
-          spacing={{ xs: 4, md: 12 }}
-        >
-          <Box>
-            <DetailSubHeader>Endorsement status</DetailSubHeader>
-            <DetailText>{endorsement_status}</DetailText>
+
+        {isEditable ? (
+          <EndorsementForm
+            endorsement_status={endorsement_status}
+            comments={comments}
+          />
+        ) : (
+          <Box
+            display="flex"
+            flexDirection="column"
+            justifyContent="space-between"
+            height="100%"
+          >
+            <Stack direction={"column"} spacing={4} height="100%">
+              <Box>
+                <DetailSubHeader mb={1.5}>Endorsement status</DetailSubHeader>
+                {endorsement_status ? (
+                  <GreenBadge>Endorsed</GreenBadge>
+                ) : (
+                  <RedBadge>Not endorsed</RedBadge>
+                )}
+              </Box>
+              <Box>
+                <DetailSubHeader>Endorsement date</DetailSubHeader>
+                <DetailText>
+                  {endorsement_date!.toLocaleDateString()}
+                </DetailText>
+              </Box>
+
+              <Box>
+                <DetailSubHeader>Comments</DetailSubHeader>
+                <DetailText isMultiLine={true}>{comments}</DetailText>
+              </Box>
+            </Stack>
           </Box>
-          <Box>
-            <DetailSubHeader>Endorsement date</DetailSubHeader>
-            {endorsement_date && (
-              <DetailText>{formatDateToString(endorsement_date)}</DetailText>
-            )}
-          </Box>
-        </Stack>
-        <Box>
-          <DetailSubHeader>HOD Comments</DetailSubHeader>
-          <DetailText noWrap={false} maxWidth="100%">
-            {comments}
-          </DetailText>
-        </Box> */}
+        )}
       </Stack>
     </ShadowBox>
   );

@@ -22,7 +22,7 @@ export default function FileUploadButton() {
       </Stack>
 
       <Button variant="outlined" color="primary" onClick={() => setOpen(true)}>
-        Upload file(s)
+        Upload supporting document(s)
       </Button>
 
       <DropzoneDialog

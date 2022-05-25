@@ -4,11 +4,11 @@ import { Controller } from "react-hook-form";
 
 interface FormTextFieldProps {
   control: any;
-  defaultValue: string | undefined;
   label: string;
   name: string;
   error: string | undefined;
-  multiLine: boolean;
+  placeholder: string;
+  multiLine?: boolean;
 }
 
 export default function FormTextField({
@@ -16,19 +16,20 @@ export default function FormTextField({
   label,
   name,
   error,
-  defaultValue,
-  multiLine,
+  placeholder,
+  multiLine = false,
 }: FormTextFieldProps) {
   return (
     <>
       <Controller
         name={name}
         control={control}
-        defaultValue={defaultValue}
         render={({ field }) => (
           <StyledTextField
             multiline={multiLine}
             rows={multiLine ? 5 : 1}
+            // maxRows={multiLine ? 100 : 1}
+            sx={{ flexGrow: 1 }}
             size="medium"
             color="secondary"
             id={name}
@@ -37,6 +38,7 @@ export default function FormTextField({
             required
             {...field}
             inputRef={field.ref}
+            placeholder={placeholder}
           />
         )}
       />

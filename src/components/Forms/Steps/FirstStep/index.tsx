@@ -87,9 +87,9 @@ export default function FirstStep({ handleNext }: FirstStepProp) {
               control={control}
               name="description"
               label="Description"
-              defaultValue=""
               error={errors.description?.message}
               multiLine={true}
+              placeholder="Enter description here..."
             />
             <FileUploadButton />
           </Stack>

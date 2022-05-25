@@ -12,7 +12,10 @@ interface EndorsementForm {
   comments?: string | undefined;
 }
 
-export default function EndorsementForm() {
+export default function EndorsementForm({
+  endorsement_status,
+  comments,
+}: EndorsementForm) {
   const {
     control,
     register,
@@ -20,8 +23,8 @@ export default function EndorsementForm() {
     formState: { errors },
   } = useForm<EndorsementForm>({
     defaultValues: {
-      endorsement_status: EndorsementStatus.COMMENDABLE,
-      comments: "",
+      endorsement_status: endorsement_status,
+      comments: comments,
     },
     resolver: yupResolver(endorsementSchema),
   });
@@ -39,9 +42,9 @@ export default function EndorsementForm() {
             control={control}
             label="Comments"
             name="comments"
-            defaultValue=""
             error={errors.comments?.message}
             multiLine={true}
+            placeholder="Enter comments here..."
           />
         </Stack>
         <Box display="flex" justifyContent="flex-end">

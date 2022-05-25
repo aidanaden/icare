@@ -12,14 +12,14 @@ import FormSwitch from "../FormSwitch";
 
 interface CommitteeForm {
   service_level?: ServiceLevel | undefined;
-  award_shortlist_status?: boolean | undefined;
+  service_level_award?: boolean | undefined;
   champion_shortlist_status?: boolean | undefined;
   comments?: string | undefined;
 }
 
 export default function CommitteeForm({
   service_level,
-  award_shortlist_status,
+  service_level_award,
   champion_shortlist_status,
   comments,
 }: CommitteeForm) {
@@ -31,7 +31,7 @@ export default function CommitteeForm({
   } = useForm<CommitteeForm>({
     defaultValues: {
       service_level: service_level,
-      award_shortlist_status: award_shortlist_status,
+      service_level_award: service_level_award,
       champion_shortlist_status: champion_shortlist_status,
       comments: comments,
     },
@@ -48,18 +48,17 @@ export default function CommitteeForm({
         <Stack direction={"column"} spacing={4} height="100%" mb={{ xs: 6 }}>
           <CommitteeServiceLevelSelect control={control} />
           {/* <CommitteeShortlistSelect control={control} /> */}
+
           <Stack direction={{ xs: "column", md: "row" }} spacing={3}>
             <FormSwitch
               control={control}
-              name="award_shortlist_status"
-              label="Shortlist for Award"
-              defaultValue={false}
+              name="service_level_award"
+              label="Nominate for Award"
             />
             <FormSwitch
               control={control}
               name="champion_shortlist_status"
               label="Shortlist for Championship"
-              defaultValue={false}
             />
           </Stack>
 
@@ -67,9 +66,9 @@ export default function CommitteeForm({
             control={control}
             label="Comments"
             name="comments"
-            defaultValue=""
             error={errors.comments?.message}
             multiLine={true}
+            placeholder="Enter comments here..."
           />
         </Stack>
         <Box display="flex" justifyContent="flex-end">

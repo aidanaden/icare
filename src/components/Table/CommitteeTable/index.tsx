@@ -35,21 +35,15 @@ export default function EndorsementTable({ data, ...other }: DataTableProps) {
       status: NominationFormStatus.ENDORSED,
       data: endorsedData,
     },
-
     {
-      headerLabel: "Shortlisted Winners",
-      status: NominationFormStatus.PENDING,
-      data: [],
-    },
-    {
-      headerLabel: "Winners",
+      headerLabel: "Award Winners",
       status: NominationFormStatus.AWARDED,
       data: awardedData,
     },
     {
       headerLabel: "Shortlisted Champions",
-      status: NominationFormStatus.INCOMPLETE,
-      data: [],
+      status: NominationFormStatus.SHORTLISTED,
+      data: shortlistedData,
     },
     {
       headerLabel: "Champions",

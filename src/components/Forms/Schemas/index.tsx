@@ -21,6 +21,8 @@ export const committeeSchema = yup
   .object({
     service_level: yup.string().required(),
     comments: yup.string().required(),
+    service_level_award: yup.boolean().required(),
+    champion_shortlist_status: yup.boolean().required(),
   })
   .required();
 

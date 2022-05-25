@@ -16,6 +16,7 @@ export const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
+    fontWeight: 500,
     "&:hover": {
       backgroundColor: "#F5F6F9",
     },

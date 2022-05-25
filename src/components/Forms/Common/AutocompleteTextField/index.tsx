@@ -81,6 +81,7 @@ export default function Asynchronous({
                   </>
                 ),
               }}
+              required
             />
           )}
           {...field}
@@ -94,7 +95,6 @@ export default function Asynchronous({
   );
 }
 
-// Top films as rated by IMDb users. http://www.imdb.com/chart/top
 const users: User[] = [
   {
     staff_id: "593413",

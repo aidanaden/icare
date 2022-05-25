@@ -5,15 +5,9 @@ interface FormSwitchProps {
   label: string;
   name: string;
   control: any;
-  defaultValue: boolean;
 }
 
-export default function FormSwitch({
-  label,
-  name,
-  control,
-  defaultValue,
-}: FormSwitchProps) {
+export default function FormSwitch({ label, name, control }: FormSwitchProps) {
   return (
     <FormControl sx={{ width: { xs: "full", sm: "240px" } }}>
       <FormLabel
@@ -34,7 +28,6 @@ export default function FormSwitch({
       <Controller
         name={name}
         control={control}
-        defaultValue={defaultValue}
         render={({ field }) => (
           <Switch
             {...field}

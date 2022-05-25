@@ -7,6 +7,7 @@ import {
   IconButton,
   Stack,
 } from "@mui/material";
+import { useRouter } from "next/router";
 import PrimaryButton from "../Common/PrimaryButton";
 
 const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
@@ -45,6 +46,7 @@ export default function Navbar({
   handleNomination,
   ...other
 }: NavbarProps) {
+  const router = useRouter();
   return (
     <DashboardNavbarRoot
       sx={{
@@ -80,6 +82,7 @@ export default function Navbar({
             }}
             size="large"
             endIcon={<Add />}
+            onClick={() => router.push("/nominations/new")}
           >
             Create nomination
           </PrimaryButton>

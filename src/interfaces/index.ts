@@ -43,9 +43,9 @@ export interface NominationQueryData {
   quiz_service_level: ServiceLevel;
   quiz_score: number;
   draft_status: boolean;
-  is_service_level_shortlist_result: boolean;
-  is_top_winner_shortlist_result: boolean;
-  is_top_winner_result: boolean;
+  service_level_award: boolean;
+  champion_shortlist_status: boolean;
+  champion_award: boolean;
   hod_name: string;
   hod_designation: string;
   endorsement_status: string;

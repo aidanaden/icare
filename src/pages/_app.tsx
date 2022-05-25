@@ -13,6 +13,8 @@ import LoginLayout from "@/components/Layout/LoginLayout";
 import useAuth, { AuthProvider } from "@/hooks/useAuth";
 import { NominationsProvider } from "@/hooks/useNominations";
 import { RecoilRoot } from "recoil";
+import { ErrorBoundary } from "react-error-boundary";
+import ErrorFallback from "@/components/ErrorFallback";
 
 interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;
@@ -47,7 +49,9 @@ const App = (props: MyAppProps) => {
             <Box bgcolor={"grey.100"} minHeight="100vh" color="text.primary">
               {!user ? (
                 <MainLayout>
-                  <Component {...pageProps} />
+                  <ErrorBoundary FallbackComponent={ErrorFallback}>
+                    <Component {...pageProps} />
+                  </ErrorBoundary>
                 </MainLayout>
               ) : (
                 <LoginLayout>

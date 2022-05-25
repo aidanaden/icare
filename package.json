@@ -24,6 +24,7 @@
     "next": "12.1.5",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
+    "react-error-boundary": "^3.1.4",
     "react-hook-form": "^7.30.0",
     "react-hook-form-mui": "^3.2.1",
     "react-material-ui-carousel": "^3.3.3",

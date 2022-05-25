@@ -18,6 +18,5 @@ export default function index(props: CommitteeDetailProps) {
       text: final_service_level,
     },
   ];
-  throw new Error("committee details error!");
   return <DetailBox title={title} data={data} />;
 }

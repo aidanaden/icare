@@ -4,7 +4,7 @@ import GreenBadge from "@/components/Common/Badge/GreenBadge";
 import OrangeBadge from "@/components/Common/Badge/OrangeBadge";
 import PurpleBadge from "@/components/Common/Badge/PurpleBadge";
 import RedBadge from "@/components/Common/Badge/RedBadge";
-import { NominationFormStatus } from "@/enums";
+import { EndorsementStatus, NominationFormStatus } from "@/enums";
 import styled from "@emotion/styled";
 import { TableCell, tableCellClasses } from "@mui/material";
 import { Column } from "../Columns";
@@ -23,37 +23,51 @@ export const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
-interface TextTableCellProps {
-  value: string | Date;
+interface TableCellProps {
+  value: string | number | boolean | Date | undefined;
   column: Column;
 }
 
-export const TextTableCell = ({ value, column }: TextTableCellProps) => {
-  return (
-    <StyledTableCell key={column.id} align={column.align} sx={{ px: 4 }}>
-      {value === NominationFormStatus.ENDORSED ? (
-        <GreenBadge>{value.toString()}</GreenBadge>
-      ) : value === NominationFormStatus.PENDING ? (
-        <GrayBadge>{value.toString()}</GrayBadge>
-      ) : value === NominationFormStatus.SUBMITTED ? (
-        <BlueBadge>{value.toString()}</BlueBadge>
-      ) : value === NominationFormStatus.SHORTLISTED ? (
-        <PurpleBadge>{value.toString()}</PurpleBadge>
-      ) : value === NominationFormStatus.AWARDED ? (
-        <OrangeBadge>{value.toString()}</OrangeBadge>
-      ) : (
-        <RedBadge>{value.toString()}</RedBadge>
-      )}
-    </StyledTableCell>
-  );
+interface CategoryTableCellProps {
+  value: NominationFormStatus;
+  column: Column;
+}
+
+export const CategoryTableCell = ({
+  value,
+  column,
+}: CategoryTableCellProps) => {
+  if (value) {
+    return (
+      <StyledTableCell key={column.id} align={column.align} sx={{ px: 4 }}>
+        {value === NominationFormStatus.ENDORSED ? (
+          <GreenBadge>{value}</GreenBadge>
+        ) : value === NominationFormStatus.SUBMITTED ? (
+          <BlueBadge>{value}</BlueBadge>
+        ) : value === NominationFormStatus.PENDING ? (
+          <GrayBadge>{value}</GrayBadge>
+        ) : (
+          <RedBadge>{value}</RedBadge>
+        )}
+      </StyledTableCell>
+    );
+  } else {
+    return <></>;
+  }
 };
 
-export const DateTableCell = ({ value, column }: TextTableCellProps) => {
-  return (
-    <StyledTableCell key={column.id} align={column.align} sx={{ px: 4 }}>
-      {column.format && value instanceof Date
-        ? column.format(value)
-        : value.toString()}
-    </StyledTableCell>
-  );
+export const DateTableCell = ({ value, column }: TableCellProps) => {
+  if (value != undefined && value instanceof Date) {
+    return (
+      <StyledTableCell key={column.id} align={column.align} sx={{ px: 4 }}>
+        {column.format(value)}
+      </StyledTableCell>
+    );
+  } else {
+    return (
+      <StyledTableCell key={column.id} align={column.align} sx={{ px: 4 }}>
+        {value?.toString()}
+      </StyledTableCell>
+    );
+  }
 };

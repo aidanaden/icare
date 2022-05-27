@@ -30,6 +30,7 @@ export enum ServiceLevel {
 }
 
 export enum EndorsementStatus {
+  PENDING = 0,
   COMMENDABLE = 170740000,
   NEUTRAL = 170740001,
 }

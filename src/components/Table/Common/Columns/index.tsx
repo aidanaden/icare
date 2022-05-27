@@ -1,7 +1,8 @@
+import { NominationDataTableData } from "@/interfaces";
 import { formatDateToString } from "@/utils";
 
 export interface Column {
-  id: "nominee" | "department" | "date" | "status";
+  id: keyof NominationDataTableData;
   label: string;
   minWidth?: number;
   align?: "right" | "center" | "left";
@@ -9,11 +10,11 @@ export interface Column {
 }
 
 export const columns: readonly Column[] = [
-  { id: "nominee", label: "Nominee", minWidth: 100 },
-  { id: "department", label: "Department", minWidth: 100 },
-  { id: "status", label: "Status", align: "center", minWidth: 100 },
+  { id: "nominee_name", label: "Nominee", minWidth: 100 },
+  { id: "nominee_department", label: "Department", minWidth: 100 },
+  { id: "nomination_status", label: "Status", align: "center", minWidth: 100 },
   {
-    id: "date",
+    id: "nomination_date",
     label: "Created",
     minWidth: 100,
     align: "right",

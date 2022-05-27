@@ -1,21 +1,21 @@
-import { DataTableData } from "@/interfaces";
-import { NominationFormStatus } from "@/enums";
+import { NominationDataTableData } from "@/interfaces";
+import { EndorsementStatus, NominationFormStatus } from "@/enums";
 import { DataTableTabPanelProps } from "../Common/DataTableTabPanel";
 import DataTable from "../DataTable";
 
 interface DataTableProps {
-  data: DataTableData[];
+  data: NominationDataTableData[];
 }
 
 export default function EndorsementTable({ data, ...other }: DataTableProps) {
   const endorsedData = data.filter(
-    (row) => row.status === NominationFormStatus.ENDORSED
+    (row) => row.endorsement_status === EndorsementStatus.COMMENDABLE
   );
   const pendingData = data.filter(
-    (row) => row.status === NominationFormStatus.PENDING
+    (row) => row.endorsement_status === EndorsementStatus.PENDING
   );
   const submittedData = data.filter(
-    (row) => row.status === NominationFormStatus.SUBMITTED
+    (row) => row.endorsement_status === EndorsementStatus.NEUTRAL
   );
 
   const tabPanelData: DataTableTabPanelProps[] = [

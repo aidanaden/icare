@@ -1,22 +1,27 @@
 import {
   DepartmentType,
+  EndorsementStatus,
   NominationFormStatus,
   ServiceLevel,
   ShortlistStatus,
 } from "@/enums";
-import { CommitteeMemberQueryData, NominationQueryData } from "@/interfaces";
-import { createData } from "@/utils";
+import {
+  CommitteeMemberQueryData,
+  NominationDetailQueryData,
+} from "@/interfaces";
+import { createData, getNominationFormStatus } from "@/utils";
 
 export const SampleCommitteeMemberQueryData: CommitteeMemberQueryData = {
   staff_id: 124543,
   committee_name: "",
-  committee_shortlist_status: ShortlistStatus.FALSE,
+  shortlist_status: ShortlistStatus.FALSE,
   top_winner_status: false,
   committee_designation: "",
   committee_department: "",
+  committee_comments: "",
 };
 
-export const SampleNominationQueryData: NominationQueryData = {
+export const SampleNominationQueryData: NominationDetailQueryData = {
   nominee_name: "Jolynn Tan",
   nominee_designation: "",
   nominee_department: "",
@@ -24,7 +29,7 @@ export const SampleNominationQueryData: NominationQueryData = {
   nominator_name: "",
   nominator_designation: "",
   nominator_department: "",
-  description: "",
+  nomination_reason: "",
   quiz_service_level: ServiceLevel.UNBELIEVABLE,
   quiz_score: 12,
   draft_status: true,
@@ -32,6 +37,7 @@ export const SampleNominationQueryData: NominationQueryData = {
   champion_shortlist_status: true,
   champion_award: false,
   hod_name: "",
+  hod_department: "",
   hod_designation: "",
   endorsement_status: "",
   hod_comments: "",
@@ -39,139 +45,324 @@ export const SampleNominationQueryData: NominationQueryData = {
   committee_service_level: ServiceLevel.SURPRISING,
   committee_comment: [SampleCommitteeMemberQueryData],
   total_top_winner_status: false,
+  status_code: 200,
+  message: "",
 };
 
 export const DataTableSampleData = [
   createData(
-    "Jolynn",
-    DepartmentType.AUDIT,
-    NominationFormStatus.PENDING,
-    new Date()
-  ),
-  createData(
-    "Jolynn",
-    DepartmentType.IT,
-    NominationFormStatus.ENDORSED,
-    new Date()
-  ),
-  createData(
-    "Jolynn",
-    DepartmentType.AUDIT,
-    NominationFormStatus.SUBMITTED,
-    new Date()
-  ),
-  createData(
-    "Jolynn",
+    "8185e247-6bd7-ec11-a7b5-000d3a85223c",
+    "Mary Doe",
+    "Director",
+    false,
+    false,
+    true,
+    false,
+    EndorsementStatus.COMMENDABLE,
     DepartmentType.SFIT,
-    NominationFormStatus.ENDORSED,
-    new Date()
+    "19/05/2022 08:00:34 pm",
+    getNominationFormStatus(
+      EndorsementStatus.COMMENDABLE,
+      false,
+      false,
+      false,
+      false
+    ),
+    ServiceLevel.DESIRED,
+    26
   ),
   createData(
-    "Jolynn",
-    DepartmentType.AUDIT,
-    NominationFormStatus.PENDING,
-    new Date()
-  ),
-  createData(
-    "Jolynn",
-    DepartmentType.AUDIT,
-    NominationFormStatus.SUBMITTED,
-    new Date()
-  ),
-  createData(
-    "Jolynn",
-    DepartmentType.AUDIT,
-    NominationFormStatus.PENDING,
-    new Date()
-  ),
-  createData(
-    "Jolynn",
-    DepartmentType.IT,
-    NominationFormStatus.SUBMITTED,
-    new Date()
-  ),
-  createData(
-    "Jolynn",
-    DepartmentType.IT,
-    NominationFormStatus.SUBMITTED,
-    new Date()
-  ),
-  createData(
-    "Jolynn",
-    DepartmentType.AUDIT,
-    NominationFormStatus.ENDORSED,
-    new Date()
-  ),
-  createData(
-    "Jolynn",
-    DepartmentType.AUDIT,
-    NominationFormStatus.PENDING,
-    new Date()
-  ),
-  createData(
-    "Jolynn",
-    DepartmentType.AUDIT,
-    NominationFormStatus.PENDING,
-    new Date()
-  ),
-  createData(
-    "Jolynn",
+    "8185e247-6bd7-ec11-a7b5-000d3a85223c",
+    "Mary Doe",
+    "Director",
+    false,
+    false,
+    true,
+    false,
+    EndorsementStatus.COMMENDABLE,
     DepartmentType.SFIT,
-    NominationFormStatus.SUBMITTED,
-    new Date()
+    "17/05/2022 12:41:47 pm",
+    getNominationFormStatus(
+      EndorsementStatus.PENDING,
+      false,
+      false,
+      false,
+      false
+    ),
+    ServiceLevel.DESIRED,
+    26
   ),
   createData(
-    "Jolynn",
-    DepartmentType.AUDIT,
-    NominationFormStatus.ENDORSED,
-    new Date()
-  ),
-  createData(
-    "Jolynn",
+    "8185e247-6bd7-ec11-a7b5-000d3a85223c",
+    "Mary Doe",
+    "Director",
+    false,
+    false,
+    true,
+    false,
+    EndorsementStatus.NEUTRAL,
     DepartmentType.IT,
-    NominationFormStatus.SUBMITTED,
-    new Date()
+    "17/05/2022 12:46:36 pm",
+    getNominationFormStatus(
+      EndorsementStatus.COMMENDABLE,
+      false,
+      false,
+      false,
+      false
+    ),
+    ServiceLevel.DESIRED,
+    26
   ),
   createData(
-    "Jolynn",
-    DepartmentType.AUDIT,
-    NominationFormStatus.PENDING,
-    new Date()
-  ),
-  createData(
-    "Jolynn",
+    "8185e247-6bd7-ec11-a7b5-000d3a85223c",
+    "Mary Doe",
+    "Director",
+    false,
+    false,
+    true,
+    false,
+    EndorsementStatus.NEUTRAL,
     DepartmentType.IT,
-    NominationFormStatus.ENDORSED,
-    new Date()
+    "17/05/2022 12:46:36 pm",
+    getNominationFormStatus(
+      EndorsementStatus.COMMENDABLE,
+      false,
+      false,
+      false,
+      false
+    ),
+    ServiceLevel.DESIRED,
+    26
   ),
   createData(
-    "Jolynn",
-    DepartmentType.AUDIT,
-    NominationFormStatus.PENDING,
-    new Date()
-  ),
-  createData(
-    "Jolynn",
-    DepartmentType.AUDIT,
-    NominationFormStatus.SUBMITTED,
-    new Date()
-  ),
-  createData(
-    "Jolynn",
-    DepartmentType.SFIT,
-    NominationFormStatus.ENDORSED,
-    new Date()
-  ),
-  createData(
-    "Jolynn",
-    DepartmentType.AUDIT,
-    NominationFormStatus.SUBMITTED,
-    new Date()
-  ),
-  createData(
-    "Jolynn",
+    "8185e247-6bd7-ec11-a7b5-000d3a85223c",
+    "Mary Doe",
+    "Director",
+    false,
+    false,
+    true,
+    false,
+    EndorsementStatus.NEUTRAL,
     DepartmentType.IT,
-    NominationFormStatus.SUBMITTED,
-    new Date()
+    "17/05/2022 12:46:36 pm",
+    getNominationFormStatus(
+      EndorsementStatus.COMMENDABLE,
+      false,
+      false,
+      false,
+      false
+    ),
+    ServiceLevel.DESIRED,
+    26
+  ),
+  createData(
+    "8185e247-6bd7-ec11-a7b5-000d3a85223c",
+    "Mary Doe",
+    "Director",
+    false,
+    false,
+    true,
+    false,
+    EndorsementStatus.NEUTRAL,
+    DepartmentType.IT,
+    "17/05/2022 12:46:36 pm",
+    getNominationFormStatus(
+      EndorsementStatus.COMMENDABLE,
+      false,
+      false,
+      false,
+      false
+    ),
+    ServiceLevel.DESIRED,
+    26
+  ),
+  createData(
+    "8185e247-6bd7-ec11-a7b5-000d3a85223c",
+    "Mary Doe",
+    "Director",
+    false,
+    false,
+    true,
+    false,
+    EndorsementStatus.NEUTRAL,
+    DepartmentType.IT,
+    "17/05/2022 12:46:36 pm",
+    getNominationFormStatus(
+      EndorsementStatus.COMMENDABLE,
+      false,
+      false,
+      false,
+      false
+    ),
+    ServiceLevel.DESIRED,
+    26
+  ),
+  createData(
+    "8185e247-6bd7-ec11-a7b5-000d3a85223c",
+    "Mary Doe",
+    "Director",
+    false,
+    false,
+    true,
+    false,
+    EndorsementStatus.NEUTRAL,
+    DepartmentType.IT,
+    "17/05/2022 12:46:36 pm",
+    getNominationFormStatus(
+      EndorsementStatus.COMMENDABLE,
+      false,
+      false,
+      false,
+      false
+    ),
+    ServiceLevel.DESIRED,
+    26
+  ),
+  createData(
+    "8185e247-6bd7-ec11-a7b5-000d3a85223c",
+    "Mary Doe",
+    "Director",
+    false,
+    false,
+    true,
+    false,
+    EndorsementStatus.NEUTRAL,
+    DepartmentType.IT,
+    "17/05/2022 12:46:36 pm",
+    getNominationFormStatus(
+      EndorsementStatus.COMMENDABLE,
+      false,
+      false,
+      false,
+      false
+    ),
+    ServiceLevel.DESIRED,
+    26
+  ),
+  createData(
+    "8185e247-6bd7-ec11-a7b5-000d3a85223c",
+    "Mary Doe",
+    "Director",
+    false,
+    false,
+    true,
+    false,
+    EndorsementStatus.NEUTRAL,
+    DepartmentType.IT,
+    "17/05/2022 12:46:36 pm",
+    getNominationFormStatus(
+      EndorsementStatus.COMMENDABLE,
+      false,
+      false,
+      false,
+      false
+    ),
+    ServiceLevel.DESIRED,
+    26
+  ),
+  createData(
+    "8185e247-6bd7-ec11-a7b5-000d3a85223c",
+    "Mary Doe",
+    "Director",
+    false,
+    false,
+    true,
+    false,
+    EndorsementStatus.NEUTRAL,
+    DepartmentType.IT,
+    "17/05/2022 12:46:36 pm",
+    getNominationFormStatus(
+      EndorsementStatus.COMMENDABLE,
+      false,
+      false,
+      false,
+      false
+    ),
+    ServiceLevel.DESIRED,
+    26
+  ),
+  createData(
+    "8185e247-6bd7-ec11-a7b5-000d3a85223c",
+    "Mary Doe",
+    "Director",
+    false,
+    false,
+    true,
+    false,
+    EndorsementStatus.NEUTRAL,
+    DepartmentType.IT,
+    "17/05/2022 12:46:36 pm",
+    getNominationFormStatus(
+      EndorsementStatus.COMMENDABLE,
+      false,
+      false,
+      false,
+      false
+    ),
+    ServiceLevel.DESIRED,
+    26
+  ),
+  createData(
+    "8185e247-6bd7-ec11-a7b5-000d3a85223c",
+    "Mary Doe",
+    "Director",
+    false,
+    false,
+    true,
+    false,
+    EndorsementStatus.NEUTRAL,
+    DepartmentType.IT,
+    "17/05/2022 12:46:36 pm",
+    getNominationFormStatus(
+      EndorsementStatus.COMMENDABLE,
+      false,
+      false,
+      false,
+      false
+    ),
+    ServiceLevel.DESIRED,
+    26
+  ),
+  createData(
+    "8185e247-6bd7-ec11-a7b5-000d3a85223c",
+    "Mary Doe",
+    "Director",
+    false,
+    false,
+    true,
+    false,
+    EndorsementStatus.NEUTRAL,
+    DepartmentType.IT,
+    "17/05/2022 12:46:36 pm",
+    getNominationFormStatus(
+      EndorsementStatus.COMMENDABLE,
+      false,
+      false,
+      false,
+      false
+    ),
+    ServiceLevel.DESIRED,
+    26
+  ),
+  createData(
+    "8185e247-6bd7-ec11-a7b5-000d3a85223c",
+    "Mary Doe",
+    "Director",
+    false,
+    false,
+    true,
+    false,
+    EndorsementStatus.NEUTRAL,
+    DepartmentType.IT,
+    "17/05/2022 12:46:36 pm",
+    getNominationFormStatus(
+      EndorsementStatus.COMMENDABLE,
+      false,
+      false,
+      false,
+      false
+    ),
+    ServiceLevel.DESIRED,
+    26
   ),
 ];

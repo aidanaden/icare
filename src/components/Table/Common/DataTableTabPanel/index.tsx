@@ -70,7 +70,7 @@ export default function DataTableTabPanel({
   const [departmentType, setDepartmentType] = useState<DepartmentType>(
     DepartmentType.ALL
   );
-  const [teamType, setTeamType] = useState<string>("");
+  const [teamType, setTeamType] = useState<string>("All");
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -106,7 +106,15 @@ export default function DataTableTabPanel({
     } else {
       setDisplayedData(data);
     }
-  }, [departmentType]);
+  }, [departmentType, data]);
+
+  useEffect(() => {
+    if (teamType !== "" && teamType !== "All") {
+      setDisplayedData(data.filter((row) => row.nominee_team === teamType));
+    } else {
+      setDisplayedData(data);
+    }
+  }, [teamType, data]);
 
   return (
     <TabPanel value={status} sx={{ p: 0 }}>
@@ -118,7 +126,7 @@ export default function DataTableTabPanel({
               setDepartmentType={setDepartmentType}
             />
             <TeamSelect
-              teams={["team1", "team2", "team3", "team4"]}
+              teams={["All", "team1", "team2", "team3", "team4"]}
               teamType={teamType}
               setTeamType={setTeamType}
             />

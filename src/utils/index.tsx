@@ -32,6 +32,8 @@ export function getNominationFormStatus(
     return NominationFormStatus.PENDING;
   } else if (draft_status) {
     return NominationFormStatus.INCOMPLETE;
+  } else {
+    return NominationFormStatus.INCOMPLETE;
   }
 }
 
@@ -54,6 +56,7 @@ export function createData(
   case_id: string,
   nominee_name: string,
   nominee_designation: string,
+  nominee_team: string,
   is_top_winner_result: boolean,
   draft_status: boolean,
   is_service_level_shortlist_result: boolean,
@@ -69,6 +72,7 @@ export function createData(
     case_id,
     nominee_name,
     nominee_designation,
+    nominee_team,
     is_top_winner_result,
     draft_status,
     is_service_level_shortlist_result,

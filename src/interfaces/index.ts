@@ -27,6 +27,7 @@ export interface NominationDataTableData {
   nominee_name: string;
   nominee_designation: string;
   nominee_department: string;
+  nominee_team: string;
   nomination_date: string | Date;
   nomination_status: NominationFormStatus;
   endorsement_status: EndorsementStatus;
@@ -122,6 +123,7 @@ export interface NominationDetailQueryData extends QueryData {
   nominee_name: string;
   nominee_designation: string;
   nominee_department: string;
+  nominee_team: string;
   nomination_date: Date;
   nominator_name: string;
   nominator_designation: string;

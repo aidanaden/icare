@@ -6,19 +6,25 @@
 //   User,
 // } from "firebase/auth";
 
-import { NominationQueryData, User } from "@/interfaces";
+import {
+  NominationFormSubmissionData,
+  NominationDetailQueryData,
+  User,
+} from "@/interfaces";
 import { useRouter } from "next/router";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 interface INominations {
-  nominations: NominationQueryData[] | undefined;
-  endorsements?: NominationQueryData[] | undefined;
-  committeeNominations?: NominationQueryData[] | undefined;
-  fetchNominations: (id: string) => Promise<NominationQueryData[] | void>;
-  fetchEndorsements: (id: string) => Promise<NominationQueryData[] | void>;
+  nominations: NominationDetailQueryData[] | undefined;
+  endorsements?: NominationDetailQueryData[] | undefined;
+  committeeNominations?: NominationDetailQueryData[] | undefined;
+  fetchNominations: (id: string) => Promise<NominationDetailQueryData[] | void>;
+  fetchEndorsements: (
+    id: string
+  ) => Promise<NominationDetailQueryData[] | void>;
   fetchCommitteeNominations: (
     id: string
-  ) => Promise<NominationQueryData[] | void>;
+  ) => Promise<NominationDetailQueryData[] | void>;
   error: string | undefined;
   loading: boolean;
 }
@@ -44,13 +50,13 @@ interface NominationsProviderProps {
 export const NominationsProvider = ({ children }: NominationsProviderProps) => {
   const router = useRouter();
   const [nominations, setNominations] = useState<
-    NominationQueryData[] | undefined
+    NominationDetailQueryData[] | undefined
   >(undefined);
   const [endorsements, setEndorsements] = useState<
-    NominationQueryData[] | undefined
+    NominationDetailQueryData[] | undefined
   >(undefined);
   const [committeeNominations, setCommitteeNominations] = useState<
-    NominationQueryData[] | undefined
+    NominationDetailQueryData[] | undefined
   >(undefined);
   const [error, setError] = useState(undefined);
   const [initialLoading, setInitialLoading] = useState(false);

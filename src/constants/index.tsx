@@ -7,6 +7,8 @@ import {
 import { CommitteeMemberQueryData, NominationQueryData } from "@/interfaces";
 import { createData } from "@/utils";
 
+export const API_URL = "";
+
 export const SampleCommitteeMemberQueryData: CommitteeMemberQueryData = {
   staff_id: 124543,
   committee_name: "",

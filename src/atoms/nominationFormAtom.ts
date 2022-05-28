@@ -11,4 +11,11 @@ export const nominationFormState = atom<NominationFormSubmissionData>({
     answers: new Map<string, string>(null),
     files: undefined,
   },
+  effects: [
+    ({ onSet }) => {
+      onSet((newNominationFormState) => {
+        upsertNominationForm(newNominationFormState);
+      });
+    },
+  ],
 });

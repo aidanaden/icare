@@ -1,17 +1,17 @@
 import { NominationFormStatus } from "@/enums";
-import { DataTableData } from "@/interfaces";
+import { DataTableData, NominationDataTableData } from "@/interfaces";
 import { DataTableTabPanelProps } from "../Common/DataTableTabPanel";
 import DataTable from "../DataTable";
 
 interface TableProps {
-  data: DataTableData[];
+  data?: NominationDataTableData[];
 }
 
 export default function NominationTable({ data }: TableProps) {
-  const incompleteData = data.filter(
+  const incompleteData = data?.filter(
     (row) => row.status === NominationFormStatus.INCOMPLETE
   );
-  const completedData = data.filter(
+  const completedData = data?.filter(
     (row) => row.status !== NominationFormStatus.INCOMPLETE
   );
 

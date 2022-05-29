@@ -14,25 +14,15 @@ import HODDetails from "@/components/HODDetails";
 import NominationDetails from "@/components/NominationDetails";
 import CommitteeDetails from "@/components/CommitteeDetails";
 import CommitteeMemberDetails from "@/components/CommitteeMemberDetails";
-import { NominationQueryData } from "@/interfaces";
 import { EndorsementStatus, ServiceLevel, ShortlistStatus } from "@/enums";
+import { fetchAPI, useFetchNominationDetails } from "@/lib/nominations";
+import { useRouter } from "next/router";
 
-// ALL nomination data (based on nomination ID)
-
-export async function getInitialProps() {
-  // Return as props
-  return {
-    props: {
-      SampleNominationQueryData,
-    },
-  };
-}
-
-interface NominationDetailProps {
-  nominationFormData: NominationQueryData;
-}
-
-const View: NextPage<NominationDetailProps> = ({ nominationFormData }) => {
+const View: NextPage = () => {
+  const router = useRouter();
+  const { id } = router.query;
+  const { nominationDetailsData, isLoading, isError } =
+    useFetchNominationDetails(id?.toString());
   return (
     <Box>
       <Box mb={4}>

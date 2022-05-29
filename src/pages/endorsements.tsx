@@ -9,8 +9,10 @@ import NextMuiLink from "@/components/Common/NextMuiLink";
 import { DataTableSampleData } from "@/constants";
 import EndorsementTable from "@/components/Table/EndorsementTable";
 import theme from "@/styles/theme";
-import useNominations from "@/hooks/useNominations";
 import useAuth from "@/hooks/useAuth";
+import { NominationFilter } from "@/enums";
+import { useFetchNominations } from "@/lib/nominations";
+import { getStatusFromData } from "@/utils";
 
 // ALL nominations made by staff of department of HOD
 // (pending, submitted/not endorsed, endorsed)
@@ -26,10 +28,11 @@ import useAuth from "@/hooks/useAuth";
 
 const Endorsements: NextPage = () => {
   const { user } = useAuth();
-  const { endorsements, fetchEndorsements } = useNominations();
-  if (endorsements === undefined && user) {
-    fetchEndorsements(user.staff_id);
-  }
+  const { nominationData, isLoading, isError } = useFetchNominations(
+    user?.staff_id,
+    NominationFilter.SUBMITTED
+  );
+
   return (
     <Box>
       <Box mb={4}>
@@ -54,7 +57,9 @@ const Endorsements: NextPage = () => {
         </Breadcrumbs>
       </Box>
       <ShadowBox borderRadius="20px">
-        <EndorsementTable data={DataTableSampleData} />
+        <EndorsementTable
+          data={nominationData?.map((data) => getStatusFromData(data))}
+        />
       </ShadowBox>
     </Box>
   );

@@ -10,44 +10,22 @@ import { DepartmentType } from "@/enums";
 import NominationQuestion from "../../Common/NominationQuestion";
 import { useRecoilState } from "recoil";
 import { nominationFormState } from "@/atoms/nominationFormAtom";
-import { NominationFormSubmissionData } from "@/interfaces";
-
-interface NominationFormQuestionsData {
-  values: Map<string, string>;
-}
-
-interface FormQuestion {
-  question: string;
-  answers: string[];
-}
-
-const formQuestionData: FormQuestion[] = [
-  {
-    question: "The nominee provided service based on?",
-    answers: [
-      "Gave me what I have asked for only",
-      "Fulfilled requirements very well",
-      "Given requirements and further improving more than what was needed",
-      "Provided services out of his/her own will and outside of the job scope",
-    ],
-  },
-  {
-    question: "The nominee displayed the following",
-    answers: [
-      "Able to meet deadlines with little to no supervision",
-      "Initiate action to seek information and solve problems",
-      "Work with people sincerely to achieve goals",
-      "Anticipate potential issues and develops prevention alternatives",
-    ],
-  },
-];
+import {
+  NominationFormSubmissionData,
+  NominationQuestionsQueryData,
+} from "@/interfaces";
 
 interface SecondStepProp {
+  questionData?: NominationQuestionsQueryData;
   handleNext: () => void;
   handleBack: () => void;
 }
 
-export default function SecondStep({ handleNext, handleBack }: SecondStepProp) {
+export default function SecondStep({
+  questionData,
+  handleNext,
+  handleBack,
+}: SecondStepProp) {
   const [getNominationFormState, setNominationFormState] =
     useRecoilState(nominationFormState);
 
@@ -80,13 +58,15 @@ export default function SecondStep({ handleNext, handleBack }: SecondStepProp) {
       // @ts-ignore */}
       <FormContainer formContext={formContext} onSuccess={onSubmit}>
         <Stack direction={"column"} spacing={3} mb={8}>
-          {formQuestionData.map(({ question, answers }, i) => (
-            <NominationQuestion
-              key={`qn data ${i}`}
-              question={question}
-              answers={answers}
-            />
-          ))}
+          {questionData?.qna_questions.map(
+            ({ quiz_question_name, answers }, i) => (
+              <NominationQuestion
+                key={`qn data ${i}`}
+                question={quiz_question_name}
+                answers={answers}
+              />
+            )
+          )}
         </Stack>
         <Stack
           justifyContent={{ sm: "space-between" }}

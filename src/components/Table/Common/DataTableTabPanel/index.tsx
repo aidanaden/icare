@@ -1,6 +1,6 @@
 import TableMenu from "@/components/Common/Menu/TableMenu";
 import { NominationFormStatus, DepartmentType } from "@/enums";
-import { DataTableData } from "@/interfaces";
+import { DataTableData, NominationDataTableData } from "@/interfaces";
 import { Search } from "@mui/icons-material";
 import { TabPanel } from "@mui/lab";
 import {
@@ -35,10 +35,10 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
 
 type Order = "asc" | "desc";
 
-function getComparator<Key extends keyof DataTableData>(
+function getComparator<Key extends keyof NominationDataTableData>(
   order: Order,
   orderBy: Key
-): (a: DataTableData, b: DataTableData) => number {
+): (a: NominationDataTableData, b: NominationDataTableData) => number {
   return order === "desc"
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
@@ -47,7 +47,7 @@ function getComparator<Key extends keyof DataTableData>(
 export interface DataTableTabPanelProps {
   headerLabel: string;
   status: NominationFormStatus | "completed";
-  data: DataTableData[];
+  data?: NominationDataTableData[];
 }
 
 export default function DataTableTabPanel({
@@ -55,18 +55,21 @@ export default function DataTableTabPanel({
   status,
   data,
 }: DataTableTabPanelProps) {
-  const [displayedData, setDisplayedData] = useState<DataTableData[]>(data);
+  const [displayedData, setDisplayedData] = useState<
+    NominationDataTableData[] | undefined
+  >(data);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [order, setOrder] = useState<Order>("asc");
-  const [orderBy, setOrderBy] = useState<keyof DataTableData>("date");
+  const [orderBy, setOrderBy] =
+    useState<keyof NominationDataTableData>("nomination_date");
   const [departmentType, setDepartmentType] = useState<DepartmentType>(
     DepartmentType.ALL
   );
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
-    property: keyof DataTableData
+    property: keyof NominationDataTableData
   ) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -74,7 +77,8 @@ export default function DataTableTabPanel({
   };
 
   const createSortHandler =
-    (property: keyof DataTableData) => (event: React.MouseEvent<unknown>) => {
+    (property: keyof NominationDataTableData) =>
+    (event: React.MouseEvent<unknown>) => {
       handleRequestSort(event, property);
     };
 
@@ -91,7 +95,9 @@ export default function DataTableTabPanel({
 
   useEffect(() => {
     if (departmentType !== DepartmentType.ALL) {
-      setDisplayedData(data.filter((row) => row.department === departmentType));
+      setDisplayedData(
+        data?.filter((row) => row.nominee_department === departmentType)
+      );
     } else {
       setDisplayedData(data);
     }
@@ -99,7 +105,7 @@ export default function DataTableTabPanel({
 
   return (
     <TabPanel value={status} sx={{ p: 0 }}>
-      {data.length > 0 && (
+      {data!.length > 0 && (
         <>
           <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5} p={3}>
             <DepartmentSelect
@@ -168,7 +174,7 @@ export default function DataTableTabPanel({
                 </TableRow>
               </TableHead>
               <TableBody>
-                {displayedData
+                {displayedData!
                   .sort(getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, i) => {
@@ -207,7 +213,7 @@ export default function DataTableTabPanel({
           <TablePagination
             rowsPerPageOptions={[5, 10, 20]}
             component="div"
-            count={displayedData.length}
+            count={displayedData!.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

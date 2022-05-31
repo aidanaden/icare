@@ -83,6 +83,9 @@ export default function FirstStep({ handleNext }: FirstStepProp) {
               <AutocompleteTextField control={control} />
               <FormDepartmentSelect control={control} />
             </Stack>
+            <SectionSubtitle>
+              Enter the reasons of why you&#39;re nominating this staff member.
+            </SectionSubtitle>
             <FormTextField
               control={control}
               name="description"

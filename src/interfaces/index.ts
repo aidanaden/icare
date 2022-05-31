@@ -137,6 +137,7 @@ export interface NominationDetailQueryData extends QueryData {
   nominator_name: string;
   nominator_designation: string;
   nominator_department: string;
+  nominator_team: string;
   nomination_reason: string;
   quiz_service_level: ServiceLevel;
   quiz_score: number;
@@ -147,7 +148,7 @@ export interface NominationDetailQueryData extends QueryData {
   hod_name: string;
   hod_department: string;
   hod_designation: string;
-  endorsement_status: string;
+  endorsement_status: EndorsementStatus;
   hod_comments: string;
   committee_total_score: number;
   committee_service_level: ServiceLevel;

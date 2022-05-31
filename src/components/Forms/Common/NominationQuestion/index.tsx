@@ -17,6 +17,7 @@ export default function NominationQuestion({
   question,
   answers,
 }: NominationQuestion) {
+  console.log("anwers: ", answers);
   const options = answers.map(({ answer_id, answer_name }) => {
     return { id: `${answer_id}`, label: answer_name };
   });

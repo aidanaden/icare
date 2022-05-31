@@ -44,6 +44,8 @@ export default function SecondStep({
     // resolver: yupResolver(nominationDetailSchema),
   });
 
+  console.log("question data: ", questionData);
+
   return (
     <Box width="100%">
       <Box>

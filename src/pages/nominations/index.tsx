@@ -48,7 +48,7 @@ const Nominations: NextPage = () => {
       <ShadowBox borderRadius="20px">
         <Suspense fallback={<CircularProgress />}>
           <NominationTable
-            data={nominationData?.map((data) => getStatusFromData(data))}
+            data={nominationData?.map((data: any) => getStatusFromData(data))}
           />
         </Suspense>
       </ShadowBox>

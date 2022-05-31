@@ -48,3 +48,14 @@ export function getStatusFromData(
 
   return { ...data, status: status };
 }
+
+export const objToLowerCase = (obj: any) => {
+  if (!obj) return obj;
+  return Object.keys(obj).reduce(
+    (prev, current) => ({
+      ...prev,
+      [current.toLowerCase()]: obj[current].toLowerCase(),
+    }),
+    {}
+  );
+};

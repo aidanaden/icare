@@ -2459,6 +2459,11 @@ recoil@^0.7.3-alpha.2:
   dependencies:
     hamt_plus "1.0.2"
 
+recursive-lowercase-json@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/recursive-lowercase-json/-/recursive-lowercase-json-0.2.0.tgz#b5d8cd9723a9eec23a8ec7bcafbdba033dc340c0"
+  integrity sha1-tdjNlyOp7sI6jse8r726Az3DQMA=
+
 regenerator-runtime@^0.13.4:
   version "0.13.9"
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.9.tgz#8925742a98ffd90814988d7566ad30ca3b263b52"

@@ -10,6 +10,12 @@ import {
 } from "@/interfaces";
 import axios from "axios";
 import useSWR from "swr";
+import quizData from "@/constants/RetrieveQuiz/retrievequiz_response.json";
+import userNominationData from "@/constants/RetrieveNomination/retrievenomination_1_response.json";
+import submittedNominationData from "@/constants/RetrieveNomination/retrievenomination_2_response.json";
+import endorsedNominationData from "@/constants/RetrieveNomination/retrievenomination_3_response.json";
+import nominationDetailData from "@/constants/RetrieveNominationDetails/retrievenominationdetails_response.json";
+import recursivelyLowercaseJSONKeys from "recursive-lowercase-json";
 
 const callAPI = async <JSON = any>(
   path: string,
@@ -59,10 +65,14 @@ const upsertNominationForm = async (
 };
 
 const useFetchNominationDetails = (case_id?: string) => {
-  const { data, error } = useSWR<NominationDetailQueryData>(
-    ["/RetrieveNominationDetails", { case_id: case_id }],
-    fetchAPI
-  );
+  const data = recursivelyLowercaseJSONKeys(
+    nominationDetailData
+  ) as NominationDetailQueryData;
+  const error = false;
+  // const { data, error } = useSWR<NominationDetailQueryData>(
+  //   ["/RetrieveNominationDetails", { case_id: case_id }],
+  //   fetchAPI
+  // );
   return {
     nominationDetailsData: data,
     isLoading: !error && !data,
@@ -89,19 +99,33 @@ const upsertNominationFormCommitteeComments = async (
 };
 
 const useFetchNominations = (id?: string, filter?: NominationFilter) => {
-  const { data, error } = useSWR<Omit<NominationDataTableData, "status">[]>(
-    ["/RetrieveNomination", { staff_id: id, filter: filter, year: "" }],
-    fetchAPI
-  );
+  let data;
+  let error;
+
+  if (filter === NominationFilter.USER) {
+    data = recursivelyLowercaseJSONKeys(userNominationData);
+    error = false;
+  } else if (filter === NominationFilter.SUBMITTED) {
+    data = recursivelyLowercaseJSONKeys(submittedNominationData);
+  } else {
+    data = recursivelyLowercaseJSONKeys(endorsedNominationData);
+  }
+
+  // const { data, error } = useSWR<Omit<NominationDataTableData, "status">[]>(
+  //   ["/RetrieveNomination", { staff_id: id, filter: filter, year: "" }],
+  //   fetchAPI
+  // );
   return { nominationData: data, isLoading: !error && !data, isError: error };
 };
 
 const useFetchQuiz = (staff_id?: string) => {
-  const { data, error } = useSWR<NominationQuestionsQueryData>(
-    ["/RetrieveQuiz", { staff_id: staff_id }],
-    fetchAPI,
-    { suspense: true }
-  );
+  const data = recursivelyLowercaseJSONKeys(quizData);
+  const error = false;
+  // const { data, error } = useSWR<NominationQuestionsQueryData>(
+  //   ["/RetrieveQuiz", { staff_id: staff_id }],
+  //   fetchAPI,
+  //   { suspense: true }
+  // );
   return { questionData: data, isLoading: !error && !data, isError: error };
 };
 

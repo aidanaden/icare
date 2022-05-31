@@ -15,7 +15,7 @@ export const nominationFormState = atom<NominationFormSubmissionData>({
   effects: [
     ({ onSet }) => {
       onSet((newNominationFormState) => {
-        upsertNominationForm(newNominationFormState);
+        // upsertNominationForm(newNominationFormState);
       });
     },
   ],

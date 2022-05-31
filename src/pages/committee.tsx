@@ -196,7 +196,7 @@ const Nominations: NextPage = () => {
   const { user } = useAuth();
   const { nominationData, isLoading, isError } = useFetchNominations(
     user?.staff_id,
-    NominationFilter.ALL
+    NominationFilter.ENDORSED
   );
 
   return (
@@ -224,7 +224,7 @@ const Nominations: NextPage = () => {
       </Box>
       <ShadowBox borderRadius="20px">
         <CommitteeTable
-          data={nominationData?.map((data) => getStatusFromData(data))}
+          data={nominationData?.map((data: any) => getStatusFromData(data))}
         />
       </ShadowBox>
     </Box>

@@ -58,7 +58,7 @@ const Endorsements: NextPage = () => {
       </Box>
       <ShadowBox borderRadius="20px">
         <EndorsementTable
-          data={nominationData?.map((data) => getStatusFromData(data))}
+          data={nominationData?.map((data: any) => getStatusFromData(data))}
         />
       </ShadowBox>
     </Box>

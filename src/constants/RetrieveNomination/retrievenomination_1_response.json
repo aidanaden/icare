@@ -1,0 +1,62 @@
+[
+  {
+    "Case_ID": "f293ec95-b4e0-ec11-bb3d-000d3a822244",
+    "Nominee_Name": "Joe Smith",
+    "Nominee_Designation": "Assistant Manager 2",
+    "Nominee_Department": "SFIT",
+    "Nomination_Date": "31/05/2022",
+    "Nominator_Name": null,
+    "Endorsement_Status": 170740000,
+    "Committee_Service_Level": null,
+    "Committee_Total_Score": null,
+    "Draft_Status": false,
+    "is_Service_Level_Winner": false,
+    "is_Champion_Shortlist_Result": false,
+    "is_Champion_Result": false
+  },
+  {
+    "Case_ID": "dfe3dd6c-b5e0-ec11-bb3d-000d3a822244",
+    "Nominee_Name": "Doreen Quek",
+    "Nominee_Designation": "HQ Director",
+    "Nominee_Department": "SFIT",
+    "Nomination_Date": "31/05/2022",
+    "Nominator_Name": null,
+    "Endorsement_Status": 170740001,
+    "Committee_Service_Level": null,
+    "Committee_Total_Score": null,
+    "Draft_Status": false,
+    "is_Service_Level_Winner": false,
+    "is_Champion_Shortlist_Result": false,
+    "is_Champion_Result": false
+  },
+  {
+    "Case_ID": "cef77322-e7dc-ec11-bb3c-00224818dd90",
+    "Nominee_Name": "Joe Smith",
+    "Nominee_Designation": "Assistant Manager 2",
+    "Nominee_Department": "SFIT",
+    "Nomination_Date": "26/05/2022",
+    "Nominator_Name": null,
+    "Endorsement_Status": 0,
+    "Committee_Service_Level": null,
+    "Committee_Total_Score": null,
+    "Draft_Status": true,
+    "is_Service_Level_Winner": false,
+    "is_Champion_Shortlist_Result": false,
+    "is_Champion_Result": false
+  },
+  {
+    "Case_ID": "59fb65e0-19cd-ec11-a7b6-002248193e35",
+    "Nominee_Name": "Joe Smith",
+    "Nominee_Designation": "Assistant Manager 2",
+    "Nominee_Department": "SFIT",
+    "Nomination_Date": "06/05/2022",
+    "Nominator_Name": null,
+    "Endorsement_Status": 0,
+    "Committee_Service_Level": null,
+    "Committee_Total_Score": null,
+    "Draft_Status": false,
+    "is_Service_Level_Winner": false,
+    "is_Champion_Shortlist_Result": false,
+    "is_Champion_Result": false
+  }
+]

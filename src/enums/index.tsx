@@ -39,5 +39,5 @@ export enum NominationFilter {
   USER = 1,
   SUBMITTED = 2,
   ALL = 3,
-  WINNERS = 4,
+  ENDORSED = 4,
 }

@@ -23,6 +23,9 @@ const View: NextPage = () => {
   const { id } = router.query;
   const { nominationDetailsData, isLoading, isError } =
     useFetchNominationDetails(id?.toString());
+
+  console.log("nomination details: ", nominationDetailsData);
+
   return (
     <Box>
       <Box mb={4}>
@@ -53,35 +56,39 @@ const View: NextPage = () => {
         <Grid item xs={12} sm={6}>
           <UserDetails
             title="Nominee"
-            name="Jolynn"
-            designation="Manager"
-            department="Business Development"
+            name={nominationDetailsData.nominee_name}
+            designation={nominationDetailsData.nominee_designation}
+            department={nominationDetailsData.nominee_department}
+            team={nominationDetailsData.nominee_team}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <UserDetails
             title="Nominator"
-            name="Shiqi"
-            designation="Intern"
-            department="Tech"
+            name={nominationDetailsData.nominator_name}
+            designation={nominationDetailsData.nominator_designation}
+            department={nominationDetailsData.nominator_department}
+            team={nominationDetailsData.nominator_team}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <NominationDetails
             title="Details"
-            service_level="Desired"
-            description="Nomination descripiton very long "
+            service_level={nominationDetailsData.quiz_service_level.toString()}
+            description={nominationDetailsData.nomination_reason}
+            attachment_list={nominationDetailsData.attachment_list}
           />
+          {/* TODO: add supporting file documents here */}
         </Grid>
         <Grid item xs={12} sm={6}>
           <HODDetails
             title="Head of Department"
-            name="Eileen"
-            designation="COO"
-            department="Tech"
-            endorsement_status={EndorsementStatus.COMMENDABLE}
-            endorsement_date={new Date()}
-            comments="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+            name={nominationDetailsData.hod_name}
+            designation={nominationDetailsData.hod_designation}
+            department={nominationDetailsData.hod_department}
+            endorsement_status={nominationDetailsData.endorsement_status}
+            endorsement_date={nominationDetailsData.nomination_date}
+            comments={nominationDetailsData.hod_comments}
           />
         </Grid>
         <Grid item xs={12}>
@@ -90,22 +97,27 @@ const View: NextPage = () => {
               <Grid item xs={12}>
                 <CommitteeDetails
                   title="Committee Score"
-                  final_score="88"
-                  final_service_level="Amazing"
+                  final_score={nominationDetailsData.committee_total_score}
+                  final_service_level={
+                    nominationDetailsData.committee_service_level
+                  }
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <CommitteeMemberDetails
-                  name="Larry"
-                  designation="CEO"
-                  department="IT"
-                  service_level={ServiceLevel.BASIC}
-                  service_level_award={true}
-                  champion_shortlist_status={false}
-                  comments="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
+              {nominationDetailsData.committee_comment.map((committeeData) => (
+                <Grid item xs={12} sm={6} key={committeeData.case_id}>
+                  <CommitteeMemberDetails
+                    name={committeeData.committee_name}
+                    designation={committeeData.committee_designation}
+                    department={committeeData.committee_department}
+                    service_level={ServiceLevel.BASIC}
+                    service_level_award={true}
+                    champion_shortlist_status={committeeData.shortlist_status}
+                    comments={committeeData.committee_comments}
+                  />
+                </Grid>
+              ))}
+
+              {/* <Grid item xs={12} sm={6}>
                 <CommitteeMemberDetails
                   name="Johnny"
                   designation="CEO"
@@ -116,7 +128,7 @@ const View: NextPage = () => {
                   comments=""
                   isEditable={true}
                 />
-              </Grid>
+              </Grid> */}
             </Grid>
           </Stack>
         </Grid>

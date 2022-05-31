@@ -14,7 +14,7 @@ interface CommitteeMemberDetailProps {
   department: string;
   service_level?: ServiceLevel;
   service_level_award?: boolean;
-  champion_shortlist_status?: boolean;
+  champion_shortlist_status?: ShortlistStatus;
   comments?: string;
   isEditable?: boolean;
 }

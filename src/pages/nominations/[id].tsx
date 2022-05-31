@@ -6,7 +6,6 @@ import SectionHeader from "@/components/Common/SectionHeader";
 import ShadowBox from "@/components/Common/ShadowBox";
 import { Breadcrumbs, Grid, Stack } from "@mui/material";
 import NextMuiLink from "@/components/Common/NextMuiLink";
-import { DataTableSampleData, SampleNominationQueryData } from "@/constants";
 import EndorsementTable from "@/components/Table/EndorsementTable";
 import theme from "@/styles/theme";
 import UserDetails from "@/components/UserDetails";

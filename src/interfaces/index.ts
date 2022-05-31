@@ -154,7 +154,7 @@ export interface NominationDetailQueryData extends QueryData {
   committee_service_level: ServiceLevel;
   committee_comment: CommitteeMemberQueryData[];
   total_champion_status: boolean;
-  attachment_list?: File[];
+  attachment_list?: string[];
 }
 
 // nomination form answers

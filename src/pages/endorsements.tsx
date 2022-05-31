@@ -6,7 +6,6 @@ import SectionHeader from "@/components/Common/SectionHeader";
 import ShadowBox from "@/components/Common/ShadowBox";
 import { Breadcrumbs } from "@mui/material";
 import NextMuiLink from "@/components/Common/NextMuiLink";
-import { DataTableSampleData } from "@/constants";
 import EndorsementTable from "@/components/Table/EndorsementTable";
 import theme from "@/styles/theme";
 import useAuth from "@/hooks/useAuth";
@@ -16,15 +15,6 @@ import { getStatusFromData } from "@/utils";
 
 // ALL nominations made by staff of department of HOD
 // (pending, submitted/not endorsed, endorsed)
-
-// export async function getInitialProps() {
-//   // Return as props
-//   return {
-//     props: {
-//       SampleNominationQueryData,
-//     },
-//   };
-// }
 
 const Endorsements: NextPage = () => {
   const { user } = useAuth();

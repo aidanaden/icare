@@ -6,7 +6,6 @@ import SectionHeader from "@/components/Common/SectionHeader";
 import ShadowBox from "@/components/Common/ShadowBox";
 import { Breadcrumbs, CircularProgress } from "@mui/material";
 import NextMuiLink from "@/components/Common/NextMuiLink";
-import { DataTableSampleData } from "@/constants";
 import NominationTable from "@/components/Table/NominationTable";
 import { useFetchNominations } from "@/lib/nominations";
 import { NominationFilter } from "@/enums";

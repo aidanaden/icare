@@ -1,4 +1,3 @@
-import { API_URL } from "@/constants";
 import { NominationFilter } from "@/enums";
 import {
   CommitteeMemberQueryData,
@@ -16,6 +15,7 @@ import submittedNominationData from "@/constants/RetrieveNomination/retrievenomi
 import endorsedNominationData from "@/constants/RetrieveNomination/retrievenomination_3_response.json";
 import nominationDetailData from "@/constants/RetrieveNominationDetails/retrievenominationdetails_response.json";
 import recursivelyLowercaseJSONKeys from "recursive-lowercase-json";
+import { API_URL } from "@/constants";
 
 const callAPI = async <JSON = any>(
   path: string,

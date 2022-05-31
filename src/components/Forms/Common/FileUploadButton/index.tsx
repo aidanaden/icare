@@ -8,6 +8,12 @@ export default function FileUploadButton() {
   const [open, setOpen] = useState(false);
   const [getNominationFormState, setNominationFormState] =
     useRecoilState(nominationFormState);
+  const handleFileDelete = (file: File) => {
+    setNominationFormState({
+      ...getNominationFormState,
+      files: getNominationFormState.files?.filter((f) => f != file),
+    });
+  };
   return (
     <>
       <Stack direction={{ xs: "column", sm: "row" }} gap={1} flexWrap={"wrap"}>
@@ -17,6 +23,7 @@ export default function FileUploadButton() {
             variant="outlined"
             size="small"
             label={file.name}
+            onDelete={() => handleFileDelete(file)}
           />
         ))}
       </Stack>

@@ -6,30 +6,23 @@ import SectionHeader from "@/components/Common/SectionHeader";
 import ShadowBox from "@/components/Common/ShadowBox";
 import { Breadcrumbs } from "@mui/material";
 import NextMuiLink from "@/components/Common/NextMuiLink";
-import { DataTableSampleData } from "@/constants";
 import EndorsementTable from "@/components/Table/EndorsementTable";
 import theme from "@/styles/theme";
-import useNominations from "@/hooks/useNominations";
 import useAuth from "@/hooks/useAuth";
+import { NominationFilter } from "@/enums";
+import { useFetchNominations } from "@/lib/nominations";
+import { getStatusFromData } from "@/utils";
 
 // ALL nominations made by staff of department of HOD
 // (pending, submitted/not endorsed, endorsed)
 
-// export async function getInitialProps() {
-//   // Return as props
-//   return {
-//     props: {
-//       SampleNominationQueryData,
-//     },
-//   };
-// }
-
 const Endorsements: NextPage = () => {
   const { user } = useAuth();
-  const { endorsements, fetchEndorsements } = useNominations();
-  if (endorsements === undefined && user) {
-    fetchEndorsements(user.staff_id);
-  }
+  const { nominationData, isLoading, isError } = useFetchNominations(
+    user?.staff_id,
+    NominationFilter.SUBMITTED
+  );
+
   return (
     <Box>
       <Box mb={4}>
@@ -54,7 +47,9 @@ const Endorsements: NextPage = () => {
         </Breadcrumbs>
       </Box>
       <ShadowBox borderRadius="20px">
-        <EndorsementTable data={DataTableSampleData} />
+        <EndorsementTable
+          data={nominationData?.map((data: any) => getStatusFromData(data))}
+        />
       </ShadowBox>
     </Box>
   );

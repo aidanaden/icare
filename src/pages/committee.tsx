@@ -6,12 +6,16 @@ import SectionHeader from "@/components/Common/SectionHeader";
 import ShadowBox from "@/components/Common/ShadowBox";
 import { Breadcrumbs } from "@mui/material";
 import NextMuiLink from "@/components/Common/NextMuiLink";
-import { DepartmentType, NominationFormStatus } from "@/enums";
-import { createData } from "@/utils";
+import {
+  DepartmentType,
+  NominationFilter,
+  NominationFormStatus,
+} from "@/enums";
+import { createData, getStatusFromData } from "@/utils";
 import CommitteeTable from "@/components/Table/CommitteeTable";
 import theme from "@/styles/theme";
-import useNominations from "@/hooks/useNominations";
 import useAuth from "@/hooks/useAuth";
+import { useFetchNominations } from "@/lib/nominations";
 
 const data = [
   createData(
@@ -190,11 +194,10 @@ const data = [
 
 const Nominations: NextPage = () => {
   const { user } = useAuth();
-  const { committeeNominations, fetchCommitteeNominations } = useNominations();
-
-  if (committeeNominations === undefined && user) {
-    fetchCommitteeNominations(user.staff_id);
-  }
+  const { nominationData, isLoading, isError } = useFetchNominations(
+    user?.staff_id,
+    NominationFilter.ENDORSED
+  );
 
   return (
     <Box>
@@ -220,7 +223,9 @@ const Nominations: NextPage = () => {
         </Breadcrumbs>
       </Box>
       <ShadowBox borderRadius="20px">
-        <CommitteeTable data={data} />
+        <CommitteeTable
+          data={nominationData?.map((data: any) => getStatusFromData(data))}
+        />
       </ShadowBox>
     </Box>
   );

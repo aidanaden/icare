@@ -10,10 +10,17 @@ import CommitteeServiceLevelSelect from "../Common/CommitteeServiceLevelSelect";
 import CommitteeShortlistSelect from "../Common/CommitteeShortlistSelect";
 import FormSwitch from "../FormSwitch";
 
+interface CommitteeFormProps {
+  service_level?: ServiceLevel | undefined;
+  service_level_award?: boolean | undefined;
+  champion_shortlist_status?: ShortlistStatus | undefined;
+  comments?: string | undefined;
+}
+
 interface CommitteeForm {
   service_level?: ServiceLevel | undefined;
   service_level_award?: boolean | undefined;
-  champion_shortlist_status?: boolean | undefined;
+  boolean_shortlist_status?: boolean | undefined;
   comments?: string | undefined;
 }
 
@@ -22,7 +29,9 @@ export default function CommitteeForm({
   service_level_award,
   champion_shortlist_status,
   comments,
-}: CommitteeForm) {
+}: CommitteeFormProps) {
+  const booleanShortlistStatus =
+    champion_shortlist_status === ShortlistStatus.TRUE ? true : false;
   const {
     control,
     register,
@@ -32,7 +41,7 @@ export default function CommitteeForm({
     defaultValues: {
       service_level: service_level,
       service_level_award: service_level_award,
-      champion_shortlist_status: champion_shortlist_status,
+      boolean_shortlist_status: booleanShortlistStatus,
       comments: comments,
     },
     resolver: yupResolver(committeeSchema),
@@ -57,7 +66,7 @@ export default function CommitteeForm({
             />
             <FormSwitch
               control={control}
-              name="champion_shortlist_status"
+              name="boolean_shortlist_status"
               label="Shortlist for Championship"
             />
           </Stack>

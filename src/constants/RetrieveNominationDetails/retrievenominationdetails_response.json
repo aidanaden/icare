@@ -1,0 +1,63 @@
+{
+  "Nominee_ID": "2222",
+  "Nominee_Name": "Mary Doe",
+  "Nominee_Designation": "Director",
+  "Nominee_Department": "SFIT",
+  "Nomination_Date": "24/05/2022",
+  "Nominator_ID": "1111",
+  "Nominator_Name": "Joe Smith",
+  "Nominator_Designation": "Assistant Manager 2",
+  "Nominator_Department": "SFIT",
+  "Nomination_Reason": "24 May 1230pm TEST NOW MAY",
+  "HOD_ID": "3333",
+  "HOD_Name": "Eileen Tan",
+  "HOD_Designation": "Director",
+  "HOD_Department": "SFIT",
+  "HOD_Comments": "hod comment here testing",
+  "Endorsement_Status": 170740000,
+  "Endorsement_Date": "01/01/0001",
+  "Quiz_Service_Level": 170740003,
+  "Quiz_Score": 20,
+  "Committee_Service_Level_Result": 170740002,
+  "Committee_Total_Score": 25,
+  "is_Service_Level_Winner": false,
+  "is_Champion_Shortlist_Result": false,
+  "is_Champion_Result": false,
+  "Committee_Comment": [
+    {
+      "Committee_ID": "4444",
+      "Committee_Name": "Doreen Quek",
+      "Committee_Designation": "HQ Director",
+      "Committee_Department": "SFIT",
+      "Committee_Comments": "doreen comments",
+      "Committee_Service_Level": 170740002,
+      "Service_Level_Winner_Status": 170740000,
+      "Champion_Status": true
+    },
+    {
+      "Committee_ID": "3333",
+      "Committee_Name": "Eileen Tan",
+      "Committee_Designation": "Director",
+      "Committee_Department": "SFIT",
+      "Committee_Comments": "eileen comments",
+      "Committee_Service_Level": 170740002,
+      "Service_Level_Winner_Status": 170740000,
+      "Champion_Status": true
+    },
+    {
+      "Committee_ID": "5555",
+      "Committee_Name": "Helen See",
+      "Committee_Designation": "Director B",
+      "Committee_Department": "SFIT",
+      "Committee_Comments": "helen comments",
+      "Committee_Service_Level": 170740001,
+      "Service_Level_Winner_Status": 170740000,
+      "Champion_Status": false
+    }
+  ],
+  "Attachment_List": [
+    "testfile1.pdf"
+  ],
+  "Message": "Successful",
+  "Status_Code": 200
+}

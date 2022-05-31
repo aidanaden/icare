@@ -8,7 +8,8 @@ import DashboardCarousel from "@/components/Common/Carousel/DashboardCarousel";
 import SimpleTable from "@/components/Table/SimpleTable/";
 import SimpleTableLink from "@/components/Table/Common/SimpleTableLink";
 import useAuth from "@/hooks/useAuth";
-import useNominations from "@/hooks/useNominations";
+import { NominationFilter } from "@/enums";
+import { useFetchNominations } from "@/lib/nominations";
 
 // 1. user data (name, staff_id, department, designation, role)
 // 2. number of nominations created by staff
@@ -18,10 +19,12 @@ import useNominations from "@/hooks/useNominations";
 
 const Dashboard: NextPage = () => {
   const { user, logout } = useAuth();
-  const { nominations, fetchNominations } = useNominations();
-  if (nominations === undefined && user) {
-    fetchNominations(user.staff_id);
-  }
+
+  const { nominationData, isLoading, isError } = useFetchNominations(
+    user?.staff_id,
+    NominationFilter.USER
+  );
+
   return (
     <Box>
       <Grid container spacing={3}>

@@ -83,9 +83,7 @@ export default function index(props: HODDetailProps) {
               </Box>
               <Box>
                 <DetailSubHeader>Endorsement date</DetailSubHeader>
-                <DetailText>
-                  {endorsement_date!.toLocaleDateString()}
-                </DetailText>
+                <DetailText>{endorsement_date?.toString()}</DetailText>
               </Box>
 
               <Box>

@@ -4,14 +4,23 @@ import type { NextPage } from "next";
 import Box from "@mui/material/Box";
 import SectionHeader from "@/components/Common/SectionHeader";
 import ShadowBox from "@/components/Common/ShadowBox";
-import { Breadcrumbs } from "@mui/material";
+import { Breadcrumbs, CircularProgress } from "@mui/material";
 import NextMuiLink from "@/components/Common/NextMuiLink";
-import { DataTableSampleData } from "@/constants";
 import NominationTable from "@/components/Table/NominationTable";
+import { useFetchNominations } from "@/lib/nominations";
+import { NominationFilter } from "@/enums";
+import useAuth from "@/hooks/useAuth";
+import { getStatusFromData } from "@/utils";
+import { Suspense } from "react";
 
 // ALL nominations made by staff (draft AND completed)
 
 const Nominations: NextPage = () => {
+  const { user } = useAuth();
+  const { nominationData, isLoading, isError } = useFetchNominations(
+    user?.staff_id,
+    NominationFilter.USER
+  );
   return (
     <Box>
       <Box mb={4}>
@@ -36,7 +45,11 @@ const Nominations: NextPage = () => {
         </Breadcrumbs>
       </Box>
       <ShadowBox borderRadius="20px">
-        <NominationTable data={DataTableSampleData} />
+        <Suspense fallback={<CircularProgress />}>
+          <NominationTable
+            data={nominationData?.map((data: any) => getStatusFromData(data))}
+          />
+        </Suspense>
       </ShadowBox>
     </Box>
   );

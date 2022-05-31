@@ -11,7 +11,6 @@ import MainLayout from "@/components/Layout/MainLayout";
 import { Box } from "@mui/material";
 import LoginLayout from "@/components/Layout/LoginLayout";
 import useAuth, { AuthProvider } from "@/hooks/useAuth";
-import { NominationsProvider } from "@/hooks/useNominations";
 import { RecoilRoot } from "recoil";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "@/components/ErrorFallback";
@@ -41,8 +40,7 @@ const App = (props: MyAppProps) => {
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
       <RecoilRoot>
-        {/* <AuthProvider> */}
-        <NominationsProvider>
+        <AuthProvider>
           <ThemeProvider theme={theme}>
             {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
             <CssBaseline />
@@ -60,8 +58,7 @@ const App = (props: MyAppProps) => {
               )}
             </Box>
           </ThemeProvider>
-        </NominationsProvider>
-        {/* </AuthProvider> */}
+        </AuthProvider>
       </RecoilRoot>
     </CacheProvider>
   );

@@ -6,7 +6,7 @@ import DetailText from "./DetailText";
 
 export interface DetailAttribute {
   title: string;
-  text: string | undefined;
+  text?: string | undefined;
   isMultiLine?: boolean | undefined;
 }
 
@@ -34,12 +34,16 @@ export default function index(props: DetailBoxProps) {
         spacing={{ xs: 4 }}
       >
         {data.map((attribute: DetailAttribute, i) => (
-          <Box key={`attribute ${i}`}>
-            <DetailSubHeader>{attribute.title}</DetailSubHeader>
-            <DetailText isMultiLine={attribute.isMultiLine}>
-              {attribute.text}
-            </DetailText>
-          </Box>
+          <>
+            {attribute.text && (
+              <Box key={`attribute ${i}`}>
+                <DetailSubHeader>{attribute.title}</DetailSubHeader>
+                <DetailText isMultiLine={attribute.isMultiLine}>
+                  {attribute.text}
+                </DetailText>
+              </Box>
+            )}
+          </>
         ))}
       </Stack>
     </ShadowBox>

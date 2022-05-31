@@ -24,8 +24,8 @@ export const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 interface TextTableCellProps {
-  value: string | Date;
   column: Column;
+  value?: string | number | boolean | Date;
 }
 
 export const TextTableCell = ({ value, column }: TextTableCellProps) => {
@@ -42,18 +42,19 @@ export const TextTableCell = ({ value, column }: TextTableCellProps) => {
       ) : value === NominationFormStatus.AWARDED ? (
         <OrangeBadge>{value.toString()}</OrangeBadge>
       ) : (
-        <RedBadge>{value.toString()}</RedBadge>
+        <RedBadge>{value?.toString()}</RedBadge>
       )}
     </StyledTableCell>
   );
 };
 
 export const DateTableCell = ({ value, column }: TextTableCellProps) => {
+  console.log("date table cell value: ", value);
   return (
     <StyledTableCell key={column.id} align={column.align} sx={{ px: 4 }}>
       {column.format && value instanceof Date
         ? column.format(value)
-        : value.toString()}
+        : value?.toString()}
     </StyledTableCell>
   );
 };

@@ -1,3 +1,4 @@
+import { NominationQuestionAnswerData } from "@/interfaces";
 import {
   FormControlLabel,
   FormLabel,
@@ -9,15 +10,16 @@ import { RadioButtonGroup } from "react-hook-form-mui";
 
 interface NominationQuestion {
   question: string;
-  answers: string[];
+  answers: NominationQuestionAnswerData[];
 }
 
 export default function NominationQuestion({
   question,
   answers,
 }: NominationQuestion) {
-  const options = answers.map((answer, i) => {
-    return { id: `${i}`, label: answer };
+  console.log("anwers: ", answers);
+  const options = answers.map(({ answer_id, answer_name }) => {
+    return { id: `${answer_id}`, label: answer_name };
   });
   return (
     <RadioButtonGroup

@@ -1,9 +1,10 @@
+import { ServiceLevel } from "@/enums";
 import DetailBox, { DetailAttribute } from "../Common/DetailBox";
 
 interface CommitteeDetailProps {
   title: string;
-  final_score: string;
-  final_service_level: string;
+  final_score?: number;
+  final_service_level?: ServiceLevel;
 }
 
 export default function index(props: CommitteeDetailProps) {
@@ -11,11 +12,11 @@ export default function index(props: CommitteeDetailProps) {
   const data: DetailAttribute[] = [
     {
       title: "final score",
-      text: final_score,
+      text: final_score?.toString(),
     },
     {
       title: "final service level",
-      text: final_service_level,
+      text: final_service_level?.toString(),
     },
   ];
   return <DetailBox title={title} data={data} />;

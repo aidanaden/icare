@@ -3,5 +3,25 @@
     "Staff_ID": "1111",
     "Staff_Name": "Joe Smith",
     "Staff_Department": "SFIT"
+  },
+  {
+    "Staff_ID": "2222",
+    "Staff_Name": "Joseph Smithereens",
+    "Staff_Department": "IT"
+  },
+  {
+    "Staff_ID": "3333",
+    "Staff_Name": "Jolynn Tay",
+    "Staff_Department": "Audit"
+  },
+  {
+    "Staff_ID": "4444",
+    "Staff_Name": "Taylor Swift",
+    "Staff_Department": "Sales"
+  },
+  {
+    "Staff_ID": "5555",
+    "Staff_Name": "Sword Smith",
+    "Staff_Department": "SFIT"
   }
 ]

@@ -4,23 +4,24 @@ import {
   NominationFormStatus,
 } from "@/enums";
 import { DataTableData, NominationDataTableData } from "@/interfaces";
+import saveAs from "file-saver";
 
-export function formatDateToString(value: Date) {
+const formatDateToString = (value: Date) => {
   return value.toLocaleDateString("en-GB");
-}
+};
 
-export function createData(
+const createData = (
   nominee: string,
   department: DepartmentType,
   status: NominationFormStatus,
   date: Date
-): DataTableData {
+): DataTableData => {
   return { nominee, department, status, date };
-}
+};
 
-export function getStatusFromData(
+const getStatusFromData = (
   data: Omit<NominationDataTableData, "status">
-): NominationDataTableData {
+): NominationDataTableData => {
   let status = NominationFormStatus.INCOMPLETE;
 
   if (data.is_champion_result) {
@@ -47,15 +48,31 @@ export function getStatusFromData(
   }
 
   return { ...data, status: status };
-}
+};
 
-export const objToLowerCase = (obj: any) => {
-  if (!obj) return obj;
-  return Object.keys(obj).reduce(
-    (prev, current) => ({
-      ...prev,
-      [current.toLowerCase()]: obj[current].toLowerCase(),
-    }),
-    {}
-  );
+const convertBase64ToFile = (base64String: string, fileName: string) => {
+  const arr = base64String.split(",");
+  const patterns = arr[0].match(/:(.*?);/);
+  const mime = patterns !== null ? patterns[1] : "application/pdf";
+  const bstr = atob(arr[1]);
+  let n = bstr.length;
+  const uint8Array = new Uint8Array(n);
+  while (n--) {
+    uint8Array[n] = bstr.charCodeAt(n);
+  }
+  const file = new File([uint8Array], fileName, { type: mime });
+  return file;
+};
+
+const downloadBase64Data = (base64String: string, fileName: string) => {
+  const file = convertBase64ToFile(base64String, fileName);
+  saveAs(file, fileName);
+};
+
+export {
+  formatDateToString,
+  getStatusFromData,
+  createData,
+  convertBase64ToFile,
+  downloadBase64Data,
 };

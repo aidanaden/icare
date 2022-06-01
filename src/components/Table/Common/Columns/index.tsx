@@ -12,6 +12,7 @@ export interface Column {
 export const columns: readonly Column[] = [
   { id: "nominee_name", label: "Nominee", minWidth: 100 },
   { id: "nominee_department", label: "Department", minWidth: 100 },
+  { id: "nominee_team", label: "Team", minWidth: 100 },
   { id: "status", label: "Status", align: "center", minWidth: 100 },
   {
     id: "nomination_date",

@@ -7,7 +7,6 @@ import ShadowBox from "@/components/Common/ShadowBox";
 import { Breadcrumbs } from "@mui/material";
 import NextMuiLink from "@/components/Common/NextMuiLink";
 import { DepartmentType, NominationFormStatus } from "@/enums";
-import { createData } from "@/utils";
 import EndorsementTable from "@/components/Table/EndorsementTable";
 import theme from "@/styles/theme";
 import StepForm from "@/components/Forms/StepForm";

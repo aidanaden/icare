@@ -21,7 +21,8 @@ import {
 import { useState, useEffect } from "react";
 import { columns } from "../Columns";
 import DepartmentSelect from "../DepartmentSelect";
-import { StyledTableCell, TextTableCell, DateTableCell } from "../TableCells";
+import { StyledTableCell, TextTableCell, BadgeTableCell } from "../TableCells";
+import TeamSelect from "../TeamSelect";
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -67,6 +68,14 @@ export default function DataTableTabPanel({
     DepartmentType.ALL
   );
 
+  const teamValues = Array.from(
+    new Set(data?.flatMap((data) => [data.nominee_team]))
+  );
+  const hasTeamValues = teamValues.length > 0 && teamValues[0] !== undefined;
+  console.log("team value: ", teamValues);
+  console.log("has team values: ", hasTeamValues);
+  const [teamType, setTeamType] = useState<string>("All");
+
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
     property: keyof NominationDataTableData
@@ -101,7 +110,15 @@ export default function DataTableTabPanel({
     } else {
       setDisplayedData(data);
     }
-  }, [departmentType]);
+  }, [departmentType, data]);
+
+  useEffect(() => {
+    if (teamType !== "" && teamType !== "All") {
+      setDisplayedData(data?.filter((row) => row.nominee_team === teamType));
+    } else {
+      setDisplayedData(data);
+    }
+  }, [teamType, data]);
 
   return (
     <TabPanel value={status} sx={{ p: 0 }}>
@@ -110,6 +127,13 @@ export default function DataTableTabPanel({
           departmentType={departmentType}
           setDepartmentType={setDepartmentType}
         />
+        {hasTeamValues && (
+          <TeamSelect
+            teams={teamValues}
+            teamType={teamType}
+            setTeamType={setTeamType}
+          />
+        )}
         <TextField
           id="input-with-search-icon-textfield"
           placeholder="Enter nomination..."
@@ -153,20 +177,26 @@ export default function DataTableTabPanel({
           >
             <TableRow>
               {columns.map((column) => (
-                <StyledTableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth }}
-                  sortDirection={orderBy === column.id ? order : false}
-                >
-                  <TableSortLabel
-                    active={orderBy === column.id}
-                    direction={orderBy === column.id ? order : "asc"}
-                    onClick={createSortHandler(column.id)}
-                  >
-                    {column.label}
-                  </TableSortLabel>
-                </StyledTableCell>
+                <>
+                  {column.id === "nominee_team" && !hasTeamValues ? (
+                    <></>
+                  ) : (
+                    <StyledTableCell
+                      key={column.id}
+                      align={column.align}
+                      style={{ minWidth: column.minWidth }}
+                      sortDirection={orderBy === column.id ? order : false}
+                    >
+                      <TableSortLabel
+                        active={orderBy === column.id}
+                        direction={orderBy === column.id ? order : "asc"}
+                        onClick={createSortHandler(column.id)}
+                      >
+                        {column.label}
+                      </TableSortLabel>
+                    </StyledTableCell>
+                  )}
+                </>
               ))}
               <StyledTableCell />
             </TableRow>
@@ -182,15 +212,20 @@ export default function DataTableTabPanel({
                       const value = row[column.id];
                       if (column.id === "status") {
                         return (
-                          <TextTableCell
+                          <BadgeTableCell
                             key={`table-cell ${i}`}
                             value={value}
                             column={column}
                           />
                         );
+                      } else if (
+                        column.id === "nominee_team" &&
+                        !hasTeamValues
+                      ) {
+                        return <></>;
                       } else {
                         return (
-                          <DateTableCell
+                          <TextTableCell
                             key={`table-cell ${i}`}
                             value={value}
                             column={column}

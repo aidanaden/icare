@@ -28,7 +28,7 @@ interface TextTableCellProps {
   value?: string | number | boolean | Date;
 }
 
-export const TextTableCell = ({ value, column }: TextTableCellProps) => {
+export const BadgeTableCell = ({ value, column }: TextTableCellProps) => {
   return (
     <StyledTableCell key={column.id} align={column.align} sx={{ px: 4 }}>
       {value === NominationFormStatus.ENDORSED ? (
@@ -48,7 +48,7 @@ export const TextTableCell = ({ value, column }: TextTableCellProps) => {
   );
 };
 
-export const DateTableCell = ({ value, column }: TextTableCellProps) => {
+export const TextTableCell = ({ value, column }: TextTableCellProps) => {
   console.log("date table cell value: ", value);
   return (
     <StyledTableCell key={column.id} align={column.align} sx={{ px: 4 }}>

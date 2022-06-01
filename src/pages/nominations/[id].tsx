@@ -73,6 +73,7 @@ const View: NextPage = () => {
         <Grid item xs={12} sm={6}>
           <NominationDetails
             title="Details"
+            case_id={id}
             service_level={nominationDetailsData.quiz_service_level.toString()}
             description={nominationDetailsData.nomination_reason}
             attachment_list={nominationDetailsData.attachment_list}
@@ -98,7 +99,7 @@ const View: NextPage = () => {
                   title="Committee Score"
                   final_score={nominationDetailsData.committee_total_score}
                   final_service_level={
-                    nominationDetailsData.committee_service_level
+                    nominationDetailsData.committee_service_level_result
                   }
                 />
               </Grid>

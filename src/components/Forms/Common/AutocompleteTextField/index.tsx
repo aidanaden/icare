@@ -1,13 +1,14 @@
 import StyledTextField from "@/components/Common/StyledTextField";
 import { DepartmentType } from "@/enums";
-import { NominationFormSubmissionDetails, User } from "@/interfaces";
+import { NominationFormSubmissionDetails, StaffData, User } from "@/interfaces";
 import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useEffect, useState } from "react";
 import { TextFieldElementProps } from "react-hook-form-mui";
 import { useRecoilState } from "recoil";
 import { nominationFormState } from "@/atoms/nominationFormAtom";
-import { Control, Controller } from "react-hook-form";
+import { Control, Controller, useFormState, useWatch } from "react-hook-form";
+import { useFetchStaff, fetchStaff } from "@/lib/nominations";
 
 function sleep(delay = 0) {
   return new Promise((resolve) => {
@@ -15,14 +16,21 @@ function sleep(delay = 0) {
   });
 }
 
-export default function Asynchronous({
-  control,
-}: {
+const getStaffName = (staffDatas: StaffData[]): string[] => {
+  return staffDatas.map((staffData) => staffData.staff_name);
+};
+
+interface AutoCompleteProps {
   control: Control<Omit<NominationFormSubmissionDetails, "files">>;
-}) {
+  getValues: any;
+}
+
+export default function Asynchronous({ control }: AutoCompleteProps) {
   const [open, setOpen] = useState(false);
-  const [options, setOptions] = useState<readonly User[]>([]);
+  const [options, setOptions] = useState<StaffData[]>([]);
   const loading = open && options.length === 0;
+  const { staffData, isLoading, isError } = useFetchStaff("", "");
+  const dept = useWatch({ control, name: "department" });
 
   useEffect(() => {
     let active = true;
@@ -31,24 +39,37 @@ export default function Asynchronous({
       return undefined;
     }
 
-    (async () => {
-      await sleep(1e3); // For demo purposes.
+    if (active) {
+      if (dept?.toLowerCase() === "all") {
+        console.log("useEffect department changed to all: ", dept);
+        setOptions(staffData);
+      } else {
+        console.log("useEffect department changed to: ", dept);
+        const filteredStaffNames =
+          staffData?.filter((staff) => staff.staff_department === dept) ?? [];
 
-      if (active) {
-        setOptions(users);
+        console.log(
+          "new filtered staff names from dept change: ",
+          filteredStaffNames
+        );
+        setOptions(filteredStaffNames);
       }
-    })();
+    }
 
     return () => {
       active = false;
     };
-  }, [loading]);
+  }, [loading, dept, staffData]);
 
   useEffect(() => {
     if (!open) {
       setOptions([]);
     }
   }, [open]);
+
+  useEffect(() => {
+    console.log("options changed to :", options);
+  }, [options]);
 
   return (
     <Controller
@@ -62,7 +83,7 @@ export default function Asynchronous({
             setOpen(false);
           }}
           isOptionEqualToValue={(option, value) => option === value}
-          getOptionLabel={(option) => option.name}
+          getOptionLabel={(option) => option.staff_name}
           options={options}
           loading={loading}
           fullWidth
@@ -86,7 +107,9 @@ export default function Asynchronous({
           )}
           {...field}
           ref={field.ref}
-          onChange={(e, data) => field.onChange(data)}
+          onChange={(e, data) => {
+            field.onChange(data);
+          }}
         />
       )}
       name="user"
@@ -94,62 +117,3 @@ export default function Asynchronous({
     />
   );
 }
-
-const users: User[] = [
-  {
-    staff_id: "593413",
-    name: "Staff 1",
-    department: DepartmentType.AUDIT,
-    designation: "Intern",
-    role: "Staff",
-  },
-  {
-    staff_id: "593413",
-    name: "Staff 2",
-    department: DepartmentType.AUDIT,
-    designation: "Intern",
-    role: "Staff",
-  },
-  {
-    staff_id: "593413",
-    name: "Staff 3",
-    department: DepartmentType.AUDIT,
-    designation: "Intern",
-    role: "Staff",
-  },
-  {
-    staff_id: "593413",
-    name: "Staff 4",
-    department: DepartmentType.AUDIT,
-    designation: "Intern",
-    role: "Staff",
-  },
-  {
-    staff_id: "593413",
-    name: "Staff 5",
-    department: DepartmentType.AUDIT,
-    designation: "Intern",
-    role: "Staff",
-  },
-  {
-    staff_id: "593413",
-    name: "Staff 6",
-    department: DepartmentType.AUDIT,
-    designation: "Intern",
-    role: "Staff",
-  },
-  {
-    staff_id: "593413",
-    name: "Staff 7",
-    department: DepartmentType.AUDIT,
-    designation: "Intern",
-    role: "Staff",
-  },
-  {
-    staff_id: "593413",
-    name: "Staff 8",
-    department: DepartmentType.AUDIT,
-    designation: "Intern",
-    role: "Staff",
-  },
-];

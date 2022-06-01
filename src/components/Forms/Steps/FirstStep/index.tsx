@@ -17,6 +17,7 @@ import { nominationFormState } from "@/atoms/nominationFormAtom";
 import {
   NominationFormSubmissionData,
   NominationFormSubmissionDetails,
+  StaffData,
 } from "@/interfaces";
 import FileUploadButton from "@/components/Forms/Common/FileUploadButton";
 import FormDepartmentSelect from "@/components/Forms/Common/FormDepartmentSelect";
@@ -25,6 +26,7 @@ import AutocompleteTextField from "../../Common/AutocompleteTextField";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import StyledMenuItem from "@/components/Common/Menu/StyledMenuItem";
 import FormTextField from "../../Common/FormTextField";
+import { useFetchStaff } from "@/lib/nominations";
 
 interface FirstStepProp {
   handleNext: () => void;
@@ -50,6 +52,8 @@ export default function FirstStep({ handleNext }: FirstStepProp) {
     control,
     register,
     handleSubmit,
+    getValues,
+    watch,
     formState: { errors },
   } = useForm<Omit<NominationFormSubmissionDetails, "files">>({
     defaultValues: {
@@ -80,7 +84,7 @@ export default function FirstStep({ handleNext }: FirstStepProp) {
         >
           <Stack direction={"column"} spacing={3} height="100%" mb={{ xs: 4 }}>
             <Stack direction={{ xs: "column", md: "row" }} spacing={3}>
-              <AutocompleteTextField control={control} />
+              <AutocompleteTextField control={control} getValues={getValues} />
               <FormDepartmentSelect control={control} />
             </Stack>
             <SectionSubtitle>

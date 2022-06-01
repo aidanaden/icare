@@ -40,15 +40,6 @@ export interface NominationDataTableData {
   is_champion_shortlist_result: boolean;
 }
 
-// {
-//       "Committee_Name": "Eileen Tan",
-//       "Committee_Designation": "Director",
-//       "Committee_Department": "SFIT",
-//       "Committee_Comments": "eileen comments",
-//       "Shortlist_Status": 170740000,
-//       "Top_Winner_Status": true
-//     },
-
 export interface QueryData {
   message: string;
   status_code: number;
@@ -69,63 +60,10 @@ export interface CommitteeMemberQueryData {
   committee_designation: string;
   committee_department: string;
   committee_comments: string;
+  committee_service_level: ServiceLevel;
   shortlist_status: ShortlistStatus;
   champion_status: boolean;
 }
-
-// {
-//   "Nominee_Name": "Mary Doe",
-//   "Nominee_Designation": "Director",
-//   "Nominee_Department": "SFIT",
-//   "Nomination_Date": "24/05/2022",
-//   "Nominator_Name": "Joe Smith",
-//   "Nominator_Designation": "Assistant Manager 2",
-//   "Nominator_Department": "SFIT",
-//   "Nomination_Reason": "24 May 1230pm TEST NOW MAY",
-//   "HOD_Name": "Eileen Tan",
-//   "HOD_Designation": "Director",
-//   "HOD_Department": "SFIT",
-//   "HOD_Comments": "hod comment here testing",
-//   "Endorsement_Status": 170740000,
-//   "Quiz_Service_Level": 170740003,
-//   "Quiz_Score": 20,
-//   "Committee_Service_Level": 0,
-//   "Committee_Total_Score": 25,
-//   "is_Service_Level_Shortlist_Result": false,
-//   "is_Top_Winner_Shortlist_Result": false,
-//   "is_Top_Winner_Result": false,
-//   "Committee_Comment": [
-//     {
-//       "Committee_Name": "Doreen Quek",
-//       "Committee_Designation": "HQ Director",
-//       "Committee_Department": "SFIT",
-//       "Committee_Comments": "doreen comments",
-//       "Shortlist_Status": 170740000,
-//       "Top_Winner_Status": true
-//     },
-//     {
-//       "Committee_Name": "Eileen Tan",
-//       "Committee_Designation": "Director",
-//       "Committee_Department": "SFIT",
-//       "Committee_Comments": "eileen comments",
-//       "Shortlist_Status": 170740000,
-//       "Top_Winner_Status": true
-//     },
-//     {
-//       "Committee_Name": "Helen See",
-//       "Committee_Designation": "Director B",
-//       "Committee_Department": "SFIT",
-//       "Committee_Comments": "helen comments",
-//       "Shortlist_Status": 170740000,
-//       "Top_Winner_Status": false
-//     }
-//   ],
-//   "Attachment_List": [
-//     "testfile1.pdf"
-//   ],
-//   "Message": "Successful",
-//   "Status_Code": 200
-// }
 
 // nomination form detail data
 export interface NominationDetailQueryData extends QueryData {
@@ -151,7 +89,7 @@ export interface NominationDetailQueryData extends QueryData {
   endorsement_status: EndorsementStatus;
   hod_comments: string;
   committee_total_score: number;
-  committee_service_level: ServiceLevel;
+  committee_service_level_result: ServiceLevel;
   committee_comment: CommitteeMemberQueryData[];
   total_champion_status: boolean;
   attachment_list?: string[];
@@ -188,13 +126,38 @@ export interface NominationQuestionsQueryData {
 }
 
 export interface NominationFormSubmissionDetails {
-  user: User | undefined;
+  user: StaffData | undefined;
   department: DepartmentType | undefined;
   description: string | undefined;
   files: File[] | undefined;
+  case_id?: string;
 }
 
 export interface NominationFormSubmissionData
   extends NominationFormSubmissionDetails {
   answers: Map<string, string>;
+}
+
+export interface StaffData {
+  staff_id: string;
+  staff_name: string;
+  staff_department: string;
+}
+
+export interface FileNameString {
+  file_name: string;
+  file_string: string;
+}
+
+export interface FileQueryData extends QueryData {
+  file_string: string;
+}
+
+export interface FileStringNameData extends FileQueryData {
+  file_name: string;
+}
+
+export interface FileFetchData {
+  case_id: string;
+  file_name: string;
 }

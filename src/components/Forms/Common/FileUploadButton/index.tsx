@@ -3,6 +3,12 @@ import { Button, Chip, Stack } from "@mui/material";
 import { DropzoneDialog } from "react-mui-dropzone";
 import { useRecoilState } from "recoil";
 import { nominationFormState } from "@/atoms/nominationFormAtom";
+import {
+  IMAGE_FILE_TYPE,
+  PDF_FILE_TYPE,
+  WORD_FILE_TYPE,
+  EXCEL_FILE_TYPE,
+} from "@/constants/";
 
 export default function FileUploadButton() {
   const [open, setOpen] = useState(false);
@@ -34,10 +40,10 @@ export default function FileUploadButton() {
 
       <DropzoneDialog
         acceptedFiles={[
-          "image/*",
-          "application/pdf",
-          "application/msword",
-          "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          IMAGE_FILE_TYPE,
+          PDF_FILE_TYPE,
+          WORD_FILE_TYPE,
+          EXCEL_FILE_TYPE,
         ]}
         cancelButtonText={"cancel"}
         submitButtonText={"submit"}

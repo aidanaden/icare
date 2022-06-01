@@ -4,13 +4,14 @@
     "Nominee_Name": "Mary Doe",
     "Nominee_Designation": "Director",
     "Nominee_Department": "SFIT",
+    "Nominee_Team": "CRM",
     "Nomination_Date": null,
     "Nominator_Name": "Joe Smith",
     "Endorsement_Status": 0,
-    "Committee_Service_Level": null,
-    "Committee_Total_Score": null,
+    "Committee_Service_Level_Result": 0,
+    "Committee_Total_Score": 0,
     "Draft_Status": false,
-    "is_Service_Level_Winner": false,
+    "is_Service_Level_Winner": 0,
     "is_Champion_Shortlist_Result": false,
     "is_Champion_Result": false
   }

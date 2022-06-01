@@ -16,7 +16,7 @@ export default function index(props: CommitteeDetailProps) {
     },
     {
       title: "final service level",
-      text: final_service_level?.toString(),
+      text: ServiceLevel[final_service_level!].toString(),
     },
   ];
   return <DetailBox title={title} data={data} />;

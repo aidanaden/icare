@@ -8,8 +8,9 @@ import DashboardCarousel from "@/components/Common/Carousel/DashboardCarousel";
 import SimpleTable from "@/components/Table/SimpleTable/";
 import SimpleTableLink from "@/components/Table/Common/SimpleTableLink";
 import useAuth from "@/hooks/useAuth";
-import { NominationFilter } from "@/enums";
+import { EndorsementStatus, NominationFilter } from "@/enums";
 import { useFetchNominations } from "@/lib/nominations";
+import { getStatusFromData } from "@/utils";
 
 // 1. user data (name, staff_id, department, designation, role)
 // 2. number of nominations created by staff
@@ -25,6 +26,15 @@ const Dashboard: NextPage = () => {
     NominationFilter.USER
   );
 
+  const draftNominationData = nominationData.filter((nom) => nom.draft_status);
+  const completedNominationData = nominationData.filter(
+    (nom) => !nom.draft_status
+  );
+
+  const endorsedNominationData = nominationData.filter(
+    (nom) => nom.endorsement_status === EndorsementStatus.COMMENDABLE
+  );
+
   return (
     <Box>
       <Grid container spacing={3}>
@@ -35,13 +45,22 @@ const Dashboard: NextPage = () => {
           <DashboardCarousel />
         </Grid>
         <Grid item xs={12} sm={4}>
-          <Statistic title="Nominations created" value={42} />
+          <Statistic
+            title="Nominations created"
+            value={nominationData.length}
+          />
         </Grid>
         <Grid item xs={12} sm={4}>
-          <Statistic title="Nominations incomplete" value={42} />
+          <Statistic
+            title="Nominations incomplete"
+            value={draftNominationData.length}
+          />
         </Grid>
         <Grid item xs={12} sm={4}>
-          <Statistic title="Nominations endorsed" value={42} />
+          <Statistic
+            title="Nominations endorsed"
+            value={endorsedNominationData.length}
+          />
         </Grid>
         <Grid item xs={12} md={6}>
           <ShadowBox px={3} py={4}>
@@ -52,11 +71,9 @@ const Dashboard: NextPage = () => {
               mb={4}
             >
               <SectionHeader>Incompleted nominations</SectionHeader>
-              <SimpleTableLink href="/nominations/incomplete">
-                View all
-              </SimpleTableLink>
+              <SimpleTableLink href="/nominations">View all</SimpleTableLink>
             </Stack>
-            <SimpleTable />
+            <SimpleTable rows={draftNominationData} />
           </ShadowBox>
         </Grid>
         <Grid item xs={12} md={6}>
@@ -68,11 +85,9 @@ const Dashboard: NextPage = () => {
               mb={4}
             >
               <SectionHeader>Completed nominations</SectionHeader>
-              <SimpleTableLink href="/nominations/completed">
-                View all
-              </SimpleTableLink>
+              <SimpleTableLink href="/nominations">View all</SimpleTableLink>
             </Stack>
-            <SimpleTable />
+            <SimpleTable rows={completedNominationData} />
           </ShadowBox>
         </Grid>
       </Grid>

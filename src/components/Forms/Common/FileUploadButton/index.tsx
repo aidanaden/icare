@@ -9,12 +9,16 @@ import {
   WORD_FILE_TYPE,
   EXCEL_FILE_TYPE,
 } from "@/constants/";
+import { convertFileToBase64 } from "@/utils";
+import { FileNameString } from "@/interfaces";
+import SectionSubtitle from "@/components/Common/SectionSubtitle";
+import DetailSubHeader from "@/components/Common/DetailBox/DetailSubHeader";
 
 export default function FileUploadButton() {
   const [open, setOpen] = useState(false);
   const [getNominationFormState, setNominationFormState] =
     useRecoilState(nominationFormState);
-  const handleFileDelete = (file: File) => {
+  const handleFileDelete = (file: FileNameString) => {
     setNominationFormState({
       ...getNominationFormState,
       files: getNominationFormState.files?.filter((f) => f != file),
@@ -28,7 +32,7 @@ export default function FileUploadButton() {
             key={`file ${i}`}
             variant="outlined"
             size="small"
-            label={file.name}
+            label={file.file_name}
             onDelete={() => handleFileDelete(file)}
           />
         ))}
@@ -50,8 +54,18 @@ export default function FileUploadButton() {
         maxFileSize={5000000}
         open={open}
         onClose={() => setOpen(false)}
-        onSave={(files) => {
-          const newFormData = { ...getNominationFormState, files: files };
+        onSave={async (files) => {
+          const base64s = await Promise.all(
+            files.map(async (file) => {
+              return {
+                file_name: file.name,
+                file_string: (await convertFileToBase64(
+                  file
+                )) as unknown as string,
+              };
+            })
+          );
+          const newFormData = { ...getNominationFormState, files: base64s };
           setNominationFormState(newFormData);
           console.log("Files:", newFormData);
           setOpen(false);
@@ -62,6 +76,9 @@ export default function FileUploadButton() {
         filesLimit={5}
         useChipsForPreview={true}
       />
+      <DetailSubHeader mb={0}>
+        Supported files: images, pdf, word docs
+      </DetailSubHeader>
     </>
   );
 }

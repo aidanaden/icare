@@ -3,30 +3,38 @@ import ShadowBox from "../Common/ShadowBox";
 import DetailHeader from "../Common/DetailBox/DetailHeader";
 import DetailSubHeader from "../Common/DetailBox/DetailSubHeader";
 import DetailText from "../Common/DetailBox/DetailText";
-import { ServiceLevel, ShortlistStatus } from "@/enums";
+import { ServiceLevel, ServiceLevelWinner, ShortlistStatus } from "@/enums";
 import CommitteeForm from "../Forms/CommitteeForm";
 import GreenBadge from "../Common/Badge/GreenBadge";
 import RedBadge from "../Common/Badge/RedBadge";
+import GrayBadge from "../Common/Badge/GrayBadge";
+import { convertServiceLevelWinnerToBoolean } from "@/utils";
 
 interface CommitteeMemberDetailProps {
+  case_id: string;
+  committee_id: string;
   name: string;
   designation: string;
   department: string;
   service_level?: ServiceLevel;
-  service_level_award?: boolean;
-  champion_shortlist_status?: ShortlistStatus;
+  service_level_award?: ServiceLevelWinner;
+  champion_shortlist_status?: boolean;
+  champion_status?: boolean;
   comments?: string;
   isEditable?: boolean;
 }
 
 export default function index(props: CommitteeMemberDetailProps) {
   const {
+    case_id,
+    committee_id,
     name,
     designation,
     department,
     service_level,
     service_level_award,
     champion_shortlist_status,
+    champion_status,
     comments,
     isEditable,
   } = props;
@@ -42,8 +50,9 @@ export default function index(props: CommitteeMemberDetailProps) {
       <DetailHeader>{name}</DetailHeader>
       <Stack direction="column" spacing={4}>
         <Stack
+          flexWrap="wrap"
           direction={{ xs: "column", md: "row" }}
-          spacing={{ xs: 4, md: 8, lg: 12 }}
+          spacing={{ xs: 4, md: 8, lg: 8 }}
         >
           <Box>
             <DetailSubHeader>name</DetailSubHeader>
@@ -61,9 +70,14 @@ export default function index(props: CommitteeMemberDetailProps) {
 
         {isEditable ? (
           <CommitteeForm
+            case_id={case_id}
+            committee_id={committee_id}
             service_level={service_level}
-            service_level_award={service_level_award}
+            service_level_award={convertServiceLevelWinnerToBoolean(
+              service_level_award
+            )}
             champion_shortlist_status={champion_shortlist_status}
+            champion_status={champion_status}
             comments={comments}
           />
         ) : (
@@ -86,20 +100,22 @@ export default function index(props: CommitteeMemberDetailProps) {
 
               <Box>
                 <DetailSubHeader mb={1.5}>Service level award</DetailSubHeader>
-                {service_level_award ? (
+                {service_level_award === ServiceLevelWinner.TRUE ? (
                   <GreenBadge>Awarded</GreenBadge>
-                ) : (
+                ) : service_level_award === ServiceLevelWinner.FALSE ? (
                   <RedBadge>Not awarded</RedBadge>
+                ) : (
+                  <GrayBadge>Pending</GrayBadge>
                 )}
               </Box>
               <Box>
                 <DetailSubHeader mb={1.5}>
-                  Shortlisted for championship
+                  Nominated for ICare Championship
                 </DetailSubHeader>
-                {champion_shortlist_status ? (
-                  <GreenBadge>Shortlisted</GreenBadge>
+                {champion_status ? (
+                  <GreenBadge>Nominated</GreenBadge>
                 ) : (
-                  <RedBadge>Not shortlisted</RedBadge>
+                  <RedBadge>Not nominated</RedBadge>
                 )}
               </Box>
               {/* <Stack direction={{ xs: "column", md: "row" }} spacing={3}></Stack> */}

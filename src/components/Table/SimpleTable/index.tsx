@@ -1,3 +1,4 @@
+import { NominationDataTableData } from "@/interfaces";
 import { formatDateToString } from "@/utils";
 import {
   Box,
@@ -12,44 +13,12 @@ import {
   TableRow,
 } from "@mui/material";
 import { tableCellClasses } from "@mui/material/TableCell";
-
-interface SimpleColumn {
-  id: "nominee" | "department" | "date";
-  label: string;
-  minWidth?: number;
-  align?: "right";
-  format?: (value: Date) => string;
-}
-
-const columns: readonly SimpleColumn[] = [
-  { id: "nominee", label: "Nominee", minWidth: 170 },
-  { id: "department", label: "Department", minWidth: 100 },
-  {
-    id: "date",
-    label: "Date",
-    minWidth: 170,
-    align: "right",
-    format: formatDateToString,
-  },
-];
-
+import { Column, SimpleColumn, simpleColumns } from "../Common/Columns";
 interface Data {
   nominee: string;
   department: string;
   date: Date;
 }
-
-function createData(nominee: string, department: string, date: Date): Data {
-  return { nominee, department, date };
-}
-
-const rows = [
-  createData("Jolynn", "IT", new Date()),
-  createData("Jolynn", "AUDIT", new Date()),
-  createData("Jolynn", "SFIT", new Date()),
-  createData("Jolynn", "AUDIT", new Date()),
-  createData("Jolynn", "IT", new Date()),
-];
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -63,7 +32,11 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
-export default function SimpleTable({ ...other }: BoxProps) {
+interface SimpleTableProps extends BoxProps {
+  rows: Omit<NominationDataTableData, "nomination_status">[];
+}
+
+export default function SimpleTable({ rows, ...other }: SimpleTableProps) {
   return (
     <Box {...other}>
       <TableContainer sx={{ maxHeight: 440 }}>
@@ -93,7 +66,7 @@ export default function SimpleTable({ ...other }: BoxProps) {
             }}
           >
             <TableRow>
-              {columns.map((column) => (
+              {simpleColumns.map((column: Column) => (
                 <StyledTableCell
                   key={column.id}
                   align={column.align}
@@ -119,7 +92,7 @@ export default function SimpleTable({ ...other }: BoxProps) {
                     },
                   }}
                 >
-                  {columns.map((column) => {
+                  {simpleColumns.map((column: SimpleColumn) => {
                     const value = row[column.id];
                     return (
                       <StyledTableCell

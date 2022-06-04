@@ -110,7 +110,7 @@ export default function FirstStep({ handleNext }: FirstStepProp) {
                 width: { xs: "100%", sm: "auto" },
               }}
             >
-              Submit
+              Next
             </PrimaryButton>
           </Box>
         </Box>

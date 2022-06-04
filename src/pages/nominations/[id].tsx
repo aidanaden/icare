@@ -16,8 +16,10 @@ import CommitteeMemberDetails from "@/components/CommitteeMemberDetails";
 import { EndorsementStatus, ServiceLevel, ShortlistStatus } from "@/enums";
 import { fetchAPI, useFetchNominationDetails } from "@/lib/nominations";
 import { useRouter } from "next/router";
+import useAuth from "@/hooks/useAuth";
 
 const View: NextPage = () => {
+  const { user } = useAuth();
   const router = useRouter();
   const { id } = router.query;
   const { nominationDetailsData, isLoading, isError } =
@@ -74,21 +76,25 @@ const View: NextPage = () => {
           <NominationDetails
             title="Details"
             case_id={id}
-            service_level={nominationDetailsData.quiz_service_level.toString()}
+            service_level={nominationDetailsData.quiz_service_level}
             description={nominationDetailsData.nomination_reason}
             attachment_list={nominationDetailsData.attachment_list}
           />
-          {/* TODO: add supporting file documents here */}
         </Grid>
         <Grid item xs={12} sm={6}>
           <HODDetails
+            case_id={id as string}
+            hod_id={nominationDetailsData.hod_id}
             title="Head of Department"
             name={nominationDetailsData.hod_name}
             designation={nominationDetailsData.hod_designation}
             department={nominationDetailsData.hod_department}
             endorsement_status={nominationDetailsData.endorsement_status}
-            endorsement_date={nominationDetailsData.nomination_date}
+            endorsement_date={nominationDetailsData.endorsement_date}
             comments={nominationDetailsData.hod_comments}
+            // TODO
+            // isEditable={nominationDetailsData.hod_id === user?.staff_id}
+            isEditable={false}
           />
         </Grid>
         <Grid item xs={12}>
@@ -101,34 +107,38 @@ const View: NextPage = () => {
                   final_service_level={
                     nominationDetailsData.committee_service_level_result
                   }
+                  is_service_level_winner={
+                    nominationDetailsData.is_service_level_winner
+                  }
+                  is_champion_shortlist_result={
+                    nominationDetailsData.is_champion_shortlist_result
+                  }
+                  is_champion_result={nominationDetailsData.is_champion_result}
                 />
               </Grid>
               {nominationDetailsData.committee_comment.map((committeeData) => (
                 <Grid item xs={12} sm={6} key={committeeData.case_id}>
                   <CommitteeMemberDetails
+                    case_id={id as string}
+                    committee_id={committeeData.committee_id}
                     name={committeeData.committee_name}
                     designation={committeeData.committee_designation}
                     department={committeeData.committee_department}
-                    service_level={ServiceLevel.BASIC}
-                    service_level_award={true}
-                    champion_shortlist_status={committeeData.shortlist_status}
+                    service_level={committeeData.committee_service_level}
+                    service_level_award={
+                      committeeData.service_level_winner_status
+                    }
+                    champion_shortlist_status={
+                      nominationDetailsData.is_champion_shortlist_result
+                    }
+                    champion_status={committeeData.champion_status}
                     comments={committeeData.committee_comments}
+                    // TODO
+                    // isEditable={committeeData.committee_id === user?.staff_id}
+                    isEditable={true}
                   />
                 </Grid>
               ))}
-
-              {/* <Grid item xs={12} sm={6}>
-                <CommitteeMemberDetails
-                  name="Johnny"
-                  designation="CEO"
-                  department="IT"
-                  service_level={ServiceLevel.BASIC}
-                  service_level_award={false}
-                  champion_shortlist_status={false}
-                  comments=""
-                  isEditable={true}
-                />
-              </Grid> */}
             </Grid>
           </Stack>
         </Grid>

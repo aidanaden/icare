@@ -9,10 +9,10 @@ interface TableProps {
 
 export default function NominationTable({ data }: TableProps) {
   const incompleteData = data?.filter(
-    (row) => row.status === NominationFormStatus.INCOMPLETE
+    (row) => row.nomination_status === NominationFormStatus.INCOMPLETE
   );
   const completedData = data?.filter(
-    (row) => row.status !== NominationFormStatus.INCOMPLETE
+    (row) => row.nomination_status !== NominationFormStatus.INCOMPLETE
   );
 
   const tabPanelData: DataTableTabPanelProps[] = [
@@ -20,17 +20,20 @@ export default function NominationTable({ data }: TableProps) {
       headerLabel: NominationFormStatus.ALL.toString(),
       status: NominationFormStatus.ALL,
       data: data,
+      isDeletable: true,
     },
     {
       headerLabel: "Completed",
       status: "completed",
       data: completedData,
+      isDeletable: true,
     },
     {
       headerLabel: NominationFormStatus.INCOMPLETE.toString(),
       status: NominationFormStatus.INCOMPLETE,
       data: incompleteData,
+      isDeletable: true,
     },
   ];
-  return <DataTable tabPanelData={tabPanelData} />;
+  return <DataTable tabPanelData={tabPanelData} isDeletable={true} />;
 }

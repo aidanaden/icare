@@ -12,16 +12,16 @@ export default function EndorsementTable({
   ...other
 }: NominationDataTableProps) {
   const endorsedData = data?.filter(
-    (row) => row.status === NominationFormStatus.ENDORSED
+    (row) => row.nomination_status === NominationFormStatus.ENDORSED
   );
   const pendingData = data?.filter(
-    (row) => row.status === NominationFormStatus.PENDING
+    (row) => row.nomination_status === NominationFormStatus.PENDING
   );
   const submittedData = data?.filter(
-    (row) => row.status === NominationFormStatus.SUBMITTED
+    (row) => row.nomination_status === NominationFormStatus.SUBMITTED
   );
 
-  const tabPanelData: DataTableTabPanelProps[] = [
+  const tabPanelData: Omit<DataTableTabPanelProps, "isDeletable">[] = [
     {
       headerLabel: NominationFormStatus.ALL.toString(),
       status: NominationFormStatus.ALL,
@@ -44,5 +44,7 @@ export default function EndorsementTable({
     },
   ];
 
-  return <DataTable tabPanelData={tabPanelData} {...other} />;
+  return (
+    <DataTable tabPanelData={tabPanelData} isDeletable={false} {...other} />
+  );
 }

@@ -6,6 +6,7 @@
 //   User,
 // } from "firebase/auth";
 
+import { UserRole } from "@/enums";
 import { User } from "@/interfaces";
 import { useRouter } from "next/router";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
@@ -34,7 +35,11 @@ interface AuthProviderProps {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const router = useRouter();
-  const [user, setUser] = useState<User | undefined>(undefined);
+  const [user, setUser] = useState<User | undefined>({
+    staff_id: "124123123",
+    name: "sample user",
+    role: UserRole.COMMITTEE,
+  });
   const [error, setError] = useState(undefined);
   const [initialLoading, setInitialLoading] = useState(false);
   const [loading, setLoading] = useState(false);

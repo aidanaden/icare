@@ -2,6 +2,8 @@ import {
   DepartmentType,
   EndorsementStatus,
   NominationFormStatus,
+  ServiceLevelWinner,
+  ShortlistStatus,
 } from "@/enums";
 import { DataTableData, NominationDataTableData } from "@/interfaces";
 import saveAs from "file-saver";
@@ -17,6 +19,18 @@ const createData = (
   date: Date
 ): DataTableData => {
   return { nominee, department, status, date };
+};
+
+const convertServiceLevelWinnerToBoolean = (slw?: ServiceLevelWinner) => {
+  return slw === ServiceLevelWinner.TRUE ? true : false;
+};
+
+const convertBooleanToServiceLevelWinner = (bool?: boolean) => {
+  return bool ? ServiceLevelWinner.TRUE : ServiceLevelWinner.FALSE;
+};
+
+const convertBooleanToShortlist = (bool?: boolean) => {
+  return bool ? ShortlistStatus.TRUE : ShortlistStatus.FALSE;
 };
 
 const getStatusFromData = (
@@ -47,7 +61,22 @@ const getStatusFromData = (
     status = NominationFormStatus.INCOMPLETE;
   }
 
-  return { ...data, status: status };
+  return { ...data, nomination_status: status };
+};
+
+const convertFileToBase64 = (file: File) => {
+  return new Promise((resolve, reject) => {
+    const fileReader = new FileReader();
+    fileReader.readAsDataURL(file);
+
+    fileReader.onload = () => {
+      resolve(fileReader.result);
+    };
+
+    fileReader.onerror = (err) => {
+      reject(err);
+    };
+  });
 };
 
 const convertBase64ToFile = (base64String: string, fileName: string) => {
@@ -72,7 +101,11 @@ const downloadBase64Data = (base64String: string, fileName: string) => {
 export {
   formatDateToString,
   getStatusFromData,
+  convertServiceLevelWinnerToBoolean,
+  convertBooleanToServiceLevelWinner,
+  convertBooleanToShortlist,
   createData,
+  convertFileToBase64,
   convertBase64ToFile,
   downloadBase64Data,
 };

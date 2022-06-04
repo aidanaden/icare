@@ -1,11 +1,23 @@
+import useAuth from "@/hooks/useAuth";
 import { MoreVert, Edit, FolderOpen, Delete } from "@mui/icons-material";
 import IconButton from "@mui/material/IconButton";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import ErrorStyledMenuItem from "../ErrorStyledMenuItem";
 import StyledMenu from "../StyledMenu";
 import StyledMenuItem from "../StyledMenuItem";
 
-export default function Menu() {
+interface NominationDataTableMenuProps {
+  case_id: string;
+  isDeletable: boolean;
+}
+
+export default function Menu({
+  case_id,
+  isDeletable,
+}: NominationDataTableMenuProps) {
+  const router = useRouter();
+  const { user } = useAuth();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -14,6 +26,20 @@ export default function Menu() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const handleView = () => {
+    router.push(`/nominations/${case_id}`);
+    handleClose();
+  };
+
+  const handleEdit = () => {
+    console.log("edit button pressed!");
+  };
+
+  const handleDelete = () => {
+    console.log("delete button pressed!");
+  };
+
   return (
     <>
       <IconButton
@@ -42,18 +68,20 @@ export default function Menu() {
           horizontal: "right",
         }}
       >
-        <StyledMenuItem onClick={handleClose}>
+        <StyledMenuItem onClick={handleView}>
           <FolderOpen />
           View
         </StyledMenuItem>
-        <StyledMenuItem onClick={handleClose}>
+        <StyledMenuItem onClick={handleEdit}>
           <Edit />
           Edit
         </StyledMenuItem>
-        <ErrorStyledMenuItem onClick={handleClose}>
-          <Delete style={{ color: "red" }} />
-          Delete
-        </ErrorStyledMenuItem>
+        {isDeletable && (
+          <ErrorStyledMenuItem onClick={handleDelete}>
+            <Delete style={{ color: "red" }} />
+            Delete
+          </ErrorStyledMenuItem>
+        )}
       </StyledMenu>
     </>
   );

@@ -48,34 +48,58 @@ function getComparator<Key extends keyof NominationDataTableData>(
 export interface DataTableTabPanelProps {
   headerLabel: string;
   status: NominationFormStatus | "completed";
+  isDeletable: boolean;
   data?: NominationDataTableData[];
 }
 
 export default function DataTableTabPanel({
   headerLabel,
   status,
+  isDeletable,
   data,
 }: DataTableTabPanelProps) {
   const [displayedData, setDisplayedData] = useState<
     NominationDataTableData[] | undefined
   >(data);
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  // set up order-by filter
   const [order, setOrder] = useState<Order>("asc");
   const [orderBy, setOrderBy] =
     useState<keyof NominationDataTableData>("nomination_date");
+
+  // set up department filter
   const [departmentType, setDepartmentType] = useState<DepartmentType>(
     DepartmentType.ALL
   );
+  const departmentValues = Array.from(
+    new Set(
+      data
+        ?.flatMap((data) => [data.nominee_department as DepartmentType])
+        .concat(DepartmentType.ALL)
+        .reverse()
+    )
+  );
 
+  // set up team filter
   const teamValues = Array.from(
-    new Set(data?.flatMap((data) => [data.nominee_team]))
+    new Set(
+      data
+        ?.flatMap((data) => [data.nominee_team])
+        .concat("All")
+        .reverse()
+    )
   );
   const hasTeamValues = teamValues.length > 0 && teamValues[0] !== undefined;
-  console.log("team value: ", teamValues);
-  console.log("has team values: ", hasTeamValues);
   const [teamType, setTeamType] = useState<string>("All");
 
+  // set up championship nominations
+  const championNominations = data?.filter((d) => d.is_champion_result);
+  const hasChampions = championNominations && championNominations?.length > 0;
+
+  // sort filter effect
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
     property: keyof NominationDataTableData
@@ -91,6 +115,7 @@ export default function DataTableTabPanel({
       handleRequestSort(event, property);
     };
 
+  // change of page / change no. of rows per page filter effect
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
@@ -102,6 +127,17 @@ export default function DataTableTabPanel({
     setPage(0);
   };
 
+  // search filter
+  const handleSearchTextChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const filteredData = data?.filter((row) =>
+      row.nominee_name.toLowerCase().includes(event.target.value.toLowerCase())
+    );
+    setDisplayedData(filteredData);
+  };
+
+  // department filter effect
   useEffect(() => {
     if (departmentType !== DepartmentType.ALL) {
       setDisplayedData(
@@ -112,8 +148,10 @@ export default function DataTableTabPanel({
     }
   }, [departmentType, data]);
 
+  // team filter effect
   useEffect(() => {
-    if (teamType !== "" && teamType !== "All") {
+    console.log("team type value: ", teamType);
+    if (teamType !== "All") {
       setDisplayedData(data?.filter((row) => row.nominee_team === teamType));
     } else {
       setDisplayedData(data);
@@ -124,6 +162,7 @@ export default function DataTableTabPanel({
     <TabPanel value={status} sx={{ p: 0 }}>
       <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5} p={3}>
         <DepartmentSelect
+          departments={departmentValues}
           departmentType={departmentType}
           setDepartmentType={setDepartmentType}
         />
@@ -147,6 +186,7 @@ export default function DataTableTabPanel({
           }}
           variant="outlined"
           fullWidth
+          onChange={handleSearchTextChange}
         />
       </Stack>
       <TableContainer sx={{ maxHeight: 480, px: 1 }}>
@@ -178,7 +218,8 @@ export default function DataTableTabPanel({
             <TableRow>
               {columns.map((column) => (
                 <>
-                  {column.id === "nominee_team" && !hasTeamValues ? (
+                  {(column.id === "nominee_team" && !hasTeamValues) ||
+                  (column.id === "nominator_name" && !hasChampions) ? (
                     <></>
                   ) : (
                     <StyledTableCell
@@ -210,7 +251,7 @@ export default function DataTableTabPanel({
                   <TableRow hover role="checkbox" tabIndex={-1} key={i}>
                     {columns.map((column, i) => {
                       const value = row[column.id];
-                      if (column.id === "status") {
+                      if (column.id === "nomination_status") {
                         return (
                           <BadgeTableCell
                             key={`table-cell ${i}`}
@@ -219,8 +260,8 @@ export default function DataTableTabPanel({
                           />
                         );
                       } else if (
-                        column.id === "nominee_team" &&
-                        !hasTeamValues
+                        (column.id === "nominee_team" && !hasTeamValues) ||
+                        (column.id === "nominator_name" && !hasChampions)
                       ) {
                         return <></>;
                       } else {
@@ -234,7 +275,10 @@ export default function DataTableTabPanel({
                       }
                     })}
                     <TableCell align="right">
-                      <TableMenu />
+                      <TableMenu
+                        case_id={row.case_id}
+                        isDeletable={isDeletable}
+                      />
                     </TableCell>
                   </TableRow>
                 );

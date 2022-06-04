@@ -1,3 +1,9 @@
+export enum UserRole {
+  STAFF = "Staff",
+  HOD = "HOD",
+  COMMITTEE = "Committee",
+}
+
 export enum NominationFormStatus {
   ALL = "all",
   PENDING = "pending",
@@ -17,6 +23,11 @@ export enum DepartmentType {
 }
 
 export enum ShortlistStatus {
+  TRUE = 170740000,
+  FALSE = 170740001,
+}
+
+export enum ServiceLevelWinner {
   TRUE = 170740000,
   FALSE = 170740001,
 }

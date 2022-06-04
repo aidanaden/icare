@@ -20,14 +20,17 @@ export default function TeamSelect({
   teamType,
   setTeamType,
 }: TeamSelectProps) {
+  console.log("initial team type value: ", teamType);
+
   const handleSelectChange = (event: SelectChangeEvent) => {
+    console.log("handle select change!");
     setTeamType(event.target.value as string);
   };
 
   return (
     <FormControl sx={{ width: { xs: "full", sm: "240px" } }}>
       <InputLabel id="team-simple-select-label" sx={{ color: "black" }}>
-        Teams
+        Team
       </InputLabel>
       <Select
         labelId="team-simple-select-helper-label"

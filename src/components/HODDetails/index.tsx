@@ -10,18 +10,22 @@ import GreenBadge from "../Common/Badge/GreenBadge";
 import RedBadge from "../Common/Badge/RedBadge";
 
 interface HODDetailProps {
+  case_id: string;
+  hod_id: string;
   title: string;
   name: string;
   designation: string;
   department?: string;
   endorsement_status?: EndorsementStatus;
-  endorsement_date?: Date;
+  endorsement_date?: string;
   comments?: string;
   isEditable?: boolean;
 }
 
 export default function index(props: HODDetailProps) {
   const {
+    case_id,
+    hod_id,
     title,
     name,
     designation,
@@ -62,6 +66,8 @@ export default function index(props: HODDetailProps) {
 
         {isEditable ? (
           <EndorsementForm
+            case_id={case_id}
+            hod_id={hod_id}
             endorsement_status={endorsement_status}
             comments={comments}
           />

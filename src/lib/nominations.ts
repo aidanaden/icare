@@ -58,19 +58,19 @@ const postAPI = async (path: string, body: any) => {
 
 const upsertNominationForm = async (
   id: string,
-  formState: NominationFormSubmissionData
+  formState: NominationFormSubmissionData,
+  draft_status: boolean
 ) => {
+  const answersArray: string[] = Object.values(formState.answers);
   const data = {
-    case_id: formState.case_id,
     nominator_id: id,
-    nominee_id: formState.user,
+    nominee_id: formState.user?.staff_id,
     nomination_reason: formState.description,
-    quiz_response: formState.answers,
-    // TODO: check draft status
-    draft_status: true,
-    // TODO: convert File() to { file_name, file_string_base64 }
+    quiz_response: answersArray,
+    draft_status: draft_status,
     attachment: formState.files,
   };
+  console.log("uploading nomination form data: ", data);
   return await postAPI("UpsertNomination", data);
 };
 
@@ -96,20 +96,33 @@ const upsertNominationFormHODComments = async (hodData: HODQueryData) => {
 };
 
 const upsertNominationFormCommitteeComments = async (
-  committeeData: CommitteeMemberQueryData
+  committeeData: Omit<
+    CommitteeMemberQueryData,
+    "committee_name" | "committee_designation" | "committee_department"
+  >
 ) => {
   const data = {
     case_id: committeeData.case_id,
     committee_id: committeeData.committee_id,
     committee_comments: committeeData.committee_comments,
     committee_service_level: committeeData.committee_service_level,
+    service_level_winner_status: committeeData.service_level_winner_status,
     shortlist_status: committeeData.shortlist_status,
     champion_status: committeeData.champion_status,
   };
   return await postAPI("/nominations/id", data);
 };
 
-const useFetchNominations = (id?: string, filter?: NominationFilter) => {
+interface FetchNominationsProps {
+  nominationData: Omit<NominationDataTableData, "nomination_status">[];
+  isLoading?: boolean;
+  isError?: any;
+}
+
+const useFetchNominations = (
+  id?: string,
+  filter?: NominationFilter
+): FetchNominationsProps => {
   let data;
   let error;
 
@@ -127,7 +140,14 @@ const useFetchNominations = (id?: string, filter?: NominationFilter) => {
   //   fetchAPI,
   //   { suspense: true }
   // );
-  return { nominationData: data, isLoading: !error && !data, isError: error };
+  return {
+    nominationData: data as Omit<
+      NominationDataTableData,
+      "nomination_status"
+    >[],
+    isLoading: !error && !data,
+    isError: error,
+  };
 };
 
 const useFetchQuiz = (staff_id?: string) => {
@@ -168,7 +188,10 @@ const useFetchStaff = (
   };
 };
 
-const useFetchFile = (case_id?: string, file_name?: string) => {
+const fetchFile = (
+  case_id?: string,
+  file_name?: string
+): FileStringNameData => {
   const data = recursivelyLowercaseJSONKeys(fileData);
   const error = false;
   // const { data, error } = useSWR<FileQueryData>(
@@ -176,7 +199,12 @@ const useFetchFile = (case_id?: string, file_name?: string) => {
   //   fetchAPI,
   //   { suspense: true }
   // );
-  return { fileData: data, isLoading: !error && !data, isError: error };
+  return {
+    file_name: "test.pdf",
+    file_string: data.file_string,
+    message: "success",
+    status_code: 200,
+  };
 };
 
 const fetchFileStrings = (fileFetchDatas: FileFetchData[]) => {
@@ -208,6 +236,6 @@ export {
   useFetchQuiz,
   fetchStaff,
   useFetchStaff,
-  useFetchFile,
+  fetchFile,
   fetchFileStrings,
 };

@@ -1,4 +1,4 @@
-import { TextField, Box, Button, Grid, Stack } from "@mui/material";
+import { TextField, Box, Button, Grid, Stack, Typography } from "@mui/material";
 import { useContext, useCallback, useState, Dispatch, useEffect } from "react";
 import { FormContainer } from "react-hook-form-mui";
 import { useForm } from "react-hook-form";
@@ -61,12 +61,30 @@ export default function SecondStep({
       <FormContainer formContext={formContext} onSuccess={onSubmit}>
         <Stack direction={"column"} spacing={3} mb={8}>
           {questionData?.qna_questions.map(
-            ({ quiz_question_name, answers }, i) => (
+            ({ quiz_question_name, answers }) => (
               <NominationQuestion
-                key={`qn data ${i}`}
+                key={`qn ${quiz_question_name}`}
                 question={quiz_question_name}
                 answers={answers}
               />
+            )
+          )}
+          {questionData?.rating_questions?.map(
+            ({ quiz_question_name, rating_child_quiz_questions }) => (
+              <>
+                <Typography fontWeight={600} fontSize="20px" color="#212b36">
+                  {quiz_question_name}
+                </Typography>
+                {rating_child_quiz_questions.map(
+                  ({ child_quiz_question_name, answers }) => (
+                    <NominationQuestion
+                      key={`qn ${child_quiz_question_name}`}
+                      question={child_quiz_question_name}
+                      answers={answers}
+                    />
+                  )
+                )}
+              </>
             )
           )}
         </Stack>
@@ -97,7 +115,7 @@ export default function SecondStep({
               justifyContent: { xs: "center", sm: "flex-end" },
             }}
           >
-            Submit
+            Next
           </PrimaryButton>
         </Stack>
       </FormContainer>

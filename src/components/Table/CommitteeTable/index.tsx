@@ -12,22 +12,22 @@ export default function EndorsementTable({
   ...other
 }: NominationDataTableProps) {
   const completedData = data?.filter(
-    (row) => row.status === NominationFormStatus.SUBMITTED
+    (row) => row.nomination_status === NominationFormStatus.SUBMITTED
   );
 
   const endorsedData = data?.filter(
-    (row) => row.status === NominationFormStatus.ENDORSED
+    (row) => row.nomination_status === NominationFormStatus.ENDORSED
   );
 
   const shortlistedData = data?.filter(
-    (row) => row.status === NominationFormStatus.SHORTLISTED
+    (row) => row.nomination_status === NominationFormStatus.SHORTLISTED
   );
 
   const awardedData = data?.filter(
-    (row) => row.status === NominationFormStatus.AWARDED
+    (row) => row.nomination_status === NominationFormStatus.AWARDED
   );
 
-  const tabPanelData: DataTableTabPanelProps[] = [
+  const tabPanelData: Omit<DataTableTabPanelProps, "isDeletable">[] = [
     {
       headerLabel: NominationFormStatus.ALL.toString(),
       status: NominationFormStatus.ALL,
@@ -55,5 +55,5 @@ export default function EndorsementTable({
     },
   ];
 
-  return <DataTable tabPanelData={tabPanelData} />;
+  return <DataTable tabPanelData={tabPanelData} isDeletable={false} />;
 }

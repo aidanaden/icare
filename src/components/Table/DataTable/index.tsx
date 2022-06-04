@@ -9,10 +9,15 @@ import { StyledTab } from "../Common/StyledTab";
 import { NominationFormStatus } from "@/enums";
 
 interface DataTableProps {
-  tabPanelData: DataTableTabPanelProps[];
+  tabPanelData: Omit<DataTableTabPanelProps, "isDeletable">[];
+  isDeletable: boolean;
 }
 
-export default function DataTable({ tabPanelData, ...other }: DataTableProps) {
+export default function DataTable({
+  tabPanelData,
+  isDeletable,
+  ...other
+}: DataTableProps) {
   const [nominationValue, setNominationValue] = useState<NominationFormStatus>(
     NominationFormStatus.ALL
   );
@@ -63,6 +68,7 @@ export default function DataTable({ tabPanelData, ...other }: DataTableProps) {
           headerLabel={panelData.headerLabel}
           data={panelData.data}
           status={panelData.status}
+          isDeletable={isDeletable}
           key={`panel ${i}`}
         />
       ))}

@@ -10,11 +10,13 @@ import {
   DepartmentType,
   NominationFilter,
   NominationFormStatus,
+  UserRole,
 } from "@/enums";
 import { getStatusFromData } from "@/utils";
 import CommitteeTable from "@/components/Table/CommitteeTable";
 import useAuth from "@/hooks/useAuth";
 import { useFetchNominations } from "@/lib/nominations";
+import Unauthorized from "@/components/UnauthorizedAccess";
 
 // ALL nominations (endorsed, submitted/not endorsed,
 // service level award shortlisted, service level award winners,
@@ -27,36 +29,40 @@ const Nominations: NextPage = () => {
     NominationFilter.ENDORSED
   );
 
-  return (
-    <Box>
-      <Box mb={4}>
-        <SectionHeader mb={2}>Nominations</SectionHeader>
-        <Breadcrumbs
-          separator="•"
-          aria-label="breadcrumb"
-          sx={{
-            "& .MuiBreadcrumbs-separator": {
-              color: "#637381",
-              opacity: 0.8,
-              px: 1,
-            },
-          }}
-        >
-          <NextMuiLink color="#212B36" href="/dashboard" fontSize="14px">
-            Dashboard
-          </NextMuiLink>
-          <NextMuiLink color="#919EAB" href="/committee" fontSize="14px">
-            Committee
-          </NextMuiLink>
-        </Breadcrumbs>
+  if (user?.role === UserRole.COMMITTEE) {
+    return (
+      <Box>
+        <Box mb={4}>
+          <SectionHeader mb={2}>Nominations</SectionHeader>
+          <Breadcrumbs
+            separator="•"
+            aria-label="breadcrumb"
+            sx={{
+              "& .MuiBreadcrumbs-separator": {
+                color: "#637381",
+                opacity: 0.8,
+                px: 1,
+              },
+            }}
+          >
+            <NextMuiLink color="#212B36" href="/dashboard" fontSize="14px">
+              Dashboard
+            </NextMuiLink>
+            <NextMuiLink color="#919EAB" href="/committee" fontSize="14px">
+              Committee
+            </NextMuiLink>
+          </Breadcrumbs>
+        </Box>
+        <ShadowBox borderRadius="20px">
+          <CommitteeTable
+            data={nominationData?.map((data: any) => getStatusFromData(data))}
+          />
+        </ShadowBox>
       </Box>
-      <ShadowBox borderRadius="20px">
-        <CommitteeTable
-          data={nominationData?.map((data: any) => getStatusFromData(data))}
-        />
-      </ShadowBox>
-    </Box>
-  );
+    );
+  } else {
+    return <Unauthorized />;
+  }
 };
 
 export default Nominations;

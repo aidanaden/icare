@@ -11,6 +11,8 @@ import NominationQuestion from "../../Common/NominationQuestion";
 import { useRecoilState } from "recoil";
 import { nominationFormState } from "@/atoms/nominationFormAtom";
 import { NominationFormSubmissionData } from "@/interfaces";
+import { upsertNominationForm } from "@/lib/nominations";
+import useAuth from "@/hooks/useAuth";
 
 interface FinalStepProp {
   handleSubmit: () => void;
@@ -18,6 +20,7 @@ interface FinalStepProp {
 }
 
 export default function FinalStep({ handleSubmit, handleBack }: FinalStepProp) {
+  const { user } = useAuth();
   const [getNominationFormState, setNominationFormState] =
     useRecoilState(nominationFormState);
 
@@ -113,9 +116,15 @@ export default function FinalStep({ handleSubmit, handleBack }: FinalStepProp) {
               display: "flex",
               justifyContent: { xs: "center", sm: "flex-end" },
             }}
-            onClick={() =>
-              console.log("final form state: ", getNominationFormState)
-            }
+            onClick={() => {
+              if (user) {
+                upsertNominationForm(
+                  user?.staff_id,
+                  getNominationFormState,
+                  false
+                );
+              }
+            }}
           >
             Submit
           </PrimaryButton>

@@ -9,29 +9,38 @@ import FormTextField from "../Common/FormTextField";
 import CommitteeServiceLevelSelect from "../Common/CommitteeServiceLevelSelect";
 import CommitteeShortlistSelect from "../Common/CommitteeShortlistSelect";
 import FormSwitch from "../FormSwitch";
+import { upsertNominationFormCommitteeComments } from "@/lib/nominations";
+import {
+  convertBooleanToServiceLevelWinner,
+  convertBooleanToShortlist,
+} from "@/utils";
 
 interface CommitteeFormProps {
-  service_level?: ServiceLevel | undefined;
-  service_level_award?: boolean | undefined;
-  champion_shortlist_status?: ShortlistStatus | undefined;
-  comments?: string | undefined;
+  case_id: string;
+  committee_id: string;
+  service_level?: ServiceLevel;
+  service_level_award?: boolean;
+  champion_shortlist_status?: boolean;
+  champion_status?: boolean;
+  comments?: string;
 }
 
 interface CommitteeForm {
-  service_level?: ServiceLevel | undefined;
-  service_level_award?: boolean | undefined;
-  boolean_shortlist_status?: boolean | undefined;
-  comments?: string | undefined;
+  service_level?: ServiceLevel;
+  service_level_award?: boolean;
+  is_champion_result?: boolean;
+  comments?: string;
 }
 
 export default function CommitteeForm({
+  case_id,
+  committee_id,
   service_level,
   service_level_award,
   champion_shortlist_status,
+  champion_status,
   comments,
 }: CommitteeFormProps) {
-  const booleanShortlistStatus =
-    champion_shortlist_status === ShortlistStatus.TRUE ? true : false;
   const {
     control,
     register,
@@ -41,13 +50,41 @@ export default function CommitteeForm({
     defaultValues: {
       service_level: service_level,
       service_level_award: service_level_award,
-      boolean_shortlist_status: booleanShortlistStatus,
+      is_champion_result: champion_status,
       comments: comments,
     },
     resolver: yupResolver(committeeSchema),
   });
+
+  const onSubmit = (data: CommitteeForm) => {
+    console.log(data);
+
+    const transformedData = {
+      case_id: case_id,
+      committee_id: committee_id,
+      committee_comments: data.comments!,
+      committee_service_level: data.service_level!,
+      service_level_winner_status: convertBooleanToServiceLevelWinner(
+        data.service_level_award
+      ),
+      champion_status: data.is_champion_result!,
+    };
+    // upsertNominationFormCommitteeComments(transformedData);
+    console.log(transformedData);
+  };
+
+  // const data = {
+  //   case_id: committeeData.case_id,
+  //   committee_id: committeeData.committee_id,
+  //   committee_comments: committeeData.committee_comments,
+  //   committee_service_level: committeeData.committee_service_level,
+  //   service_level_winner_status: committeeData.service_level_winner_status,
+  //   shortlist_status: committeeData.shortlist_status,
+  //   champion_status: committeeData.champion_status,
+  // };
+
   return (
-    <form onSubmit={handleSubmit((data) => console.log(data))}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Box
         display="flex"
         flexDirection="column"
@@ -63,12 +100,16 @@ export default function CommitteeForm({
               control={control}
               name="service_level_award"
               label="Nominate for Award"
+              error={errors.service_level_award?.message}
             />
-            <FormSwitch
-              control={control}
-              name="boolean_shortlist_status"
-              label="Shortlist for Championship"
-            />
+            {champion_shortlist_status && (
+              <FormSwitch
+                control={control}
+                name="is_champion_result"
+                label="Vote for Championship"
+                error={errors.is_champion_result?.message}
+              />
+            )}
           </Stack>
 
           <FormTextField

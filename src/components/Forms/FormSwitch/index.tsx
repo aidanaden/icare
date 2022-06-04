@@ -1,13 +1,19 @@
-import { FormControl, FormLabel, Switch } from "@mui/material";
+import { FormControl, FormLabel, Switch, FormHelperText } from "@mui/material";
 import { Controller } from "react-hook-form";
 
 interface FormSwitchProps {
   label: string;
   name: string;
   control: any;
+  error?: string;
 }
 
-export default function FormSwitch({ label, name, control }: FormSwitchProps) {
+export default function FormSwitch({
+  label,
+  name,
+  control,
+  error,
+}: FormSwitchProps) {
   return (
     <FormControl sx={{ width: { xs: "full", sm: "240px" } }}>
       <FormLabel
@@ -39,6 +45,7 @@ export default function FormSwitch({ label, name, control }: FormSwitchProps) {
           />
         )}
       />
+      <FormHelperText>{error}</FormHelperText>
     </FormControl>
   );
 }

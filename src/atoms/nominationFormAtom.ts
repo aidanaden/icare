@@ -7,7 +7,7 @@ export const nominationFormState = atom<NominationFormSubmissionData>({
   key: "nominationFormState",
   default: {
     user: undefined,
-    department: DepartmentType.AUDIT,
+    department: DepartmentType.ALL,
     description: "",
     answers: new Map<string, string>(null),
     files: undefined,
@@ -15,7 +15,17 @@ export const nominationFormState = atom<NominationFormSubmissionData>({
   effects: [
     ({ onSet }) => {
       onSet((newNominationFormState) => {
-        // upsertNominationForm(newNominationFormState);
+        if (newNominationFormState.user) {
+          console.log(
+            "nomination form updated by user: ",
+            newNominationFormState.user
+          );
+          // upsertNominationForm(
+          //   newNominationFormState.user?.staff_id,
+          //   newNominationFormState,
+          //   true
+          // );
+        }
       });
     },
   ],

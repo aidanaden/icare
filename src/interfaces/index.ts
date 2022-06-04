@@ -3,16 +3,15 @@ import {
   EndorsementStatus,
   NominationFormStatus,
   ServiceLevel,
+  ServiceLevelWinner,
   ShortlistStatus,
+  UserRole,
 } from "@/enums";
 
 export interface User {
   staff_id: string;
   name: string;
-  department: string;
-  team?: string;
-  designation: string;
-  role: string;
+  role: UserRole;
 }
 
 export interface DataTableData {
@@ -24,19 +23,19 @@ export interface DataTableData {
 
 export interface NominationDataTableData {
   case_id: string;
-  status: NominationFormStatus;
   nominee_name: string;
   nominee_designation: string;
   nominee_department: string;
   nominee_team: string;
   nomination_date: string | Date;
+  nominator_name: string;
   nomination_status: NominationFormStatus;
   endorsement_status: EndorsementStatus;
   committee_service_level?: ServiceLevel;
   committee_total_score?: number;
   is_champion_result: boolean;
   draft_status: boolean;
-  is_service_level_shortlist_result: boolean;
+  is_service_level_winner: ServiceLevelWinner;
   is_champion_shortlist_result: boolean;
 }
 
@@ -52,6 +51,18 @@ export interface HODQueryData {
   endorsement_status: EndorsementStatus;
 }
 
+// {
+//       "Committee_ID": "4444",
+//       "Committee_Name": "Doreen Quek",
+//       "Committee_Designation": "HQ Director",
+//       "Committee_Department": "SFIT",
+//       "Committee_Team": "CRM",
+//       "Committee_Comments": "doreen comments",
+//       "Committee_Service_Level": 170740002,
+//       "Service_Level_Winner_Status": 170740000,
+//       "Champion_Status": true
+//     },
+
 // nomination form detail committee member data
 export interface CommitteeMemberQueryData {
   case_id: string;
@@ -61,35 +72,40 @@ export interface CommitteeMemberQueryData {
   committee_department: string;
   committee_comments: string;
   committee_service_level: ServiceLevel;
+  service_level_winner_status: ServiceLevelWinner;
   shortlist_status: ShortlistStatus;
   champion_status: boolean;
 }
 
 // nomination form detail data
 export interface NominationDetailQueryData extends QueryData {
+  nominee_id: string;
   nominee_name: string;
   nominee_designation: string;
   nominee_department: string;
   nominee_team: string;
   nomination_date: Date;
+  nominator_id: string;
   nominator_name: string;
   nominator_designation: string;
   nominator_department: string;
   nominator_team: string;
   nomination_reason: string;
-  quiz_service_level: ServiceLevel;
-  quiz_score: number;
-  draft_status: boolean;
-  service_level_award: boolean;
-  champion_shortlist_status: boolean;
-  champion_award: boolean;
+  hod_id: string;
   hod_name: string;
   hod_department: string;
   hod_designation: string;
-  endorsement_status: EndorsementStatus;
   hod_comments: string;
-  committee_total_score: number;
+  endorsement_status: EndorsementStatus;
+  endorsement_date: string;
+  quiz_service_level: ServiceLevel;
+  quiz_score: number;
   committee_service_level_result: ServiceLevel;
+  committee_total_score: number;
+  draft_status: boolean;
+  is_service_level_winner: boolean;
+  is_champion_shortlist_result: boolean;
+  is_champion_result: boolean;
   committee_comment: CommitteeMemberQueryData[];
   total_champion_status: boolean;
   attachment_list?: string[];
@@ -115,7 +131,7 @@ export interface RatingChildQuestionData {
 
 // nomination form senior questions data
 export interface RatingQuestionData {
-  quiz_question_data: string;
+  quiz_question_name: string;
   rating_child_quiz_questions: RatingChildQuestionData[];
 }
 
@@ -129,8 +145,7 @@ export interface NominationFormSubmissionDetails {
   user: StaffData | undefined;
   department: DepartmentType | undefined;
   description: string | undefined;
-  files: File[] | undefined;
-  case_id?: string;
+  files: FileNameString[] | undefined;
 }
 
 export interface NominationFormSubmissionData

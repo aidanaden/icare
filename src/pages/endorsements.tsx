@@ -24,7 +24,8 @@ const Endorsements: NextPage = () => {
     NominationFilter.SUBMITTED
   );
 
-  if (user?.role === UserRole.HOD) {
+  // if (user?.role === UserRole.HOD) {
+  if (true) {
     return (
       <Box>
         <Box mb={4}>

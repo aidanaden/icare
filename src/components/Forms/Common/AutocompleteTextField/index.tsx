@@ -90,7 +90,7 @@ export default function Asynchronous({ control }: AutoCompleteProps) {
           renderInput={(params) => (
             <StyledTextField
               {...params}
-              label="User"
+              label="Staff"
               InputProps={{
                 ...params.InputProps,
                 endAdornment: (

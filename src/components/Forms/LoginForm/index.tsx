@@ -41,7 +41,7 @@ export default function LoginForm() {
             color="secondary"
             id="username"
             name={"username"}
-            label={"Username"}
+            label={"Staff ID"}
             required
             helperText={errors.username?.message}
           />
@@ -50,7 +50,7 @@ export default function LoginForm() {
             color="secondary"
             id="password"
             name={"password"}
-            label={"Password"}
+            label={"Timesheet Password"}
             type="password"
             required
             helperText={errors.password?.message}

@@ -28,6 +28,7 @@ const App = (props: MyAppProps) => {
   const { user } = useAuth();
 
   useEffect(() => {
+    console.log("user value has changed: ", user);
     if (!user) {
       router.push("/login");
     }

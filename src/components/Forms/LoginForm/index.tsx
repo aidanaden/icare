@@ -17,9 +17,10 @@ export default function LoginForm() {
   const [values, setValues] = useState<LoginProps>();
   const { signIn } = useAuth();
   const onSubmit = (data: LoginProps) => {
+    const { staff_id, password } = data;
     setValues(data);
     console.log("submitted data: ", data);
-    signIn(data);
+    signIn(staff_id, password);
   };
   const formContext = useForm<LoginProps>({
     defaultValues: {

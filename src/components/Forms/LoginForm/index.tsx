@@ -31,6 +31,7 @@ export default function LoginForm() {
   });
 
   const {
+    handleSubmit,
     formState: { errors },
   } = formContext;
 
@@ -38,7 +39,10 @@ export default function LoginForm() {
     <Box>
       {/*
       // @ts-ignore */}
-      <FormContainer formContext={formContext} onSuccess={onSubmit}>
+      <FormContainer
+        formContext={formContext}
+        onSuccess={handleSubmit(onSubmit)}
+      >
         <Stack direction={"column"} spacing={2.5} mb={5}>
           <StyledTextField
             size="medium"
@@ -47,6 +51,7 @@ export default function LoginForm() {
             name={"staff_id"}
             label={"Staff ID"}
             required
+            error={errors.staff_id ? true : false}
             helperText={errors.staff_id?.message}
           />
           <StyledTextField
@@ -57,6 +62,7 @@ export default function LoginForm() {
             label={"Timesheet Password"}
             type="password"
             required
+            error={errors.password ? true : false}
             helperText={errors.password?.message}
           />
         </Stack>

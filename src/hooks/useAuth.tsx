@@ -47,6 +47,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    console.log("user value has changed to: ", user);
     if (!user) {
       router.push("/login");
     }

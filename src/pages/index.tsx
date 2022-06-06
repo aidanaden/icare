@@ -2,8 +2,17 @@ import type { NextPage } from "next";
 // import Head from "next/head";
 // import Image from "next/image"
 import { CircularProgress, Box } from "@mui/material";
+import useAuth from "@/hooks/useAuth";
+import { useRouter } from "next/router";
 
 const Home: NextPage = () => {
+  // const router = useRouter();
+  // const { user } = useAuth();
+  // if (user) {
+  //   router.push("/dashboard");
+  // } else {
+  //   router.push("/login");
+  // }
   return (
     <Box
       sx={{

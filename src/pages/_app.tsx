@@ -27,16 +27,16 @@ const App = (props: MyAppProps) => {
   const router = useRouter();
   const { user } = useAuth();
 
-  // useEffect(() => {
-  //   if (!user) {
-  //     router.push("/login");
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (!user) {
+      router.push("/login");
+    }
+  }, []);
 
   return (
     <CacheProvider value={emotionCache}>
       <Head>
-        <title>NextJS MUI Typescript starter</title>
+        <title>ICare</title>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
       <RecoilRoot>
@@ -45,7 +45,7 @@ const App = (props: MyAppProps) => {
             {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
             <CssBaseline />
             <Box bgcolor={"grey.100"} minHeight="100vh" color="text.primary">
-              {!user ? (
+              {user ? (
                 <MainLayout>
                   <ErrorBoundary FallbackComponent={ErrorFallback}>
                     <Component {...pageProps} />

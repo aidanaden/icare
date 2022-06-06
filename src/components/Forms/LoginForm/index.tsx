@@ -6,21 +6,24 @@ import PrimaryButton from "@/components/Common/PrimaryButton";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema } from "../Schemas";
+import useAuth from "@/hooks/useAuth";
 
 interface LoginProps {
-  username: string;
+  staff_id: string;
   password: string;
 }
 
 export default function LoginForm() {
   const [values, setValues] = useState<LoginProps>();
+  const { signIn } = useAuth();
   const onSubmit = (data: LoginProps) => {
     setValues(data);
     console.log("submitted data: ", data);
+    signIn(data);
   };
   const formContext = useForm<LoginProps>({
     defaultValues: {
-      username: "",
+      staff_id: "",
       password: "",
     },
     resolver: yupResolver(loginSchema),
@@ -39,11 +42,11 @@ export default function LoginForm() {
           <StyledTextField
             size="medium"
             color="secondary"
-            id="username"
-            name={"username"}
+            id="staff_id"
+            name={"staff_id"}
             label={"Staff ID"}
             required
-            helperText={errors.username?.message}
+            helperText={errors.staff_id?.message}
           />
           <StyledTextField
             size="medium"

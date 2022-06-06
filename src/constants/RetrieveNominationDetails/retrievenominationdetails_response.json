@@ -24,7 +24,7 @@
   "Committee_Service_Level_Result": 170740003,
   "Committee_Total_Score": 25,
   "is_Service_Level_Winner": false,
-  "is_Champion_Shortlist_Result": true,
+  "is_Champion_Shortlist_Result": false,
   "is_Champion_Result": false,
   "Committee_Comment": [
     {
@@ -61,7 +61,9 @@
       "Champion_Status": false
     }
   ],
-  "Attachment_List": ["hello world.pdf"],
+  "Attachment_List": [
+    "hello world.pdf"
+  ],
   "Message": "Successful",
   "Status_Code": 200
 }

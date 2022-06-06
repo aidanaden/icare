@@ -225,6 +225,13 @@ const fetchFileStrings = (fileFetchDatas: FileFetchData[]) => {
   return files;
 };
 
+const deleteDraftNomination = async (case_id: string) => {
+  const data = {
+    case_id: case_id,
+  };
+  return await postAPI("DeleteDraft", data);
+};
+
 export {
   fetchAPI,
   postAPI,
@@ -238,4 +245,5 @@ export {
   useFetchStaff,
   fetchFile,
   fetchFileStrings,
+  deleteDraftNomination,
 };

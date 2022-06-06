@@ -5,7 +5,7 @@ YupPassword(yup); // extend yup
 
 export const loginSchema = yup
   .object({
-    username: yup.string().required(),
+    staff_id: yup.string().required(),
     password: yup.string().password().required(),
   })
   .required();

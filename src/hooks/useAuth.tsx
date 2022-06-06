@@ -8,12 +8,13 @@
 
 import { UserRole } from "@/enums";
 import { User } from "@/interfaces";
+import { postAPI } from "@/lib/nominations";
 import { useRouter } from "next/router";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 interface IAuth {
   user: User | undefined;
-  signIn: (email: string, password: string) => Promise<void>;
+  signIn: (staff_id: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   error: string | undefined;
   loading: boolean;
@@ -35,11 +36,12 @@ interface AuthProviderProps {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const router = useRouter();
-  const [user, setUser] = useState<User | undefined>({
-    staff_id: "124123123",
-    name: "sample user",
-    role: UserRole.COMMITTEE,
-  });
+  // const [user, setUser] = useState<User | undefined>({
+  //   staff_id: "124123123",
+  //   name: "sample user",
+  //   role: UserRole.COMMITTEE,
+  // });
+  const [user, setUser] = useState<User | undefined>(undefined);
   const [error, setError] = useState(undefined);
   const [initialLoading, setInitialLoading] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -63,16 +65,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   //   [auth]
   // );
 
-  const signIn = async (email: string, password: string) => {
+  const signIn = async (staff_id: string, password: string) => {
     setLoading(true);
-    // await signInWithEmailAndPassword(auth, email, password)
-    //   .then((userCredential) => {
-    //     setUser(userCredential.user);
-    //     router.push("/");
-    //     setLoading(false);
-    //   })
-    //   .catch((error) => alert(error.message))
-    //   .finally(() => setLoading(false));
+    const data = { staff_id: staff_id, password: password };
+    const userData = { Name: "test user", User_Role: "HOD" };
+    // const userData = await postAPI("AuthenticationToken", data);
+    console.log("log in response data: ", userData);
+    setLoading(false);
+    setUser({
+      staff_id: staff_id,
+      name: userData.Name,
+      role: userData.User_Role as UserRole,
+    });
   };
 
   const logout = async () => {

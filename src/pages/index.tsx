@@ -4,15 +4,9 @@ import type { NextPage } from "next";
 import { CircularProgress, Box } from "@mui/material";
 import useAuth from "@/hooks/useAuth";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 const Home: NextPage = () => {
-  const router = useRouter();
-  const { user } = useAuth();
-  if (user) {
-    router.push("/dashboard");
-  } else {
-    router.push("/login");
-  }
   return (
     <Box
       sx={{

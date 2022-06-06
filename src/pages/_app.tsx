@@ -27,6 +27,12 @@ const App = (props: MyAppProps) => {
   const router = useRouter();
   const { user } = useAuth();
 
+  useEffect(() => {
+    if (!user) {
+      router.push("/login");
+    }
+  }, [user, router]);
+
   return (
     <CacheProvider value={emotionCache}>
       <Head>

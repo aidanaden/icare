@@ -1,7 +1,9 @@
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
+import useAuth from "@/hooks/useAuth";
 import { Box, BoxProps, Container, styled } from "@mui/material";
 import React, { useState } from "react";
+import LoginLayout from "../LoginLayout/";
 
 const MainLayoutRoot = styled("div")(({ theme }) => ({
   display: "flex",
@@ -17,28 +19,33 @@ const MainLayoutRoot = styled("div")(({ theme }) => ({
 
 export default function MainLayout({ children, ...other }: BoxProps) {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
-  return (
-    <Box {...other}>
-      <MainLayoutRoot>
-        <Container
-          sx={{
-            display: "flex",
-            flex: "1 1 auto",
-            flexDirection: "column",
-            width: "100%",
-          }}
-        >
-          {children}
-        </Container>
-      </MainLayoutRoot>
-      <Navbar
-        handleSidebar={() => setSidebarOpen(true)}
-        handleNomination={() => console.log("handling nomination!")}
-        handleLogin={() => console.log("handling login!")}
-      />
-      <Sidebar open={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
-      {/* <Navbar onSidebarOpen={() => setSidebarOpen(true)} /> */}
-      {/* <Sidebar onClose={() => setSidebarOpen(false)} open={isSidebarOpen} /> */}
-    </Box>
-  );
+  const { user } = useAuth();
+  if (user) {
+    return (
+      <Box {...other}>
+        <MainLayoutRoot>
+          <Container
+            sx={{
+              display: "flex",
+              flex: "1 1 auto",
+              flexDirection: "column",
+              width: "100%",
+            }}
+          >
+            {children}
+          </Container>
+        </MainLayoutRoot>
+        <Navbar
+          handleSidebar={() => setSidebarOpen(true)}
+          handleNomination={() => console.log("handling nomination!")}
+          handleLogin={() => console.log("handling login!")}
+        />
+        <Sidebar open={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
+        {/* <Navbar onSidebarOpen={() => setSidebarOpen(true)} /> */}
+        {/* <Sidebar onClose={() => setSidebarOpen(false)} open={isSidebarOpen} /> */}
+      </Box>
+    );
+  } else {
+    return <LoginLayout>{children}</LoginLayout>;
+  }
 }

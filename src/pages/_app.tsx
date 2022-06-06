@@ -24,15 +24,6 @@ const clientSideEmotionCache = createEmotionCache();
 
 const App = (props: MyAppProps) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
-  const router = useRouter();
-  const { user } = useAuth();
-
-  useEffect(() => {
-    console.log("user value has changed: ", user);
-    if (!user) {
-      router.push("/login");
-    }
-  }, []);
 
   return (
     <CacheProvider value={emotionCache}>
@@ -46,17 +37,11 @@ const App = (props: MyAppProps) => {
             {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
             <CssBaseline />
             <Box bgcolor={"grey.100"} minHeight="100vh" color="text.primary">
-              {user ? (
-                <MainLayout>
-                  <ErrorBoundary FallbackComponent={ErrorFallback}>
-                    <Component {...pageProps} />
-                  </ErrorBoundary>
-                </MainLayout>
-              ) : (
-                <LoginLayout>
+              <MainLayout>
+                <ErrorBoundary FallbackComponent={ErrorFallback}>
                   <Component {...pageProps} />
-                </LoginLayout>
-              )}
+                </ErrorBoundary>
+              </MainLayout>
             </Box>
           </ThemeProvider>
         </AuthProvider>

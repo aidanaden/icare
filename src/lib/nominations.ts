@@ -14,7 +14,7 @@ import {
 } from "@/interfaces";
 import axios from "axios";
 import useSWR from "swr";
-import quizData from "@/constants/RetrieveQuiz/retrievequiz_response.json";
+import quizData from "@/constants/RetrieveQuiz/retrievequiz_response_senior.json";
 import userNominationData from "@/constants/RetrieveNomination/retrievenomination_1_response.json";
 import submittedNominationData from "@/constants/RetrieveNomination/retrievenomination_2_response.json";
 import endorsedNominationData from "@/constants/RetrieveNomination/retrievenomination_3_response.json";

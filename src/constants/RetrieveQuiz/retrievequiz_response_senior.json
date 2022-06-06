@@ -1,0 +1,153 @@
+{
+  "QnA_Questions": [
+    {
+      "Quiz_Question_Name": "The nominee provided service based on?",
+      "Answers": [
+        {
+          "Answer_ID": "956b168e-89e5-ec11-bb3c-000d3a81cc04",
+          "Answer_Name": "Gave me what I have asked for only"
+        },
+        {
+          "Answer_ID": "14e5c696-89e5-ec11-bb3c-000d3a81cc04",
+          "Answer_Name": "Fulfilled requirements very well"
+        },
+        {
+          "Answer_ID": "6af2c39c-89e5-ec11-bb3c-000d3a81cc04",
+          "Answer_Name": "Given requirements and further improving more than what was needed"
+        },
+        {
+          "Answer_ID": "6688e9a2-89e5-ec11-bb3c-000d3a81cc04",
+          "Answer_Name": "Provided services out of his/her own will and outside of the job scope"
+        }
+      ]
+    },
+    {
+      "Quiz_Question_Name": "The nominee displayed the following",
+      "Answers": [
+        {
+          "Answer_ID": "802d80c0-89e5-ec11-bb3c-000d3a81cc04",
+          "Answer_Name": "Able to meet deadlines with little to no supervision"
+        },
+        {
+          "Answer_ID": "2ca1c8c7-89e5-ec11-bb3c-000d3a81cc04",
+          "Answer_Name": "Initiate action to seek information and solve problems"
+        },
+        {
+          "Answer_ID": "699996cf-89e5-ec11-bb3c-000d3a81cc04",
+          "Answer_Name": "Work with people sincerely to achieve goals"
+        },
+        {
+          "Answer_ID": "595104d8-89e5-ec11-bb3c-000d3a81cc04",
+          "Answer_Name": "Anticipate potential issues and develops prevention alternatives"
+        }
+      ]
+    }
+  ],
+  "Rating_Questions": [
+    {
+      "Quiz_Question_Name": "How did the nominee display fairness towards all colleagues?",
+      "Rating_Child_Quiz_Questions": [
+        {
+          "Child_Quiz_Question_Name": "Distribute tasks, attention and feedback fairly",
+          "Answers": [
+            {
+              "Answer_ID": "0b2f0b6c-88e5-ec11-bb3c-000d3a81cc04",
+              "Answer_Name": "Exceptional"
+            },
+            {
+              "Answer_ID": "f20e3f72-88e5-ec11-bb3c-000d3a81cc04",
+              "Answer_Name": "Exceeds Expectations"
+            },
+            {
+              "Answer_ID": "935d347e-88e5-ec11-bb3c-000d3a81cc04",
+              "Answer_Name": "Very Good"
+            },
+            {
+              "Answer_ID": "30533d84-88e5-ec11-bb3c-000d3a81cc04",
+              "Answer_Name": "Good"
+            },
+            {
+              "Answer_ID": "38533d84-88e5-ec11-bb3c-000d3a81cc04",
+              "Answer_Name": "Enough"
+            }
+          ]
+        },
+        {
+          "Child_Quiz_Question_Name": "Makes the effort to reach out and maintain good relationship with everyone",
+          "Answers": [
+            {
+              "Answer_ID": "2e0b4cb1-88e5-ec11-bb3c-000d3a81cc04",
+              "Answer_Name": "Exceptional"
+            },
+            {
+              "Answer_ID": "d5b346b7-88e5-ec11-bb3c-000d3a81cc04",
+              "Answer_Name": "Exceeds Expectations"
+            },
+            {
+              "Answer_ID": "f46b73bd-88e5-ec11-bb3c-000d3a81cc04",
+              "Answer_Name": "Very Good"
+            },
+            {
+              "Answer_ID": "1d080ec4-88e5-ec11-bb3c-000d3a81cc04",
+              "Answer_Name": "Good"
+            },
+            {
+              "Answer_ID": "1f080ec4-88e5-ec11-bb3c-000d3a81cc04",
+              "Answer_Name": "Enough"
+            }
+          ]
+        },
+        {
+          "Child_Quiz_Question_Name": "Ensure work opportunities are given equally to anyone willing to take up the challenge",
+          "Answers": [
+            {
+              "Answer_ID": "f4ad8692-88e5-ec11-bb3c-000d3a81cc04",
+              "Answer_Name": "Exceptional"
+            },
+            {
+              "Answer_ID": "4a10e69a-88e5-ec11-bb3c-000d3a81cc04",
+              "Answer_Name": "Exceeds Expectations"
+            },
+            {
+              "Answer_ID": "4f10e69a-88e5-ec11-bb3c-000d3a81cc04",
+              "Answer_Name": "Very Good"
+            },
+            {
+              "Answer_ID": "8b978aa3-88e5-ec11-bb3c-000d3a81cc04",
+              "Answer_Name": "Good"
+            },
+            {
+              "Answer_ID": "8c978aa3-88e5-ec11-bb3c-000d3a81cc04",
+              "Answer_Name": "Enough"
+            }
+          ]
+        },
+        {
+          "Child_Quiz_Question_Name": "Communication channels are open to everyone. Change rules to promote fairness",
+          "Answers": [
+            {
+              "Answer_ID": "b9564c43-88e5-ec11-bb3c-000d3a81cc04",
+              "Answer_Name": "Exceptional"
+            },
+            {
+              "Answer_ID": "fa14874c-88e5-ec11-bb3c-000d3a81cc04",
+              "Answer_Name": "Exceeds Expectations"
+            },
+            {
+              "Answer_ID": "8fd58355-88e5-ec11-bb3c-000d3a81cc04",
+              "Answer_Name": "Very Good"
+            },
+            {
+              "Answer_ID": "e73b865d-88e5-ec11-bb3c-000d3a81cc04",
+              "Answer_Name": "Good"
+            },
+            {
+              "Answer_ID": "e93b865d-88e5-ec11-bb3c-000d3a81cc04",
+              "Answer_Name": "Enough"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

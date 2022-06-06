@@ -32,7 +32,7 @@ const App = (props: MyAppProps) => {
     if (!user) {
       router.push("/login");
     }
-  }, [user, router]);
+  }, []);
 
   return (
     <CacheProvider value={emotionCache}>

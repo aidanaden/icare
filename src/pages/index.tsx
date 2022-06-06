@@ -6,13 +6,13 @@ import useAuth from "@/hooks/useAuth";
 import { useRouter } from "next/router";
 
 const Home: NextPage = () => {
-  // const router = useRouter();
-  // const { user } = useAuth();
-  // if (user) {
-  //   router.push("/dashboard");
-  // } else {
-  //   router.push("/login");
-  // }
+  const router = useRouter();
+  const { user } = useAuth();
+  if (user) {
+    router.push("/dashboard");
+  } else {
+    router.push("/login");
+  }
   return (
     <Box
       sx={{

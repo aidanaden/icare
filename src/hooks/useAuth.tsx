@@ -47,8 +47,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (user) {
-      router.push("/dashboard");
+    if (!user) {
+      router.push("/login");
     }
   }, [router, user]);
 
@@ -64,6 +64,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       name: userData.Name,
       role: userData.User_Role as UserRole,
     });
+    router.push("/dashboard");
   };
 
   const logout = async () => {

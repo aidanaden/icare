@@ -24,14 +24,8 @@ const clientSideEmotionCache = createEmotionCache();
 
 const App = (props: MyAppProps) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
-  const router = useRouter();
+  // const router = useRouter();
   const { user } = useAuth();
-
-  useEffect(() => {
-    if (!user) {
-      router.push("/login");
-    }
-  }, [user, router]);
 
   return (
     <CacheProvider value={emotionCache}>

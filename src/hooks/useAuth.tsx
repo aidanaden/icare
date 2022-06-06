@@ -46,13 +46,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [initialLoading, setInitialLoading] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    console.log("user value has changed to: ", user);
-    if (!user) {
-      router.push("/login");
-    }
-  }, [router, user]);
-
   const signIn = async (staff_id: string, password: string) => {
     setLoading(true);
     const data = { staff_id: staff_id, password: password };

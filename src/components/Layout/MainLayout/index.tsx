@@ -1,8 +1,9 @@
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
 import useAuth from "@/hooks/useAuth";
+import { User } from "@/interfaces";
 import { Box, BoxProps, Container, styled } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import LoginLayout from "../LoginLayout/";
 
 const MainLayoutRoot = styled("div")(({ theme }) => ({
@@ -19,8 +20,15 @@ const MainLayoutRoot = styled("div")(({ theme }) => ({
 
 export default function MainLayout({ children, ...other }: BoxProps) {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [layoutUser, setLayoutUser] = useState<User | undefined>();
   const { user } = useAuth();
-  if (user) {
+
+  useEffect(() => {
+    console.log("setting layout user value to: ", user);
+    setLayoutUser(user);
+  }, [user]);
+
+  if (layoutUser) {
     return (
       <Box {...other}>
         <MainLayoutRoot>

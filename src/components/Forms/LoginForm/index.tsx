@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema } from "../Schemas";
 import useAuth from "@/hooks/useAuth";
+import FormTextField from "../Common/FormTextField";
 
 interface LoginProps {
   staff_id: string;
@@ -22,7 +23,13 @@ export default function LoginForm() {
     console.log("submitted data: ", data);
     signIn(staff_id, password);
   };
-  const formContext = useForm<LoginProps>({
+
+  const {
+    control,
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginProps>({
     defaultValues: {
       staff_id: "",
       password: "",
@@ -30,51 +37,33 @@ export default function LoginForm() {
     resolver: yupResolver(loginSchema),
   });
 
-  const {
-    handleSubmit,
-    formState: { errors },
-  } = formContext;
-
   return (
-    <Box>
-      {/*
-      // @ts-ignore */}
-      <FormContainer
-        formContext={formContext}
-        onSuccess={handleSubmit(onSubmit)}
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Stack direction={"column"} spacing={2.5} mb={5}>
+        <FormTextField
+          control={control}
+          label="Staff ID"
+          name="staff_id"
+          error={errors.staff_id?.message}
+          placeholder="Staff ID"
+        />
+        <FormTextField
+          control={control}
+          label="Timesheet Password"
+          name="password"
+          type="password"
+          error={errors.password?.message}
+          placeholder="Timesheet Password"
+        />
+      </Stack>
+      <PrimaryButton
+        type={"submit"}
+        size="large"
+        fullWidth
+        sx={{ borderRadius: "8px", py: "12px" }}
       >
-        <Stack direction={"column"} spacing={2.5} mb={5}>
-          <StyledTextField
-            size="medium"
-            color="secondary"
-            id="staff_id"
-            name={"staff_id"}
-            label={"Staff ID"}
-            required
-            error={errors.staff_id ? true : false}
-            helperText={errors.staff_id?.message}
-          />
-          <StyledTextField
-            size="medium"
-            color="secondary"
-            id="password"
-            name={"password"}
-            label={"Timesheet Password"}
-            type="password"
-            required
-            error={errors.password ? true : false}
-            helperText={errors.password?.message}
-          />
-        </Stack>
-        <PrimaryButton
-          type={"submit"}
-          size="large"
-          fullWidth
-          sx={{ borderRadius: "8px", py: "12px" }}
-        >
-          Submit
-        </PrimaryButton>
-      </FormContainer>
-    </Box>
+        Submit
+      </PrimaryButton>
+    </form>
   );
 }

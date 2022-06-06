@@ -8,6 +8,7 @@ interface FormTextFieldProps {
   name: string;
   error: string | undefined;
   placeholder: string;
+  type?: React.InputHTMLAttributes<unknown>["type"];
   multiLine?: boolean;
 }
 
@@ -17,6 +18,7 @@ export default function FormTextField({
   name,
   error,
   placeholder,
+  type,
   multiLine = false,
 }: FormTextFieldProps) {
   return (
@@ -39,6 +41,7 @@ export default function FormTextField({
             {...field}
             inputRef={field.ref}
             placeholder={placeholder}
+            type={type}
           />
         )}
       />

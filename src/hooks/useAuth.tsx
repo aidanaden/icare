@@ -53,8 +53,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const signIn = async (staff_id: string, password: string) => {
     setLoading(true);
     const data = { staff_id: staff_id, password: password };
-    const userData = { Name: "test user", User_Role: "HOD" };
-    // const userData = await postAPI("AuthenticationToken", data);
+    // const userData = { Name: "test user", User_Role: "HOD" };
+    const userData = await postAPI("AuthenticationToken", data);
     console.log("log in response data: ", userData);
     setLoading(false);
     setUser({

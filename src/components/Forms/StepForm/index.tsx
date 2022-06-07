@@ -1,7 +1,12 @@
-import { DepartmentType } from "@/enums";
+import { nominationFormState } from "@/atoms/nominationFormAtom";
+import { DepartmentType, NominationFilter } from "@/enums";
 import useAuth from "@/hooks/useAuth";
 import { NominationQuestionsQueryData } from "@/interfaces";
-import { useFetchQuiz } from "@/lib/nominations";
+import {
+  useFetchNominationDetails,
+  useFetchNominations,
+  useFetchQuiz,
+} from "@/lib/nominations";
 import {
   Box,
   Typography,
@@ -21,6 +26,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { useRecoilState } from "recoil";
 import FinalStep from "../Steps/FinalStep";
 import FirstStep from "../Steps/FirstStep";
 import SecondStep from "../Steps/SecondStep";
@@ -72,11 +78,90 @@ const StepForm = () => {
   const handleNext = () => {
     setActiveStep(activeStep + 1);
   };
-
   const handleBack = () => {
-    console.log("setting active step to : ", activeStep - 1);
     setActiveStep(activeStep - 1);
   };
+
+  const [getNominationFormState, setNominationFormState] =
+    useRecoilState(nominationFormState);
+
+  // FETCH DRAFT NOMINATION ANSWERS (IF EXISTS)
+  const { nominationData } = useFetchNominations(
+    user?.staff_id,
+    NominationFilter.USER
+  );
+
+  // get answer data from
+  const draftNominations = nominationData.filter((nom) => nom.draft_status);
+  const draftNomination = draftNominations[0];
+
+  // fetch draft nomination details
+  const { nominationDetailsData } = useFetchNominationDetails(
+    draftNomination.case_id
+  );
+
+  useEffect(() => {
+    const draftQuestionAnswerMap = new Map<string, string>();
+    const draftAnswers = draftNominations[0].answers;
+    console.log("draft nomination answers: ", draftAnswers);
+
+    // get question keys from questionData
+    questionData?.qna_questions.map(
+      ({
+        quiz_question_name,
+        answers,
+      }: {
+        quiz_question_name: any;
+        answers: any;
+      }) => {
+        draftQuestionAnswerMap.set(quiz_question_name, "");
+      }
+    );
+    questionData?.rating_questions?.map(
+      ({
+        quiz_question_name,
+        rating_child_quiz_questions,
+      }: {
+        quiz_question_name: any;
+        rating_child_quiz_questions: any;
+      }) => {
+        rating_child_quiz_questions.map(
+          ({
+            child_quiz_question_name,
+            answers,
+          }: {
+            child_quiz_question_name: any;
+            answers: any;
+          }) => {
+            draftQuestionAnswerMap.set(child_quiz_question_name, "");
+          }
+        );
+      }
+    );
+
+    // set answer value to question keys
+    const draftQuestions = Object.keys(
+      Object.fromEntries(draftQuestionAnswerMap)
+    );
+    draftQuestions.map((question, i) => {
+      draftQuestionAnswerMap.set(question, draftAnswers[i]);
+    });
+
+    console.log("draft question map: ", draftQuestionAnswerMap);
+
+    // fetch ALL form details
+    setNominationFormState({
+      ...getNominationFormState,
+      // user: {
+      //   staff_id: nominationDetailsData.nominee_id,
+      //   staff_name: nominationDetailsData.nominee_name,
+      //   staff_department: nominationDetailsData.nominee_department,
+      // },
+      // department: nominationDetailsData.nominee_department as DepartmentType,
+      // description: nominationDetailsData.nomination_reason,
+      answers: draftQuestionAnswerMap,
+    });
+  }, []);
 
   return (
     <>

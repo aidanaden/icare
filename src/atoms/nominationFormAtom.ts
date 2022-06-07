@@ -18,8 +18,9 @@ export const nominationFormState = atom<NominationFormSubmissionData>({
         if (newNominationFormState.user) {
           console.log(
             "nomination form updated by user: ",
-            newNominationFormState.user
+            newNominationFormState.user.staff_name
           );
+          console.log("updated form data: ", newNominationFormState);
           // upsertNominationForm(
           //   newNominationFormState.user?.staff_id,
           //   newNominationFormState,

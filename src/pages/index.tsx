@@ -7,6 +7,17 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 
 const Home: NextPage = () => {
+  const router = useRouter();
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (user) {
+      router.push("/dashboard");
+    } else {
+      router.push("/login");
+    }
+  }, []);
+
   return (
     <Box
       sx={{

@@ -29,22 +29,22 @@ export default function SecondStep({
   const [getNominationFormState, setNominationFormState] =
     useRecoilState(nominationFormState);
 
-  const onSubmit = (data: Map<string, string>) => {
-    console.log("second step submit called!");
-    console.log("submitted data: ", data);
-    console.log("existing form data: ", getNominationFormState);
-    const newFormData = { ...getNominationFormState, answers: { ...data } };
+  const onSubmit = (data: any) => {
+    const mapData = new Map(Array.from(Object.entries(data)));
+    console.log("submitted data: ", mapData);
+    const newFormData = {
+      ...getNominationFormState,
+      answers: mapData as Map<string, string>,
+    };
     console.log("new form data: ", newFormData);
     setNominationFormState(newFormData);
     handleNext();
   };
 
-  const formContext = useForm<Map<string, string>>({
-    defaultValues: getNominationFormState.answers,
-    // resolver: yupResolver(nominationDetailSchema),
+  const defaultQuizValues = Object.fromEntries(getNominationFormState.answers);
+  const { handleSubmit, control } = useForm<any>({
+    defaultValues: defaultQuizValues,
   });
-
-  console.log("question data: ", questionData);
 
   return (
     <Box width="100%">
@@ -56,13 +56,12 @@ export default function SecondStep({
           Complete the quiz and answer the questions as accurately as possible.
         </SectionSubtitle>
       </Box>
-      {/*
-      // @ts-ignore */}
-      <FormContainer formContext={formContext} onSuccess={onSubmit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Stack direction={"column"} spacing={3} mb={8}>
           {questionData?.qna_questions.map(
             ({ quiz_question_name, answers }) => (
               <NominationQuestion
+                control={control}
                 key={`qn ${quiz_question_name}`}
                 question={quiz_question_name}
                 answers={answers}
@@ -78,6 +77,7 @@ export default function SecondStep({
                 {rating_child_quiz_questions.map(
                   ({ child_quiz_question_name, answers }) => (
                     <NominationQuestion
+                      control={control}
                       key={`qn ${child_quiz_question_name}`}
                       question={child_quiz_question_name}
                       answers={answers}
@@ -118,7 +118,7 @@ export default function SecondStep({
             Next
           </PrimaryButton>
         </Stack>
-      </FormContainer>
+      </form>
     </Box>
   );
 }

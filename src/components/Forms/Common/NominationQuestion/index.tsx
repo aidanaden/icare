@@ -1,50 +1,59 @@
+import { nominationFormState } from "@/atoms/nominationFormAtom";
 import { NominationQuestionAnswerData } from "@/interfaces";
 import {
+  FormControl,
   FormControlLabel,
   FormLabel,
   Radio,
   RadioGroup,
   Stack,
 } from "@mui/material";
+import { Controller } from "react-hook-form";
 import { RadioButtonGroup } from "react-hook-form-mui";
+import { useRecoilState } from "recoil";
 
 interface NominationQuestion {
+  control: any;
   question: string;
   answers: NominationQuestionAnswerData[];
 }
 
 export default function NominationQuestion({
+  control,
   question,
   answers,
 }: NominationQuestion) {
-  console.log("anwers: ", answers);
-  const options = answers.map(({ answer_id, answer_name }) => {
-    return { id: `${answer_id}`, label: answer_name };
-  });
-  return (
-    <RadioButtonGroup
-      label={question}
-      name={question}
-      options={options}
-      required
-    />
-    // <Stack direction="column" spacing={1}>
-    // {/* <FormLabel id="demo-radio-buttons-group-label">{question}</FormLabel> */}
+  const [getNominationFormState, setNominationFormState] =
+    useRecoilState(nominationFormState);
 
-    // {/* <RadioGroup
-    //   aria-labelledby="demo-radio-buttons-group-label"
-    //   defaultValue="female"
-    //   name="radio-buttons-group"
-    // >
-    //   {answers.map((answer, i) => (
-    //     <FormControlLabel
-    //       key={`answer ${i} to ${question}`}
-    //       value={answer}
-    //       control={<Radio />}
-    //       label={answer}
-    //     />
-    //   ))}
-    // </RadioGroup> */}
-    // </Stack>
+  const onChange = (e: any, value: any) => {
+    const newAnswerMap = getNominationFormState.answers.set(question, value);
+    setNominationFormState({
+      ...getNominationFormState,
+      answers: newAnswerMap,
+    });
+  };
+
+  return (
+    <FormControl>
+      <FormLabel>{question}</FormLabel>
+      <Controller
+        rules={{ required: true }}
+        control={control}
+        name={question}
+        render={({ field }) => (
+          <RadioGroup {...field} onChange={onChange}>
+            {answers.map((ans) => (
+              <FormControlLabel
+                key={ans.answer_id}
+                value={ans.answer_id}
+                control={<Radio />}
+                label={ans.answer_name}
+              />
+            ))}
+          </RadioGroup>
+        )}
+      />
+    </FormControl>
   );
 }

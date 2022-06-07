@@ -37,6 +37,7 @@ export interface NominationDataTableData {
   draft_status: boolean;
   is_service_level_winner: ServiceLevelWinner;
   is_champion_shortlist_result: boolean;
+  answers: string[];
 }
 
 export interface QueryData {

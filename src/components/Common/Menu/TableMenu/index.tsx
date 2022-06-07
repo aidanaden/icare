@@ -1,4 +1,5 @@
 import useAuth from "@/hooks/useAuth";
+import { deleteDraftNomination } from "@/lib/nominations";
 import { MoreVert, Edit, FolderOpen, Delete } from "@mui/icons-material";
 import IconButton from "@mui/material/IconButton";
 import { useRouter } from "next/router";
@@ -38,6 +39,7 @@ export default function Menu({
 
   const handleDelete = () => {
     console.log("delete button pressed!");
+    deleteDraftNomination(case_id);
   };
 
   return (

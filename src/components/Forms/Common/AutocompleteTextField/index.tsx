@@ -8,7 +8,7 @@ import { TextFieldElementProps } from "react-hook-form-mui";
 import { useRecoilState } from "recoil";
 import { nominationFormState } from "@/atoms/nominationFormAtom";
 import { Control, Controller, useFormState, useWatch } from "react-hook-form";
-import { useFetchStaff, fetchStaff } from "@/lib/nominations";
+import { fetchStaff } from "@/lib/nominations";
 
 function sleep(delay = 0) {
   return new Promise((resolve) => {
@@ -29,8 +29,16 @@ export default function Asynchronous({ control }: AutoCompleteProps) {
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState<StaffData[]>([]);
   const loading = open && options.length === 0;
-  const { staffData, isLoading, isError } = useFetchStaff("", "");
+  const [staffData, setStaffData] = useState<StaffData[]>([]);
   const dept = useWatch({ control, name: "department" });
+
+  useEffect(() => {
+    const fetchStaffDataLoad = async () => {
+      const data = await fetchStaff("", "");
+      setStaffData(data);
+    };
+    fetchStaffDataLoad();
+  }, []);
 
   useEffect(() => {
     let active = true;

@@ -26,7 +26,6 @@ import AutocompleteTextField from "../../Common/AutocompleteTextField";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import StyledMenuItem from "@/components/Common/Menu/StyledMenuItem";
 import FormTextField from "../../Common/FormTextField";
-import { useFetchStaff } from "@/lib/nominations";
 
 interface FirstStepProp {
   handleNext: () => void;

@@ -10,21 +10,31 @@ import EndorsementTable from "@/components/Table/EndorsementTable";
 import theme from "@/styles/theme";
 import useAuth from "@/hooks/useAuth";
 import { NominationFilter, UserRole } from "@/enums";
-import { useFetchNominations } from "@/lib/nominations";
+import { fetchNominations } from "@/lib/nominations";
 import { getStatusFromData } from "@/utils";
 import Unauthorized from "@/components/UnauthorizedAccess";
+import { useState, useEffect } from "react";
+import { NominationDataTableData } from "@/interfaces";
 
 // ALL nominations made by staff of department of HOD
 // (pending, submitted/not endorsed, endorsed)
 
 const Endorsements: NextPage = () => {
   const { user } = useAuth();
-  const { nominationData, isLoading, isError } = useFetchNominations(
-    user?.staff_id,
-    NominationFilter.SUBMITTED
-  );
+  const [nominations, setNominations] = useState<NominationDataTableData[]>([]);
 
-  // if (user?.role === UserRole.HOD) {
+  useEffect(() => {
+    const fetchEndorsementNominations = async () => {
+      const resp = await fetchNominations(
+        user?.staff_id,
+        NominationFilter.SUBMITTED
+      );
+      console.log("fetched nominations endorsements: ", resp);
+      setNominations(resp);
+    };
+    fetchEndorsementNominations();
+  }, []);
+
   if (true) {
     return (
       <Box>
@@ -51,7 +61,7 @@ const Endorsements: NextPage = () => {
         </Box>
         <ShadowBox borderRadius="20px">
           <EndorsementTable
-            data={nominationData?.map((data: any) => getStatusFromData(data))}
+            data={nominations.map((data: any) => getStatusFromData(data))}
           />
         </ShadowBox>
       </Box>

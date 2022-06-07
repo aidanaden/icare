@@ -17,17 +17,15 @@ interface NominationDetailProps {
   title: string;
   service_level: ServiceLevel;
   description: string;
-  attachment_list?: string[];
+  attachment_list: string[] | [];
   case_id?: string | string[];
 }
 
 export default function NominationDetail(props: NominationDetailProps) {
   const { title, service_level, description, attachment_list, case_id } = props;
-  const fileFetchDatas: FileFetchData[] | undefined = attachment_list?.map(
-    (fname) => {
-      return { case_id: case_id as string, file_name: fname };
-    }
-  );
+  const fileFetchDatas: FileFetchData[] = attachment_list.map((fname) => {
+    return { case_id: case_id as string, file_name: fname };
+  });
 
   const [fileStringNames, setFileStringNames] = useState<FileStringNameData[]>(
     []
@@ -35,10 +33,8 @@ export default function NominationDetail(props: NominationDetailProps) {
 
   useEffect(() => {
     const fetchFileStringNames = async () => {
-      const fileDatas = fetchFile();
-      //     const fileStrings = await fetchFileStrings(fileFetchData!);
-      //     setFileStringNames(fileStrings);
-      setFileStringNames([fileDatas]);
+      const fileStrings = await fetchFileStrings(fileFetchDatas!);
+      setFileStringNames(fileStrings);
     };
     fetchFileStringNames();
   }, []);

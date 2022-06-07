@@ -9,8 +9,11 @@ import SimpleTable from "@/components/Table/SimpleTable/";
 import SimpleTableLink from "@/components/Table/Common/SimpleTableLink";
 import useAuth from "@/hooks/useAuth";
 import { EndorsementStatus, NominationFilter } from "@/enums";
-import { useFetchNominations } from "@/lib/nominations";
+import { fetchNominations } from "@/lib/nominations";
 import { getStatusFromData } from "@/utils";
+import { useState, useEffect } from "react";
+import { NominationDataTableData } from "@/interfaces";
+import { getCookie, getCookies } from "cookies-next";
 
 // 1. user data (name, staff_id, department, designation, role)
 // 2. number of nominations created by staff
@@ -20,20 +23,49 @@ import { getStatusFromData } from "@/utils";
 
 const Dashboard: NextPage = () => {
   const { user, logout } = useAuth();
+  const [nominations, setNominations] = useState<NominationDataTableData[]>([]);
+  const [draftNominations, setDraftNominations] = useState<
+    NominationDataTableData[]
+  >([]);
+  const [completedNominations, setCompletedNominations] = useState<
+    NominationDataTableData[]
+  >([]);
+  const [endorsedNominations, setEndorsedNominations] = useState<
+    NominationDataTableData[]
+  >([]);
 
-  const { nominationData, isLoading, isError } = useFetchNominations(
-    user?.staff_id,
-    NominationFilter.USER
-  );
+  useEffect(() => {
+    const fetchUserNominations = async () => {
+      const cookieName = getCookie("Name");
+      const cookieUserRole = getCookie("User_Role");
+      console.log("dashboard all cookies: ", getCookies());
+      console.log("dashboard cookie user name: ", cookieName);
+      console.log("dashboard cookie user role value: ", cookieUserRole);
 
-  const draftNominationData = nominationData.filter((nom) => nom.draft_status);
-  const completedNominationData = nominationData.filter(
-    (nom) => !nom.draft_status
-  );
+      const resp = await fetchNominations(
+        user?.staff_id,
+        NominationFilter.USER
+      );
+      console.log("fetched nominations dashboard: ", resp);
+      setNominations(resp);
 
-  const endorsedNominationData = nominationData.filter(
-    (nom) => nom.endorsement_status === EndorsementStatus.COMMENDABLE
-  );
+      const draftResp = resp.filter((nom: any) => nom.draft_status);
+      console.log("fetched draft resp: ", draftResp);
+      setDraftNominations(draftResp);
+
+      const completedResp = resp.filter((nom: any) => !nom.draft_status);
+      console.log("fetched completed resp: ", completedResp);
+      setCompletedNominations(completedResp);
+
+      const endorsedResp = resp.filter(
+        (nom: any) => nom.endorsement_status === EndorsementStatus.COMMENDABLE
+      );
+      console.log("fetched endorsed resp: ", endorsedResp);
+      setEndorsedNominations(endorsedResp);
+    };
+
+    fetchUserNominations();
+  }, []);
 
   return (
     <Box>
@@ -45,21 +77,18 @@ const Dashboard: NextPage = () => {
           <DashboardCarousel />
         </Grid>
         <Grid item xs={12} sm={4}>
-          <Statistic
-            title="Nominations created"
-            value={nominationData.length}
-          />
+          <Statistic title="Nominations created" value={nominations.length} />
         </Grid>
         <Grid item xs={12} sm={4}>
           <Statistic
             title="Nominations incomplete"
-            value={draftNominationData.length}
+            value={draftNominations.length}
           />
         </Grid>
         <Grid item xs={12} sm={4}>
           <Statistic
             title="Nominations endorsed"
-            value={endorsedNominationData.length}
+            value={endorsedNominations.length}
           />
         </Grid>
         <Grid item xs={12} md={6}>
@@ -73,7 +102,7 @@ const Dashboard: NextPage = () => {
               <SectionHeader>Incompleted nominations</SectionHeader>
               <SimpleTableLink href="/nominations">View all</SimpleTableLink>
             </Stack>
-            <SimpleTable rows={draftNominationData} />
+            <SimpleTable rows={draftNominations} />
           </ShadowBox>
         </Grid>
         <Grid item xs={12} md={6}>
@@ -87,7 +116,7 @@ const Dashboard: NextPage = () => {
               <SectionHeader>Completed nominations</SectionHeader>
               <SimpleTableLink href="/nominations">View all</SimpleTableLink>
             </Stack>
-            <SimpleTable rows={completedNominationData} />
+            <SimpleTable rows={completedNominations} />
           </ShadowBox>
         </Grid>
       </Grid>

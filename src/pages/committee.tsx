@@ -15,8 +15,10 @@ import {
 import { getStatusFromData } from "@/utils";
 import CommitteeTable from "@/components/Table/CommitteeTable";
 import useAuth from "@/hooks/useAuth";
-import { useFetchNominations } from "@/lib/nominations";
+import { fetchAPI, fetchNominations } from "@/lib/nominations";
 import Unauthorized from "@/components/UnauthorizedAccess";
+import { useEffect, useState } from "react";
+import { NominationDataTableData } from "@/interfaces";
 
 // ALL nominations (endorsed, submitted/not endorsed,
 // service level award shortlisted, service level award winners,
@@ -24,10 +26,16 @@ import Unauthorized from "@/components/UnauthorizedAccess";
 
 const Nominations: NextPage = () => {
   const { user } = useAuth();
-  const { nominationData, isLoading, isError } = useFetchNominations(
-    user?.staff_id,
-    NominationFilter.ENDORSED
-  );
+  const [nominations, setNominations] = useState<NominationDataTableData[]>([]);
+
+  useEffect(() => {
+    const fetchCommitteeNominations = async () => {
+      const resp = await fetchNominations(user?.staff_id, NominationFilter.ALL);
+      console.log("fetched nominations committee: ", resp);
+      setNominations(resp);
+    };
+    fetchCommitteeNominations();
+  }, []);
 
   if (user?.role === UserRole.COMMITTEE) {
     return (
@@ -55,7 +63,7 @@ const Nominations: NextPage = () => {
         </Box>
         <ShadowBox borderRadius="20px">
           <CommitteeTable
-            data={nominationData?.map((data: any) => getStatusFromData(data))}
+            data={nominations.map((data: any) => getStatusFromData(data))}
           />
         </ShadowBox>
       </Box>

@@ -31,7 +31,7 @@ export interface NominationDataTableData {
   nominator_name: string;
   nomination_status: NominationFormStatus;
   endorsement_status: EndorsementStatus;
-  committee_service_level?: ServiceLevel;
+  committee_service_level_result?: ServiceLevel;
   committee_total_score?: number;
   is_champion_result: boolean;
   draft_status: boolean;

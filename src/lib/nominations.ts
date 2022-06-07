@@ -38,7 +38,7 @@ const callAPI = async <JSON = any>(
     withCredentials: true,
     data: JSON.stringify(body),
   });
-  return response.data.json();
+  return response.data;
 };
 
 const fetchAPI = async <JSON = any>(
@@ -48,12 +48,8 @@ const fetchAPI = async <JSON = any>(
   return callAPI(path, "GET", body);
 };
 
-const postAPI = async (path: string, body: any) => {
-  try {
-    return callAPI(path, "POST", body);
-  } catch (err) {
-    console.error(err);
-  }
+const postAPI = async <JSON = any>(path: string, body: any): Promise<JSON> => {
+  return callAPI(path, "POST", body);
 };
 
 const upsertNominationForm = async (
@@ -74,21 +70,14 @@ const upsertNominationForm = async (
   return await postAPI("UpsertNomination", data);
 };
 
-const useFetchNominationDetails = (case_id?: string) => {
-  const data = recursivelyLowercaseJSONKeys(
-    nominationDetailData
-  ) as NominationDetailQueryData;
-  const error = false;
-  // const { data, error } = useSWR<NominationDetailQueryData>(
-  //   ["/RetrieveNominationDetails", { case_id: case_id }],
-  //   fetchAPI,
-  //   { suspense: true }
-  // );
-  return {
-    nominationDetailsData: data,
-    isLoading: !error && !data,
-    isError: error,
-  };
+const fetchNominationDetails = async (
+  case_id?: string
+): Promise<NominationDetailQueryData> => {
+  const data = await fetchAPI<NominationDetailQueryData>(
+    "RetrieveNominationDetails",
+    { case_id: case_id }
+  );
+  return data;
 };
 
 const upsertNominationFormHODComments = async (hodData: HODQueryData) => {
@@ -113,94 +102,51 @@ const upsertNominationFormCommitteeComments = async (
   return await postAPI("/nominations/id", data);
 };
 
-interface FetchNominationsProps {
-  nominationData: Omit<NominationDataTableData, "nomination_status">[];
-  isLoading?: boolean;
-  isError?: any;
-}
-
-const useFetchNominations = (
+const fetchNominations = async (
   id?: string,
   filter?: NominationFilter
-): FetchNominationsProps => {
-  let data;
-  let error;
-
-  if (filter === NominationFilter.USER) {
-    data = recursivelyLowercaseJSONKeys(userNominationData);
-    error = false;
-  } else if (filter === NominationFilter.SUBMITTED) {
-    data = recursivelyLowercaseJSONKeys(submittedNominationData);
-  } else {
-    data = recursivelyLowercaseJSONKeys(endorsedNominationData);
-  }
-
-  // const { data, error } = useSWR<Omit<NominationDataTableData, "status">[]>(
-  //   ["/RetrieveNomination", { staff_id: id, filter: filter, year: "" }],
-  //   fetchAPI,
-  //   { suspense: true }
-  // );
-  return {
-    nominationData: data as Omit<
-      NominationDataTableData,
-      "nomination_status"
-    >[],
-    isLoading: !error && !data,
-    isError: error,
-  };
+): Promise<NominationDataTableData[]> => {
+  const nominations = await postAPI<NominationDataTableData[]>(
+    "RetrieveNomination",
+    {
+      staff_id: id,
+      filter: filter,
+      year: "2022",
+    }
+  );
+  return nominations;
 };
 
-const useFetchQuiz = (staff_id?: string) => {
-  const data = recursivelyLowercaseJSONKeys(quizData);
-  const error = false;
-  // const { data, error } = useSWR<NominationQuestionsQueryData>(
-  //   ["/RetrieveQuiz", { staff_id: staff_id }],
-  //   fetchAPI,
-  //   { suspense: true }
-  // );
-  return { questionData: data, isLoading: !error && !data, isError: error };
+const fetchQuiz = async (
+  staff_id?: string
+): Promise<NominationQuestionsQueryData> => {
+  const data = await fetchAPI<NominationQuestionsQueryData>("RetrieveQuiz", {
+    staff_id: staff_id,
+  });
+  return data;
 };
 
-const fetchStaff = (keyword?: string, department?: string) => {
+const fetchStaff = async (keyword?: string, department?: string) => {
   console.log("fetching staff data...");
-  return recursivelyLowercaseJSONKeys(staffData);
-  // return await fetchAPI<StaffData[]>("RetrieveStaffList", {
-  //   keyword: keyword,
-  //   department: department,
-  // });
+  // return recursivelyLowercaseJSONKeys(staffData);
+  const data = await fetchAPI<StaffData[]>("RetrieveStaffList", {
+    keyword: keyword,
+    department: department,
+  });
+  return data;
 };
 
-const useFetchStaff = (
-  keyword?: string,
-  department?: string
-): { staffData: StaffData[]; isLoading: boolean; isError: boolean } => {
-  const data = recursivelyLowercaseJSONKeys(staffData);
-  const error = false;
-  // const { data, error } = useSWR<StaffData[]>(
-  //   ["RetrieveStaffList", { keyword: keyword, department: department }],
-  //   fetchAPI,
-  //   { suspense: true }
-  // );
-  return {
-    staffData: data,
-    isLoading: !error && !data,
-    isError: error,
-  };
-};
-
-const fetchFile = (
+const fetchFile = async (
   case_id?: string,
   file_name?: string
-): FileStringNameData => {
-  const data = recursivelyLowercaseJSONKeys(fileData);
-  const error = false;
-  // const { data, error } = useSWR<FileQueryData>(
-  //   ["RetrieveFile", { case_id: case_id, file_name: file_name }],
-  //   fetchAPI,
-  //   { suspense: true }
-  // );
+): Promise<FileStringNameData> => {
+  // const data = recursivelyLowercaseJSONKeys(fileData);
+  const data = await fetchAPI<FileQueryData>("RetrieveFile", {
+    case_id: case_id,
+    file_name: file_name,
+  });
   return {
-    file_name: "test.pdf",
+    file_name: file_name!,
     file_string: data.file_string,
     message: "success",
     status_code: 200,
@@ -215,6 +161,7 @@ const fetchFileStrings = (fileFetchDatas: FileFetchData[]) => {
           case_id: fileFetchData.case_id,
           file_name: fileFetchData.file_name,
         });
+        // return data;
         return {
           ...recursivelyLowercaseJSONKeys(data),
           file_name: fileFetchData.file_name,
@@ -236,13 +183,12 @@ export {
   fetchAPI,
   postAPI,
   upsertNominationForm,
-  useFetchNominationDetails,
+  fetchNominationDetails,
   upsertNominationFormHODComments,
   upsertNominationFormCommitteeComments,
-  useFetchNominations,
-  useFetchQuiz,
+  fetchNominations,
+  fetchQuiz,
   fetchStaff,
-  useFetchStaff,
   fetchFile,
   fetchFileStrings,
   deleteDraftNomination,

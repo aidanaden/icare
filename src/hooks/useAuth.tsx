@@ -11,6 +11,7 @@ import { User } from "@/interfaces";
 import { postAPI } from "@/lib/nominations";
 import { useRouter } from "next/router";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { getCookie, getCookies } from "cookies-next";
 
 interface IAuth {
   user: User | undefined;
@@ -52,15 +53,25 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const signIn = async (staff_id: string, password: string) => {
     setLoading(true);
+    console.log("trying to sign in...");
     const data = { staff_id: staff_id, password: password };
     // const userData = { Name: "test user", User_Role: "HOD" };
     const userData = await postAPI("AuthenticationToken", data);
     console.log("log in response data: ", userData);
     setLoading(false);
+
+    const cookieName = getCookie("Name");
+    const cookieUserRole = getCookie("User_Role");
+    console.log("useAuth all cookies: ", getCookies());
+    console.log("useAuth cookie user name: ", cookieName);
+    console.log("useAuth cookie user role value: ", cookieUserRole);
+
     setUser({
       staff_id: staff_id,
-      name: userData.Name,
-      role: userData.User_Role as UserRole,
+      name: userData.Name ? userData.Name : cookieName,
+      role: userData.User_Role
+        ? (userData.User_Role as UserRole)
+        : (cookieUserRole as UserRole),
     });
     router.push("/dashboard");
   };
@@ -76,13 +87,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     //   .finally(() => setLoading(false));
   };
 
-  const memoedValue = useMemo(
-    () => ({ user, signIn, error, loading, logout }),
-    [user, loading, error]
-  );
-
   return (
-    <AuthContext.Provider value={memoedValue}>
+    <AuthContext.Provider value={{ user, signIn, error, loading, logout }}>
       {!initialLoading && children}
     </AuthContext.Provider>
   );

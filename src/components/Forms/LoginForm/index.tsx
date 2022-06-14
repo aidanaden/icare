@@ -8,6 +8,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema } from "../Schemas";
 import useAuth from "@/hooks/useAuth";
 import FormTextField from "../Common/FormTextField";
+import { LoadingButton } from "@mui/lab";
+import { useRouter } from "next/router";
+import FeedbackSnackbar from "../Common/FeedbackSnackbar";
 
 interface LoginProps {
   staff_id: string;
@@ -15,18 +18,34 @@ interface LoginProps {
 }
 
 export default function LoginForm() {
-  const [values, setValues] = useState<LoginProps>();
+  const [loginSuccessOpen, setLoginSuccessOpen] = useState<boolean>(false);
+  const [loginErrorOpen, setLoginErrorOpen] = useState<boolean>(false);
+  const [loginLoading, setLoginLoading] = useState<boolean>(false);
+  const router = useRouter();
   const { signIn } = useAuth();
-  const onSubmit = (data: LoginProps) => {
+
+  const onSubmit = async (data: LoginProps) => {
     const { staff_id, password } = data;
-    setValues(data);
     console.log("submitted data: ", data);
-    signIn(staff_id, password);
+    setLoginLoading(true);
+    try {
+      const response = await signIn(staff_id, password);
+      if (response?.status_code === 200) {
+        setLoginSuccessOpen(true);
+        setLoginLoading(false);
+        setTimeout(() => {
+          router.push("/dashboard");
+        }, 2500);
+      }
+    } catch (err) {
+      setLoginLoading(false);
+      console.log("error occurred while logging in: ", err);
+      setLoginErrorOpen(true);
+    }
   };
 
   const {
     control,
-    register,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginProps>({
@@ -56,14 +75,26 @@ export default function LoginForm() {
           placeholder="Timesheet Password"
         />
       </Stack>
-      <PrimaryButton
+      <LoadingButton
         type={"submit"}
         size="large"
         fullWidth
         sx={{ borderRadius: "8px", py: "12px" }}
+        variant={"contained"}
+        color={"secondary"}
+        disableElevation
+        loading={loginLoading}
       >
         Submit
-      </PrimaryButton>
+      </LoadingButton>
+      <FeedbackSnackbar
+        successOpen={loginSuccessOpen}
+        setSuccessOpen={setLoginSuccessOpen}
+        successMsg="Successfully logged in! Redirecting now..."
+        errorOpen={loginErrorOpen}
+        setErrorOpen={setLoginErrorOpen}
+        errorMsg="Error occurred while trying to log in. Please try again."
+      />
     </form>
   );
 }

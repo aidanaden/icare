@@ -1,76 +1,62 @@
-import { TextField, Box, Button, Grid, Stack } from "@mui/material";
+import { TextField, Box, Stack } from "@mui/material";
 import { useContext, useCallback, useState, Dispatch } from "react";
-import { FormContainer } from "react-hook-form-mui";
 import { useForm } from "react-hook-form";
 import PrimaryButton from "@/components/Common/PrimaryButton";
 import SectionHeader from "@/components/Common/SectionHeader";
 import SectionSubtitle from "@/components/Common/SectionSubtitle";
-import { nominationDetailSchema } from "../../Schemas";
-import { DepartmentType } from "@/enums";
-import NominationQuestion from "../../Common/NominationQuestion";
-import { useRecoilState } from "recoil";
-import { nominationFormState } from "@/atoms/nominationFormAtom";
+import { RecoilState, useRecoilState, useResetRecoilState } from "recoil";
 import { NominationFormSubmissionData } from "@/interfaces";
 import { upsertNominationForm } from "@/lib/nominations";
 import useAuth from "@/hooks/useAuth";
+import CustomSnackbar from "@/components/Common/Snackbar";
+import { useRouter } from "next/router";
+import FeedbackSnackbar from "../../Common/FeedbackSnackbar";
 
 interface FinalStepProp {
-  handleSubmit: () => void;
+  recoilFormState: RecoilState<NominationFormSubmissionData>;
   handleBack: () => void;
+  case_id?: string;
 }
 
-export default function FinalStep({ handleSubmit, handleBack }: FinalStepProp) {
+export default function FinalStep({
+  recoilFormState,
+  handleBack,
+  case_id,
+}: FinalStepProp) {
+  const router = useRouter();
   const { user } = useAuth();
   const [getNominationFormState, setNominationFormState] =
-    useRecoilState(nominationFormState);
+    useRecoilState(recoilFormState);
+  const resetFormState = useResetRecoilState(recoilFormState);
+  const [successSnackbarOpen, setSuccessSnackbarOpen] =
+    useState<boolean>(false);
+  const [errorSnackbarOpen, setErrorSnackbarOpen] = useState<boolean>(false);
 
-  const onSubmit = (data: Map<string, string>) => {
-    console.log("final step submit called!");
-    const newFormData = { ...getNominationFormState, answers: data };
-    setNominationFormState(newFormData);
-    console.log("submitted data: ", data);
-    console.log("new form data: ", newFormData);
-    handleSubmit();
+  const handleFinalFormSubmit = async () => {
+    if (!user) {
+      console.error("user not logged in!");
+    } else {
+      try {
+        const response = await upsertNominationForm(
+          user?.staff_id,
+          getNominationFormState,
+          false,
+          case_id ?? getNominationFormState.case_id
+        );
+        if (response.status_code === 200) {
+          setSuccessSnackbarOpen(true);
+          resetFormState();
+          setTimeout(() => {
+            router.push("/nominations");
+          }, 2500);
+        } else {
+          setErrorSnackbarOpen(true);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
   };
-
-  const formContext = useForm<NominationFormSubmissionData>({
-    defaultValues: {
-      // email: "",
-      // department: DepartmentType.AUDIT,
-      // description: "",
-    },
-    // resolver: yupResolver(nominationDetailSchema),
-  });
-
-  const {
-    formState: { errors },
-  } = formContext;
-
-  interface FormQuestion {
-    question: string;
-    answers: string[];
-  }
-
-  const formQuestionData: FormQuestion[] = [
-    {
-      question: "The nominee provided service based on?",
-      answers: [
-        "Gave me what I have asked for only",
-        "Fulfilled requirements very well",
-        "Given requirements and further improving more than what was needed",
-        "Provided services out of his/her own will and outside of the job scope",
-      ],
-    },
-    {
-      question: "The nominee displayed the following",
-      answers: [
-        "Able to meet deadlines with little to no supervision",
-        "Initiate action to seek information and solve problems",
-        "Work with people sincerely to achieve goals",
-        "Anticipate potential issues and develops prevention alternatives",
-      ],
-    },
-  ];
 
   return (
     <Box width="100%">
@@ -116,20 +102,20 @@ export default function FinalStep({ handleSubmit, handleBack }: FinalStepProp) {
               display: "flex",
               justifyContent: { xs: "center", sm: "flex-end" },
             }}
-            onClick={() => {
-              if (user) {
-                upsertNominationForm(
-                  user?.staff_id,
-                  getNominationFormState,
-                  false
-                );
-              }
-            }}
+            onClick={handleFinalFormSubmit}
           >
             Submit
           </PrimaryButton>
         </Stack>
       </Box>
+      <FeedbackSnackbar
+        successOpen={successSnackbarOpen}
+        setSuccessOpen={setSuccessSnackbarOpen}
+        successMsg="Successfully submitted your nomination!"
+        errorOpen={errorSnackbarOpen}
+        setErrorOpen={setErrorSnackbarOpen}
+        errorMsg="Error occurred while trying to submit your nomination! Please try again."
+      />
     </Box>
   );
 }

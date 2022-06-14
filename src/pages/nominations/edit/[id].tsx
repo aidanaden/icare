@@ -6,16 +6,15 @@ import SectionHeader from "@/components/Common/SectionHeader";
 import ShadowBox from "@/components/Common/ShadowBox";
 import { Breadcrumbs } from "@mui/material";
 import NextMuiLink from "@/components/Common/NextMuiLink";
-import { DepartmentType, NominationFormStatus } from "@/enums";
-import EndorsementTable from "@/components/Table/EndorsementTable";
-import theme from "@/styles/theme";
 import StepForm from "@/components/Forms/StepForm";
 import useAuth from "@/hooks/useAuth";
+import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { nominationFormState } from "@/atoms/nominationFormAtom";
+import { editNominationFormState } from "@/atoms/editNominationFormAtom";
 
 const Nomination: NextPage = () => {
-  const { user } = useAuth();
+  const router = useRouter();
+  const { id } = router.query;
 
   // add check when user attempts to leave page
   useEffect(() => {
@@ -32,7 +31,7 @@ const Nomination: NextPage = () => {
   return (
     <Box>
       <Box mb={4}>
-        <SectionHeader mb={2}>New Nomination</SectionHeader>
+        <SectionHeader mb={2}>Edit Nomination</SectionHeader>
         <Breadcrumbs
           separator="•"
           aria-label="breadcrumb"
@@ -52,9 +51,12 @@ const Nomination: NextPage = () => {
           </NextMuiLink>
         </Breadcrumbs>
       </Box>
-      {user && (
+      {id && (
         <ShadowBox p={{ xs: 4, md: 8 }}>
-          <StepForm recoilFormState={nominationFormState} />
+          <StepForm
+            recoilFormState={editNominationFormState}
+            case_id={id as string}
+          />
         </ShadowBox>
       )}
     </Box>

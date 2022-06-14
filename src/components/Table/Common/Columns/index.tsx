@@ -21,7 +21,9 @@ export interface Column {
     | "nominee_department"
     | "nominee_team"
     | "nomination_status"
-    | "nomination_date"
+    | "nomination_created_date"
+    | "nomination_submitted_date"
+    | "quiz_service_level"
   >;
   label: string;
   minWidth?: number;
@@ -36,22 +38,46 @@ export interface SimpleColumn extends Column {
     | "nominator_name"
     | "nominee_department"
     | "nominee_team"
-    | "nomination_date"
+    | "nomination_created_date"
+    | "quiz_service_level"
   >;
 }
 
 export const columns: readonly Column[] = [
-  { id: "nominee_name", label: "Nominee", minWidth: 100 },
   { id: "nominator_name", label: "Nominator", minWidth: 100 },
+  { id: "nominee_name", label: "Nominee", minWidth: 100 },
   { id: "nominee_department", label: "Department", minWidth: 100 },
+  {
+    id: "quiz_service_level",
+    label: "Service Level",
+    minWidth: 100,
+  },
   { id: "nominee_team", label: "Team", minWidth: 100 },
   { id: "nomination_status", label: "Status", align: "center", minWidth: 100 },
   {
-    id: "nomination_date",
+    id: "nomination_created_date",
     label: "Created",
     minWidth: 100,
     align: "right",
-    format: formatDateToString,
+  },
+];
+
+export const submittedColumns: readonly Column[] = [
+  { id: "nominator_name", label: "Nominator", minWidth: 100 },
+  { id: "nominee_name", label: "Nominee", minWidth: 100 },
+  { id: "nominee_department", label: "Department", minWidth: 100 },
+  {
+    id: "quiz_service_level",
+    label: "Service Level",
+    minWidth: 100,
+  },
+  { id: "nominee_team", label: "Team", minWidth: 100 },
+  { id: "nomination_status", label: "Status", align: "center", minWidth: 100 },
+  {
+    id: "nomination_submitted_date",
+    label: "Submitted",
+    minWidth: 100,
+    align: "right",
   },
 ];
 
@@ -59,7 +85,7 @@ export const simpleColumns: readonly SimpleColumn[] = [
   { id: "nominee_name", label: "Nominee", minWidth: 170 },
   { id: "nominee_department", label: "Department", minWidth: 100 },
   {
-    id: "nomination_date",
+    id: "nomination_created_date",
     label: "Created",
     minWidth: 100,
     align: "right",

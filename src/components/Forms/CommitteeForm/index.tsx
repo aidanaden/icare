@@ -18,6 +18,7 @@ import {
 interface CommitteeFormProps {
   case_id: string;
   committee_id: string;
+  default_service_level: ServiceLevel;
   service_level?: ServiceLevel;
   service_level_award?: boolean;
   champion_shortlist_status?: boolean;
@@ -35,6 +36,7 @@ interface CommitteeForm {
 export default function CommitteeForm({
   case_id,
   committee_id,
+  default_service_level,
   service_level,
   service_level_award,
   champion_shortlist_status,
@@ -92,21 +94,24 @@ export default function CommitteeForm({
         height="100%"
       >
         <Stack direction={"column"} spacing={4} height="100%" mb={{ xs: 6 }}>
-          <CommitteeServiceLevelSelect control={control} />
+          <CommitteeServiceLevelSelect
+            defaultServiceLevel={default_service_level}
+            control={control}
+          />
           {/* <CommitteeShortlistSelect control={control} /> */}
 
           <Stack direction={{ xs: "column", md: "row" }} spacing={3}>
             <FormSwitch
               control={control}
               name="service_level_award"
-              label="Nominate for Award"
+              label="Award Winner"
               error={errors.service_level_award?.message}
             />
             {champion_shortlist_status && (
               <FormSwitch
                 control={control}
                 name="is_champion_result"
-                label="Vote for Championship"
+                label="ICare Champion"
                 error={errors.is_champion_result?.message}
               />
             )}

@@ -13,8 +13,13 @@ import HODDetails from "@/components/HODDetails";
 import NominationDetails from "@/components/NominationDetails";
 import CommitteeDetails from "@/components/CommitteeDetails";
 import CommitteeMemberDetails from "@/components/CommitteeMemberDetails";
-import { EndorsementStatus, ServiceLevel, ShortlistStatus } from "@/enums";
-import { fetchAPI, fetchNominationDetails } from "@/lib/nominations";
+import {
+  EndorsementStatus,
+  ServiceLevel,
+  ShortlistStatus,
+  UserRole,
+} from "@/enums";
+import { useNominationDetails } from "@/lib/nominations";
 import { useRouter } from "next/router";
 import useAuth from "@/hooks/useAuth";
 import { useState, useEffect } from "react";
@@ -24,17 +29,10 @@ const View: NextPage = () => {
   const { user } = useAuth();
   const router = useRouter();
   const { id } = router.query;
-  const [nominationDetails, setNominationDetails] =
-    useState<NominationDetailQueryData>();
+  const { data, error, loading } = useNominationDetails(id?.toString());
 
-  useEffect(() => {
-    const fetchNominationPageDetails = async () => {
-      const resp = await fetchNominationDetails(id?.toString());
-      console.log("nomination details resp: ", resp);
-      setNominationDetails(resp);
-    };
-    fetchNominationPageDetails();
-  }, []);
+  console.log("id is: ", id);
+  console.log("nomination detail data: ", data);
 
   return (
     <Box>
@@ -62,96 +60,99 @@ const View: NextPage = () => {
           </NextMuiLink>
         </Breadcrumbs>
       </Box>
-      {nominationDetails && (
+      {data && (
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
             <UserDetails
               title="Nominee"
-              name={nominationDetails.nominee_name}
-              designation={nominationDetails.nominee_designation}
-              department={nominationDetails.nominee_department}
-              team={nominationDetails.nominee_team}
+              name={data?.nominee_name}
+              designation={data.nominee_designation}
+              department={data.nominee_department}
+              team={data.nominee_team}
+              loading={!data}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <UserDetails
               title="Nominator"
-              name={nominationDetails.nominator_name}
-              designation={nominationDetails.nominator_designation}
-              department={nominationDetails.nominator_department}
-              team={nominationDetails.nominator_team}
+              name={data.nominator_name}
+              designation={data.nominator_designation}
+              department={data.nominator_department}
+              team={data.nominator_team}
+              loading={!data}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <NominationDetails
               title="Details"
               case_id={id}
-              service_level={nominationDetails.quiz_service_level}
-              description={nominationDetails.nomination_reason}
-              attachment_list={nominationDetails.attachment_list ?? []}
+              service_level={data.quiz_service_level}
+              description={data.nomination_reason}
+              draft_status={data.draft_status}
+              attachment_list={data.attachment_list ?? []}
+              loading={!data}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <HODDetails
               case_id={id as string}
-              hod_id={nominationDetails.hod_id}
+              hod_id={data.hod_id}
               title="Head of Department"
-              name={nominationDetails.hod_name}
-              designation={nominationDetails.hod_designation}
-              department={nominationDetails.hod_department}
-              endorsement_status={nominationDetails.endorsement_status}
-              endorsement_date={nominationDetails.endorsement_date}
-              comments={nominationDetails.hod_comments}
-              // TODO
-              // isEditable={nominationDetailsData.hod_id === user?.staff_id}
-              isEditable={false}
+              name={data.hod_name}
+              designation={data.hod_designation}
+              department={data.hod_department}
+              endorsement_status={data.endorsement_status}
+              endorsement_date={data.endorsement_date}
+              comments={data.hod_comments}
+              loading={!data}
+              isEditable={data.hod_id === user?.staff_id}
             />
           </Grid>
-          <Grid item xs={12}>
-            <Stack direction={{ xs: "column", md: "row" }} spacing={3}>
-              <Grid container spacing={3}>
-                <Grid item xs={12}>
-                  <CommitteeDetails
-                    title="Committee Score"
-                    final_score={nominationDetails.committee_total_score}
-                    final_service_level={
-                      nominationDetails.committee_service_level_result
-                    }
-                    is_service_level_winner={
-                      nominationDetails.is_service_level_winner
-                    }
-                    is_champion_shortlist_result={
-                      nominationDetails.is_champion_shortlist_result
-                    }
-                    is_champion_result={nominationDetails.is_champion_result}
-                  />
-                </Grid>
-                {nominationDetails.committee_comment.map((committeeData) => (
-                  <Grid item xs={12} sm={6} key={committeeData.case_id}>
-                    <CommitteeMemberDetails
-                      case_id={id as string}
-                      committee_id={committeeData.committee_id}
-                      name={committeeData.committee_name}
-                      designation={committeeData.committee_designation}
-                      department={committeeData.committee_department}
-                      service_level={committeeData.committee_service_level}
-                      service_level_award={
-                        committeeData.service_level_winner_status
+          {user?.role.includes(UserRole.COMMITTEE) && (
+            <Grid item xs={12}>
+              <Stack direction={{ xs: "column", md: "row" }} spacing={3}>
+                <Grid container spacing={3}>
+                  <Grid item xs={12}>
+                    <CommitteeDetails
+                      title="Committee Score"
+                      final_score={data.committee_total_score}
+                      final_service_level={data.committee_service_level_result}
+                      is_service_level_winner={data.is_service_level_winner}
+                      is_champion_shortlist_result={
+                        data.is_champion_shortlist_result
                       }
-                      champion_shortlist_status={
-                        nominationDetails.is_champion_shortlist_result
-                      }
-                      champion_status={committeeData.champion_status}
-                      comments={committeeData.committee_comments}
-                      // TODO
-                      // isEditable={committeeData.committee_id === user?.staff_id}
-                      isEditable={true}
+                      is_champion_result={data.is_champion_result}
+                      loading={loading}
                     />
                   </Grid>
-                ))}
-              </Grid>
-            </Stack>
-          </Grid>
+                  {data?.committee_comment.map((committeeData) => (
+                    <Grid item xs={12} sm={6} key={committeeData.case_id}>
+                      <CommitteeMemberDetails
+                        case_id={id as string}
+                        committee_id={committeeData.committee_id}
+                        name={committeeData.committee_name}
+                        designation={committeeData.committee_designation}
+                        department={committeeData.committee_department}
+                        default_service_level={data.quiz_service_level}
+                        service_level={committeeData.committee_service_level}
+                        service_level_award={
+                          committeeData.service_level_winner_status
+                        }
+                        champion_shortlist_status={
+                          data.is_champion_shortlist_result
+                        }
+                        champion_status={committeeData.champion_status}
+                        comments={committeeData.committee_comments}
+                        isEditable={
+                          committeeData.committee_id === user?.staff_id
+                        }
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              </Stack>
+            </Grid>
+          )}
         </Grid>
       )}
     </Box>

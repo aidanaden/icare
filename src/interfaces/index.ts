@@ -11,7 +11,7 @@ import {
 export interface User {
   staff_id: string;
   name: string;
-  role: UserRole;
+  role: UserRole[];
 }
 
 export interface DataTableData {
@@ -27,7 +27,8 @@ export interface NominationDataTableData {
   nominee_designation: string;
   nominee_department: string;
   nominee_team: string;
-  nomination_date: string | Date;
+  nomination_created_date: string;
+  nomination_submitted_date: string;
   nominator_name: string;
   nomination_status: NominationFormStatus;
   endorsement_status: EndorsementStatus;
@@ -38,6 +39,7 @@ export interface NominationDataTableData {
   is_service_level_winner: ServiceLevelWinner;
   is_champion_shortlist_result: boolean;
   answers: string[];
+  quiz_service_level: ServiceLevel;
 }
 
 export interface QueryData {
@@ -151,6 +153,7 @@ export interface NominationFormSubmissionDetails {
 
 export interface NominationFormSubmissionData
   extends NominationFormSubmissionDetails {
+  case_id?: string;
   answers: Map<string, string>;
 }
 
@@ -158,6 +161,7 @@ export interface StaffData {
   staff_id: string;
   staff_name: string;
   staff_department: string;
+  staff_corporate_rank: string;
 }
 
 export interface FileNameString {
@@ -167,6 +171,7 @@ export interface FileNameString {
 
 export interface FileQueryData extends QueryData {
   file_string: string;
+  file_type: string;
 }
 
 export interface FileStringNameData extends FileQueryData {
@@ -176,4 +181,16 @@ export interface FileStringNameData extends FileQueryData {
 export interface FileFetchData {
   case_id: string;
   file_name: string;
+}
+
+export interface DraftQuizResponseQueryData extends QueryData {
+  response_list: string[];
+}
+
+export interface LoginQueryData extends QueryData {
+  name: string;
+}
+
+export interface NominationFormQueryData extends QueryData {
+  case_id: string;
 }

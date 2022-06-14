@@ -5,11 +5,12 @@ interface UserDetailProps {
   name: string;
   designation: string;
   department?: string | undefined;
+  loading?: boolean;
   team?: string | undefined;
 }
 
 export default function index(props: UserDetailProps) {
-  const { title, name, designation, department, team } = props;
+  const { title, name, designation, department, loading, team } = props;
   const data: DetailAttribute[] = [
     {
       title: "name",
@@ -28,5 +29,5 @@ export default function index(props: UserDetailProps) {
       text: team,
     },
   ];
-  return <DetailBox title={title} data={data} />;
+  return <DetailBox title={title} data={data} loading={loading} />;
 }

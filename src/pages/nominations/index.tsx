@@ -7,30 +7,22 @@ import ShadowBox from "@/components/Common/ShadowBox";
 import { Breadcrumbs, CircularProgress } from "@mui/material";
 import NextMuiLink from "@/components/Common/NextMuiLink";
 import NominationTable from "@/components/Table/NominationTable";
-import { fetchNominations } from "@/lib/nominations";
+import { useNominations } from "@/lib/nominations";
 import { NominationFilter } from "@/enums";
 import useAuth from "@/hooks/useAuth";
 import { getStatusFromData } from "@/utils";
 import { Suspense, useEffect, useState } from "react";
 import { NominationDataTableData } from "@/interfaces";
+import FallbackSpinner from "@/components/Common/FallbackSpinner";
 
 // ALL nominations made by staff (draft AND completed)
 
 const Nominations: NextPage = () => {
   const { user } = useAuth();
-  const [nominations, setNominations] = useState<NominationDataTableData[]>([]);
-
-  useEffect(() => {
-    const fetchCommitteeNominations = async () => {
-      const resp = await fetchNominations(
-        user?.staff_id,
-        NominationFilter.USER
-      );
-      console.log("fetched nominations user: ", resp);
-      setNominations(resp);
-    };
-    fetchCommitteeNominations();
-  }, []);
+  const { data, error, loading } = useNominations(
+    user?.staff_id,
+    NominationFilter.USER
+  );
 
   return (
     <Box>
@@ -56,11 +48,11 @@ const Nominations: NextPage = () => {
         </Breadcrumbs>
       </Box>
       <ShadowBox borderRadius="20px">
-        <Suspense fallback={<CircularProgress />}>
-          <NominationTable
-            data={nominations.map((data: any) => getStatusFromData(data))}
-          />
-        </Suspense>
+        {data ? (
+          <NominationTable data={data?.map((d: any) => getStatusFromData(d))} />
+        ) : (
+          <FallbackSpinner />
+        )}
       </ShadowBox>
     </Box>
   );

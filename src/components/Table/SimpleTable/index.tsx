@@ -1,3 +1,4 @@
+import FallbackSpinner from "@/components/Common/FallbackSpinner";
 import { NominationDataTableData } from "@/interfaces";
 import { formatDateToString } from "@/utils";
 import {
@@ -78,37 +79,42 @@ export default function SimpleTable({ rows, ...other }: SimpleTableProps) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row, i) => {
-              return (
-                <TableRow
-                  hover
-                  role="checkbox"
-                  tabIndex={-1}
-                  key={i}
-                  sx={{
-                    "&.MuiTableRow-hover:hover": {
-                      cursor: "pointer",
-                      backgroundColor: "#F5F6F9",
-                    },
-                  }}
-                >
-                  {simpleColumns.map((column: SimpleColumn) => {
-                    const value = row[column.id];
-                    return (
-                      <StyledTableCell
-                        key={column.id}
-                        align={column.align}
-                        sx={{ px: 4 }}
-                      >
-                        {column.format && value instanceof Date
-                          ? column.format(value)
-                          : value.toString()}
-                      </StyledTableCell>
-                    );
-                  })}
-                </TableRow>
-              );
-            })}
+            {rows ? (
+              rows.map((row, i) => {
+                return (
+                  <TableRow
+                    hover
+                    role="checkbox"
+                    tabIndex={-1}
+                    key={i}
+                    sx={{
+                      "&.MuiTableRow-hover:hover": {
+                        cursor: "pointer",
+                        backgroundColor: "#F5F6F9",
+                      },
+                    }}
+                  >
+                    {simpleColumns.map((column: SimpleColumn) => {
+                      const value = row[column.id];
+                      return (
+                        <StyledTableCell
+                          key={column.id}
+                          align={column.align}
+                          sx={{ px: 4 }}
+                        >
+                          {value?.toString()}
+                          {/* {column.format && value instanceof Date
+                            ? column.format(value)
+                            : value!.toString()} */}
+                        </StyledTableCell>
+                      );
+                    })}
+                  </TableRow>
+                );
+              })
+            ) : (
+              <FallbackSpinner />
+            )}
           </TableBody>
         </Table>
       </TableContainer>

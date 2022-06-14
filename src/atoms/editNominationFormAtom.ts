@@ -3,10 +3,9 @@ import { NominationFormSubmissionData } from "@/interfaces";
 import { upsertNominationForm } from "@/lib/nominations";
 import { atom } from "recoil";
 
-export const nominationFormState = atom<NominationFormSubmissionData>({
-  key: "nominationFormState",
+export const editNominationFormState = atom<NominationFormSubmissionData>({
+  key: "editNominationFormState",
   default: {
-    case_id: undefined,
     user: undefined,
     department: DepartmentType.ALL,
     description: "",

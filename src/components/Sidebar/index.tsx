@@ -6,101 +6,82 @@ import {
   Login,
   People,
   Person,
+  Edit,
 } from "@mui/icons-material";
 import { Box, Drawer, List, useMediaQuery } from "@mui/material";
 import { useRouter } from "next/router";
 import LogoutNavItem from "./LogoutNavItem";
 import NavItem, { NavItemProps } from "./NavItem";
 import NextImage from "next/image";
+import useAuth from "@/hooks/useAuth";
+import { UserRole } from "@/enums";
+import { useState } from "react";
 
-// const items: NavItemProps[] = [
-//   {
-//     href: "/dashboard",
-//     icon: <Dashboard fontSize="small" />,
-//     title: "Dashboard",
-//   },
-//   {
-//     href: "/nominations",
-//     icon: <Article fontSize="small" />,
-//     title: "My Nominations",
-//   },
-//   {
-//     href: "/nominations",
-//     icon: <Article fontSize="small" />,
-//     title: "My Nominations",
-//     items: [
-//       {
-//         href: "/nominations/all",
-//         icon: "•",
-//         title: "All",
-//       },
-//       {
-//         href: "/nominations/incomplete",
-//         icon: "•",
-//         title: "Incomplete",
-//       },
-//       {
-//         href: "/nominations/completed",
-//         icon: "•",
-//         title: "Completed",
-//       },
-//     ],
-//   },
-//   {
-//     href: "/endorsements",
-//     icon: <Person fontSize="small" />,
-//     title: "Endorsements",
-//   },
-//   {
-//     href: "/login",
-//     icon: <Login fontSize="small" />,
-//     title: "Login",
-//   },
-// ];
+interface Item {
+  href: string;
+  icon: JSX.Element;
+  title: string;
+}
 
-const items = [
-  {
-    href: "/dashboard",
-    icon: <Dashboard fontSize="small" />,
-    title: "Dashboard",
-  },
-  {
-    href: "/nominations/new",
-    icon: <Create fontSize="small" />,
-    title: "New Nomination",
-  },
-  {
-    href: "/nominations",
-    icon: <Article fontSize="small" />,
-    title: "My Nominations",
-  },
-  {
-    href: "/nominations/1",
-    icon: <Person fontSize="small" />,
-    title: "View Nomination Detail",
-  },
-  {
-    href: "/endorsements",
-    icon: <ThumbUp fontSize="small" />,
-    title: "Endorsements",
-  },
-  {
-    href: "/committee",
-    icon: <People fontSize="small" />,
-    title: "Committee",
-  },
-  {
-    href: "/login",
-    icon: <Login fontSize="small" />,
-    title: "Login",
-  },
-];
+const DashboardItem: Item = {
+  href: "/dashboard",
+  icon: <Dashboard fontSize="small" />,
+  title: "Dashboard",
+};
+
+const NominationsItem: Item = {
+  href: "/nominations",
+  icon: <Article fontSize="small" />,
+  title: "My Nominations",
+};
+
+const NewNominationItem: Item = {
+  href: "/nominations/new",
+  icon: <Create fontSize="small" />,
+  title: "New Nomination",
+};
+
+const HodItem: Item = {
+  href: "/endorsements",
+  icon: <ThumbUp fontSize="small" />,
+  title: "Endorsements",
+};
+
+const CommitteeItem: Item = {
+  href: "/committee",
+  icon: <People fontSize="small" />,
+  title: "Committee",
+};
 
 interface ContentProps {
+  role?: UserRole[];
   onClose: (event: unknown, reason: "backdropClick" | "escapeKeyDown") => void;
 }
 
-const Content = ({ onClose }: ContentProps) => {
+const Content = ({ role, onClose }: ContentProps) => {
+  const [contentItems, setContentItems] = useState<Set<Item>>(
+    new Set([DashboardItem])
+  );
+
+  if (role?.includes(UserRole.STAFF) || role?.includes(UserRole.HOD)) {
+    console.log("Staff/HOD role found");
+    contentItems.add(NewNominationItem);
+  }
+
+  contentItems.add(NominationsItem);
+
+  if (role?.includes(UserRole.HOD)) {
+    console.log("HOD role found");
+    contentItems.add(HodItem);
+  }
+
+  if (role?.includes(UserRole.COMMITTEE)) {
+    console.log("committee role found");
+    contentItems.add(CommitteeItem);
+  }
+
+  console.log("final content items: ", contentItems);
+
   return (
     <Box
       sx={{
@@ -121,7 +102,7 @@ const Content = ({ onClose }: ContentProps) => {
         <NextImage src={"/logo.svg"} alt="icare logo" width={242} height={94} />
       </Box>
       <List>
-        {items.map((item, i) => (
+        {Array.from(contentItems).map((item, i) => (
           <NavItem
             href={item.href}
             icon={item.icon}
@@ -143,7 +124,7 @@ interface SidebarProps {
 
 export default function Sidebar(props: SidebarProps) {
   const { open, onClose } = props;
-  const router = useRouter();
+  const { user } = useAuth();
   const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up("lg"), {
     defaultMatches: true,
     noSsr: true,
@@ -163,7 +144,7 @@ export default function Sidebar(props: SidebarProps) {
         }}
         variant="permanent"
       >
-        <Content onClose={onClose} />
+        <Content role={user?.role} onClose={onClose} />
       </Drawer>
     );
   }
@@ -183,7 +164,7 @@ export default function Sidebar(props: SidebarProps) {
       sx={{ zIndex: (theme: any) => theme.zIndex.appBar + 100 }}
       variant="temporary"
     >
-      <Content onClose={onClose} />
+      <Content role={user?.role} onClose={onClose} />
     </Drawer>
   );
 }

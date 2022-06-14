@@ -4,7 +4,7 @@ import GreenBadge from "@/components/Common/Badge/GreenBadge";
 import OrangeBadge from "@/components/Common/Badge/OrangeBadge";
 import PurpleBadge from "@/components/Common/Badge/PurpleBadge";
 import RedBadge from "@/components/Common/Badge/RedBadge";
-import { NominationFormStatus } from "@/enums";
+import { NominationFormStatus, ServiceLevel } from "@/enums";
 import styled from "@emotion/styled";
 import { TableCell, tableCellClasses } from "@mui/material";
 import { Column } from "../Columns";
@@ -25,7 +25,7 @@ export const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 interface TextTableCellProps {
   column: Column;
-  value?: string | number | boolean | Date;
+  value: string | ServiceLevel;
 }
 
 export const BadgeTableCell = ({ value, column }: TextTableCellProps) => {
@@ -49,12 +49,9 @@ export const BadgeTableCell = ({ value, column }: TextTableCellProps) => {
 };
 
 export const TextTableCell = ({ value, column }: TextTableCellProps) => {
-  console.log("date table cell value: ", value);
   return (
     <StyledTableCell key={column.id} align={column.align} sx={{ px: 4 }}>
-      {column.format && value instanceof Date
-        ? column.format(value)
-        : value?.toString()}
+      {value?.toString()}
     </StyledTableCell>
   );
 };

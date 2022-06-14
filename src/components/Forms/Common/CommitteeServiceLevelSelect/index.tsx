@@ -3,10 +3,12 @@ import FormSelect from "../FormSelect";
 
 interface CommitteeServiceLevelSelectProps {
   control: any;
+  defaultServiceLevel: ServiceLevel;
 }
 
 export default function CommitteeServiceLevelSelect({
   control,
+  defaultServiceLevel,
 }: CommitteeServiceLevelSelectProps) {
   const committeeServiceLevelData = Object.values(ServiceLevel)
     .filter((value) => isNaN(Number(value)))
@@ -22,7 +24,7 @@ export default function CommitteeServiceLevelSelect({
         control={control}
         name="service_level"
         label="Service level"
-        defaultValue={ServiceLevel.BASIC}
+        defaultValue={defaultServiceLevel}
         data={committeeServiceLevelData}
       />
     </>

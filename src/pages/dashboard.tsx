@@ -9,11 +9,12 @@ import SimpleTable from "@/components/Table/SimpleTable/";
 import SimpleTableLink from "@/components/Table/Common/SimpleTableLink";
 import useAuth from "@/hooks/useAuth";
 import { EndorsementStatus, NominationFilter } from "@/enums";
-import { fetchNominations } from "@/lib/nominations";
+import { useNominations } from "@/lib/nominations";
 import { getStatusFromData } from "@/utils";
 import { useState, useEffect } from "react";
 import { NominationDataTableData } from "@/interfaces";
 import { getCookie, getCookies } from "cookies-next";
+import useSWR from "swr";
 
 // 1. user data (name, staff_id, department, designation, role)
 // 2. number of nominations created by staff
@@ -22,50 +23,16 @@ import { getCookie, getCookies } from "cookies-next";
 // 5. draft nominations made by staff
 
 const Dashboard: NextPage = () => {
-  const { user, logout } = useAuth();
-  const [nominations, setNominations] = useState<NominationDataTableData[]>([]);
-  const [draftNominations, setDraftNominations] = useState<
-    NominationDataTableData[]
-  >([]);
-  const [completedNominations, setCompletedNominations] = useState<
-    NominationDataTableData[]
-  >([]);
-  const [endorsedNominations, setEndorsedNominations] = useState<
-    NominationDataTableData[]
-  >([]);
-
-  useEffect(() => {
-    const fetchUserNominations = async () => {
-      const cookieName = getCookie("Name");
-      const cookieUserRole = getCookie("User_Role");
-      console.log("dashboard all cookies: ", getCookies());
-      console.log("dashboard cookie user name: ", cookieName);
-      console.log("dashboard cookie user role value: ", cookieUserRole);
-
-      const resp = await fetchNominations(
-        user?.staff_id,
-        NominationFilter.USER
-      );
-      console.log("fetched nominations dashboard: ", resp);
-      setNominations(resp);
-
-      const draftResp = resp.filter((nom: any) => nom.draft_status);
-      console.log("fetched draft resp: ", draftResp);
-      setDraftNominations(draftResp);
-
-      const completedResp = resp.filter((nom: any) => !nom.draft_status);
-      console.log("fetched completed resp: ", completedResp);
-      setCompletedNominations(completedResp);
-
-      const endorsedResp = resp.filter(
-        (nom: any) => nom.endorsement_status === EndorsementStatus.COMMENDABLE
-      );
-      console.log("fetched endorsed resp: ", endorsedResp);
-      setEndorsedNominations(endorsedResp);
-    };
-
-    fetchUserNominations();
-  }, []);
+  const { user } = useAuth();
+  const { data, error, loading } = useNominations(
+    user?.staff_id,
+    NominationFilter.USER
+  );
+  const draftNominations = data?.filter((nom: any) => nom.draft_status);
+  const completedNominations = data?.filter((nom: any) => !nom.draft_status);
+  const endorsedNominations = data?.filter(
+    (nom: any) => nom.endorsement_status === EndorsementStatus.COMMENDABLE
+  );
 
   return (
     <Box>
@@ -77,18 +44,24 @@ const Dashboard: NextPage = () => {
           <DashboardCarousel />
         </Grid>
         <Grid item xs={12} sm={4}>
-          <Statistic title="Nominations created" value={nominations.length} />
+          <Statistic
+            title="Nominations created"
+            value={data?.length ?? 0}
+            loading={loading}
+          />
         </Grid>
         <Grid item xs={12} sm={4}>
           <Statistic
             title="Nominations incomplete"
-            value={draftNominations.length}
+            value={draftNominations?.length ?? 0}
+            loading={loading}
           />
         </Grid>
         <Grid item xs={12} sm={4}>
           <Statistic
             title="Nominations endorsed"
-            value={endorsedNominations.length}
+            value={endorsedNominations?.length ?? 0}
+            loading={loading}
           />
         </Grid>
         <Grid item xs={12} md={6}>
@@ -99,10 +72,29 @@ const Dashboard: NextPage = () => {
               alignItems="center"
               mb={4}
             >
-              <SectionHeader>Incompleted nominations</SectionHeader>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "baseline",
+                }}
+              >
+                <SectionHeader>Incompleted nominations</SectionHeader>
+                <Typography
+                  variant="caption"
+                  display="block"
+                  gutterBottom
+                  color="#212b36"
+                  sx={{
+                    marginLeft: "12px",
+                    alignItems: "baseline",
+                  }}
+                >
+                  based on last 10 nominations
+                </Typography>
+              </Box>
               <SimpleTableLink href="/nominations">View all</SimpleTableLink>
             </Stack>
-            <SimpleTable rows={draftNominations} />
+            <SimpleTable rows={draftNominations ?? []} />
           </ShadowBox>
         </Grid>
         <Grid item xs={12} md={6}>
@@ -113,10 +105,29 @@ const Dashboard: NextPage = () => {
               alignItems="center"
               mb={4}
             >
-              <SectionHeader>Completed nominations</SectionHeader>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "baseline",
+                }}
+              >
+                <SectionHeader>Completed nominations</SectionHeader>
+                <Typography
+                  variant="caption"
+                  display="block"
+                  gutterBottom
+                  color="#212b36"
+                  sx={{
+                    marginLeft: "12px",
+                    alignItems: "baseline",
+                  }}
+                >
+                  based on last 10 nominations
+                </Typography>
+              </Box>
               <SimpleTableLink href="/nominations">View all</SimpleTableLink>
             </Stack>
-            <SimpleTable rows={completedNominations} />
+            <SimpleTable rows={completedNominations ?? []} />
           </ShadowBox>
         </Grid>
       </Grid>

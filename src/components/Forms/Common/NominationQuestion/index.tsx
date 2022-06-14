@@ -3,31 +3,37 @@ import { NominationQuestionAnswerData } from "@/interfaces";
 import {
   FormControl,
   FormControlLabel,
+  FormHelperText,
   FormLabel,
   Radio,
   RadioGroup,
-  Stack,
 } from "@mui/material";
-import { Controller } from "react-hook-form";
-import { RadioButtonGroup } from "react-hook-form-mui";
+import { Controller, useFormState } from "react-hook-form";
 import { useRecoilState } from "recoil";
 
 interface NominationQuestion {
   control: any;
   question: string;
+  questionName: string;
   answers: NominationQuestionAnswerData[];
 }
 
 export default function NominationQuestion({
   control,
   question,
+  questionName,
   answers,
 }: NominationQuestion) {
   const [getNominationFormState, setNominationFormState] =
     useRecoilState(nominationFormState);
 
+  const { errors } = useFormState({ control });
+
   const onChange = (e: any, value: any) => {
-    const newAnswerMap = getNominationFormState.answers.set(question, value);
+    const newAnswerMap = getNominationFormState.answers.set(
+      questionName,
+      value
+    );
     setNominationFormState({
       ...getNominationFormState,
       answers: newAnswerMap,
@@ -40,9 +46,15 @@ export default function NominationQuestion({
       <Controller
         rules={{ required: true }}
         control={control}
-        name={question}
+        name={questionName}
         render={({ field }) => (
-          <RadioGroup {...field} onChange={onChange}>
+          <RadioGroup
+            {...field}
+            onChange={(e: any, value: any) => {
+              onChange(e, value);
+              field.onChange(value);
+            }}
+          >
             {answers.map((ans) => (
               <FormControlLabel
                 key={ans.answer_id}
@@ -54,6 +66,11 @@ export default function NominationQuestion({
           </RadioGroup>
         )}
       />
+      {errors[questionName] && (
+        <FormHelperText error={errors[questionName] !== null}>
+          Answer to this question is required.
+        </FormHelperText>
+      )}
     </FormControl>
   );
 }

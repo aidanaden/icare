@@ -7,18 +7,16 @@
 // } from "firebase/auth";
 
 import { UserRole } from "@/enums";
-import { User } from "@/interfaces";
+import { LoginQueryData, QueryData, User } from "@/interfaces";
 import { postAPI } from "@/lib/nominations";
-import { useRouter } from "next/router";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { getCookie, getCookies } from "cookies-next";
 
 interface IAuth {
   user: User | undefined;
-  signIn: (staff_id: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
-  error: string | undefined;
-  loading: boolean;
+  signIn: (staff_id: string, password: string) => Promise<QueryData | void>;
+  logout: () => Promise<QueryData | void>;
+  refreshToken: () => Promise<LoginQueryData | void>;
 }
 
 const AuthContext = createContext<IAuth>({
@@ -27,8 +25,8 @@ const AuthContext = createContext<IAuth>({
   signIn: async () => {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   logout: async () => {},
-  error: undefined,
-  loading: false,
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  refreshToken: async () => {},
 });
 
 interface AuthProviderProps {
@@ -36,60 +34,69 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const router = useRouter();
-  // const [user, setUser] = useState<User | undefined>({
-  //   staff_id: "124123123",
-  //   name: "sample user",
-  //   role: UserRole.COMMITTEE,
-  // });
   const [user, setUser] = useState<User | undefined>(undefined);
-  const [error, setError] = useState(undefined);
-  const [initialLoading, setInitialLoading] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     console.log("user value has changed: ", user);
   }, [user]);
 
   const signIn = async (staff_id: string, password: string) => {
-    setLoading(true);
     console.log("trying to sign in...");
     const data = { staff_id: staff_id, password: password };
-    // const userData = { Name: "test user", User_Role: "HOD" };
-    const userData = await postAPI("AuthenticationToken", data);
-    console.log("log in response data: ", userData);
-    setLoading(false);
+    const response = await postAPI<LoginQueryData>("AuthenticationToken", data);
+    console.log("log in response data: ", response);
 
-    const cookieName = getCookie("Name");
-    const cookieUserRole = getCookie("User_Role");
-    console.log("useAuth all cookies: ", getCookies());
-    console.log("useAuth cookie user name: ", cookieName);
-    console.log("useAuth cookie user role value: ", cookieUserRole);
+    const cookieUserRoles = getCookie("User_Role")?.toString();
+    const userRoles = cookieUserRoles?.split("-") as UserRole[];
 
-    setUser({
+    const userValue = {
       staff_id: staff_id,
-      name: userData.Name ? userData.Name : cookieName,
-      role: userData.User_Role
-        ? (userData.User_Role as UserRole)
-        : (cookieUserRole as UserRole),
-    });
-    router.push("/dashboard");
+      name: response.name,
+      role: userRoles,
+    };
+
+    console.log("setting user value: ", userValue);
+    setUser(userValue);
+
+    return response;
   };
 
   const logout = async () => {
-    setLoading(true);
-
-    // signOut(auth)
-    //   .then(() => {
-    //     setUser(null);
-    //   })
-    //   .catch((error) => alert(error.message))
-    //   .finally(() => setLoading(false));
+    console.log("trying to sign out...");
+    const response = await postAPI("LogOut");
+    console.log("logged out with response: ", response);
+    if (response.Status_Code === 200) {
+      setUser(undefined);
+    }
+    return response;
   };
 
+  const refreshToken = async () => {
+    console.log("trying to refresh tokens...");
+    return await postAPI<LoginQueryData>("RefreshToken");
+  };
+
+  // run refreshToken api call every 10 mins
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      try {
+        const response = await refreshToken();
+        if (response.status_code == 200) {
+          console.log("successfully refreshed token with resp: ", response);
+        }
+      } catch (err) {
+        console.error("Token failed to refresh with error: ", err);
+      }
+    }, 600000);
+
+    // This represents the unmount function, in which you need
+    // to clear your interval to prevent memory leaks.
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user, signIn, error, loading, logout }}>
-      {!initialLoading && children}
+    <AuthContext.Provider value={{ user, signIn, logout, refreshToken }}>
+      {children}
     </AuthContext.Provider>
   );
 };

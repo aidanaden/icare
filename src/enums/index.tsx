@@ -1,5 +1,5 @@
 export enum UserRole {
-  STAFF = "Staff",
+  STAFF = "User",
   HOD = "HOD",
   COMMITTEE = "Committee",
 }
@@ -12,6 +12,7 @@ export enum NominationFormStatus {
   INCOMPLETE = "incomplete",
   SHORTLISTED = "shortlisted",
   AWARDED = "awarded",
+  CHAMPION = "champion",
 }
 
 export enum DepartmentType {
@@ -20,6 +21,7 @@ export enum DepartmentType {
   IT = "IT",
   SALES = "Sales",
   SFIT = "SFIT",
+  MIS = "MIS",
 }
 
 export enum ShortlistStatus {
@@ -38,6 +40,8 @@ export enum ServiceLevel {
   DESIRED = 170740002,
   EXPECTED = 170740003,
   BASIC = 170740004,
+  CRIMINAL = 170740005,
+  PENDING = 0,
 }
 
 export enum EndorsementStatus {

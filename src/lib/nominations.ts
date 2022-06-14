@@ -11,6 +11,9 @@ import {
   NominationQuestionsQueryData,
   StaffData,
   FileNameString,
+  QueryData,
+  DraftQuizResponseQueryData,
+  NominationFormQueryData,
 } from "@/interfaces";
 import axios from "axios";
 import useSWR from "swr";
@@ -38,7 +41,7 @@ const callAPI = async <JSON = any>(
     withCredentials: true,
     data: JSON.stringify(body),
   });
-  return response.data;
+  return recursivelyLowercaseJSONKeys(response.data);
 };
 
 const fetchAPI = async <JSON = any>(
@@ -48,36 +51,49 @@ const fetchAPI = async <JSON = any>(
   return callAPI(path, "GET", body);
 };
 
-const postAPI = async <JSON = any>(path: string, body: any): Promise<JSON> => {
+const postAPI = async <JSON = any>(path: string, body?: any): Promise<JSON> => {
+  console.log("posting api with body: ", body);
   return callAPI(path, "POST", body);
 };
 
 const upsertNominationForm = async (
   id: string,
   formState: NominationFormSubmissionData,
-  draft_status: boolean
+  draft_status: boolean,
+  case_id?: string
 ) => {
-  const answersArray: string[] = Object.values(formState.answers);
+  const answersArray: string[] = Array.from(formState.answers.values()).filter(
+    (d) => d !== undefined && d !== null
+  );
   const data = {
     nominator_id: id,
     nominee_id: formState.user?.staff_id,
     nomination_reason: formState.description,
     quiz_response: answersArray,
     draft_status: draft_status,
-    attachment: formState.files,
+    file: formState.files,
+    case_id: case_id ?? null,
   };
   console.log("uploading nomination form data: ", data);
-  return await postAPI("UpsertNomination", data);
+  return await postAPI<NominationFormQueryData>("UpsertNomination", data);
 };
 
 const fetchNominationDetails = async (
   case_id?: string
 ): Promise<NominationDetailQueryData> => {
-  const data = await fetchAPI<NominationDetailQueryData>(
+  const data = await postAPI<NominationDetailQueryData>(
     "RetrieveNominationDetails",
     { case_id: case_id }
   );
-  return data;
+  return data as NominationDetailQueryData;
+};
+
+const useNominationDetails = (case_id?: string) => {
+  const { data, error } = useSWR<NominationDetailQueryData>(
+    ["RetrieveNominationDetails", { case_id: case_id }],
+    postAPI
+  );
+  return { data: data, error: error, loading: !data && !error };
 };
 
 const upsertNominationFormHODComments = async (hodData: HODQueryData) => {
@@ -102,38 +118,59 @@ const upsertNominationFormCommitteeComments = async (
   return await postAPI("/nominations/id", data);
 };
 
-const fetchNominations = async (
-  id?: string,
-  filter?: NominationFilter
-): Promise<NominationDataTableData[]> => {
-  const nominations = await postAPI<NominationDataTableData[]>(
-    "RetrieveNomination",
-    {
-      staff_id: id,
-      filter: filter,
-      year: "2022",
-    }
+const useNominations = (id?: string, filter?: NominationFilter) => {
+  const { data, error } = useSWR<NominationDataTableData[]>(
+    [
+      "RetrieveNomination",
+      {
+        staff_id: id,
+        filter: filter,
+        year: "2022",
+      },
+    ],
+    postAPI
   );
-  return nominations;
+  return { data: data, error: error, loading: !data && !error };
 };
 
-const fetchQuiz = async (
-  staff_id?: string
-): Promise<NominationQuestionsQueryData> => {
-  const data = await fetchAPI<NominationQuestionsQueryData>("RetrieveQuiz", {
-    staff_id: staff_id,
-  });
-  return data;
+const useQuiz = (staff_id?: string) => {
+  const { data, error } = useSWR<NominationQuestionsQueryData>(
+    [
+      "RetrieveQuiz",
+      {
+        staff_id: staff_id,
+      },
+    ],
+    postAPI
+  );
+  return { data: data, error: error, loading: !data && !error };
 };
 
-const fetchStaff = async (keyword?: string, department?: string) => {
-  console.log("fetching staff data...");
-  // return recursivelyLowercaseJSONKeys(staffData);
-  const data = await fetchAPI<StaffData[]>("RetrieveStaffList", {
-    keyword: keyword,
-    department: department,
-  });
-  return data;
+const useDraftQuizResponse = (case_id?: string) => {
+  const { data, error } = useSWR<DraftQuizResponseQueryData>(
+    ["RetrieveQuizResponseForDraft", { case_id: case_id }],
+    postAPI,
+    { shouldRetryOnError: false }
+  );
+  return {
+    draftQuizResponseData: data,
+    draftQuizResponseError: error,
+    draftQuizResponseLoading: !data && !error,
+  };
+};
+
+const useStaff = (keyword?: string, department?: string) => {
+  const { data, error } = useSWR<StaffData[]>(
+    [
+      "RetrieveStaffList",
+      {
+        keyword: keyword,
+        department: department,
+      },
+    ],
+    postAPI
+  );
+  return { staffData: data, error: error, loading: !data && !error };
 };
 
 const fetchFile = async (
@@ -141,13 +178,16 @@ const fetchFile = async (
   file_name?: string
 ): Promise<FileStringNameData> => {
   // const data = recursivelyLowercaseJSONKeys(fileData);
-  const data = await fetchAPI<FileQueryData>("RetrieveFile", {
-    case_id: case_id,
-    file_name: file_name,
-  });
+  const data = recursivelyLowercaseJSONKeys(
+    await postAPI<FileQueryData>("RetrieveFile", {
+      case_id: case_id,
+      file_name: file_name,
+    })
+  ) as FileQueryData;
   return {
     file_name: file_name!,
     file_string: data.file_string,
+    file_type: data.file_type,
     message: "success",
     status_code: 200,
   };
@@ -157,13 +197,13 @@ const fetchFileStrings = (fileFetchDatas: FileFetchData[]) => {
   const files = Promise.all(
     fileFetchDatas.map(
       async (fileFetchData: FileFetchData): Promise<FileStringNameData> => {
-        const data = await fetchAPI<FileQueryData>("RetrieveFile", {
+        const data = await postAPI<FileQueryData>("RetrieveFile", {
           case_id: fileFetchData.case_id,
           file_name: fileFetchData.file_name,
         });
         // return data;
         return {
-          ...recursivelyLowercaseJSONKeys(data),
+          ...(data as FileQueryData),
           file_name: fileFetchData.file_name,
         };
       }
@@ -184,11 +224,13 @@ export {
   postAPI,
   upsertNominationForm,
   fetchNominationDetails,
+  useNominationDetails,
   upsertNominationFormHODComments,
   upsertNominationFormCommitteeComments,
-  fetchNominations,
-  fetchQuiz,
-  fetchStaff,
+  useNominations,
+  useQuiz,
+  useDraftQuizResponse,
+  useStaff,
   fetchFile,
   fetchFileStrings,
   deleteDraftNomination,

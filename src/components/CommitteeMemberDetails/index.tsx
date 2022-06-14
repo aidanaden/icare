@@ -16,6 +16,7 @@ interface CommitteeMemberDetailProps {
   name: string;
   designation: string;
   department: string;
+  default_service_level: ServiceLevel;
   service_level?: ServiceLevel;
   service_level_award?: ServiceLevelWinner;
   champion_shortlist_status?: boolean;
@@ -31,6 +32,7 @@ export default function index(props: CommitteeMemberDetailProps) {
     name,
     designation,
     department,
+    default_service_level,
     service_level,
     service_level_award,
     champion_shortlist_status,
@@ -58,10 +60,10 @@ export default function index(props: CommitteeMemberDetailProps) {
             <DetailSubHeader>name</DetailSubHeader>
             <DetailText>{name}</DetailText>
           </Box>
-          <Box>
+          {/* <Box>
             <DetailSubHeader>designation</DetailSubHeader>
             <DetailText>{designation}</DetailText>
-          </Box>
+          </Box> */}
           <Box>
             <DetailSubHeader>department</DetailSubHeader>
             <DetailText>{department}</DetailText>
@@ -72,6 +74,7 @@ export default function index(props: CommitteeMemberDetailProps) {
           <CommitteeForm
             case_id={case_id}
             committee_id={committee_id}
+            default_service_level={default_service_level}
             service_level={service_level}
             service_level_award={convertServiceLevelWinnerToBoolean(
               service_level_award
@@ -95,7 +98,9 @@ export default function index(props: CommitteeMemberDetailProps) {
             >
               <Box>
                 <DetailSubHeader>Service level</DetailSubHeader>
-                <DetailText>{ServiceLevel[service_level!]}</DetailText>
+                <DetailText>
+                  {ServiceLevel[service_level as ServiceLevel]}
+                </DetailText>
               </Box>
 
               <Box>
@@ -120,10 +125,12 @@ export default function index(props: CommitteeMemberDetailProps) {
               </Box>
               {/* <Stack direction={{ xs: "column", md: "row" }} spacing={3}></Stack> */}
 
-              <Box>
-                <DetailSubHeader>Comments</DetailSubHeader>
-                <DetailText isMultiLine={true}>{comments}</DetailText>
-              </Box>
+              {comments && comments.length > 0 && (
+                <Box>
+                  <DetailSubHeader>Comments</DetailSubHeader>
+                  <DetailText isMultiLine={true}>{comments}</DetailText>
+                </Box>
+              )}
             </Stack>
           </Box>
         )}

@@ -1,13 +1,14 @@
-import { Typography } from "@mui/material";
+import { CircularProgress, Typography } from "@mui/material";
 import ShadowBox from "../Common/ShadowBox";
 
 interface StatisticProps {
   title: string;
   value: number;
+  loading: boolean;
 }
 
 export default function index(props: StatisticProps) {
-  const { title, value } = props;
+  const { title, value, loading } = props;
   return (
     <ShadowBox
       display="flex"
@@ -26,9 +27,13 @@ export default function index(props: StatisticProps) {
       >
         {title}
       </Typography>
-      <Typography variant="h4" fontWeight={600} color="#212b36">
-        {value}
-      </Typography>
+      {!loading ? (
+        <Typography variant="h4" fontWeight={600} color="#212b36">
+          {value}
+        </Typography>
+      ) : (
+        <CircularProgress size={12} />
+      )}
     </ShadowBox>
   );
 }

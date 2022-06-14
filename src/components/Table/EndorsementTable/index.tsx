@@ -2,6 +2,7 @@ import { DataTableData, NominationDataTableData } from "@/interfaces";
 import { NominationFormStatus } from "@/enums";
 import { DataTableTabPanelProps } from "../Common/DataTableTabPanel";
 import DataTable from "../DataTable";
+import { submittedColumns } from "../Common/Columns";
 
 interface NominationDataTableProps {
   data?: NominationDataTableData[];
@@ -21,7 +22,7 @@ export default function EndorsementTable({
     (row) => row.nomination_status === NominationFormStatus.SUBMITTED
   );
 
-  const tabPanelData: Omit<DataTableTabPanelProps, "isDeletable">[] = [
+  const tabPanelData: Omit<DataTableTabPanelProps, "columns" | "viewText">[] = [
     {
       headerLabel: NominationFormStatus.ALL.toString(),
       status: NominationFormStatus.ALL,
@@ -45,6 +46,11 @@ export default function EndorsementTable({
   ];
 
   return (
-    <DataTable tabPanelData={tabPanelData} isDeletable={false} {...other} />
+    <DataTable
+      tabPanelData={tabPanelData}
+      columns={submittedColumns}
+      viewText="Endorse"
+      {...other}
+    />
   );
 }

@@ -1,14 +1,14 @@
-import { Button, ButtonProps } from "@mui/material";
+import { LoadingButton, LoadingButtonProps } from "@mui/lab";
 
-export default function index({ children, ...other }: ButtonProps) {
+export default function index({ children, ...other }: LoadingButtonProps) {
   return (
-    <Button
+    <LoadingButton
       variant={"contained"}
       color={"secondary"}
       disableElevation
       {...other}
     >
       {children}
-    </Button>
+    </LoadingButton>
   );
 }

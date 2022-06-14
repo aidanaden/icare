@@ -10,32 +10,24 @@ import EndorsementTable from "@/components/Table/EndorsementTable";
 import theme from "@/styles/theme";
 import useAuth from "@/hooks/useAuth";
 import { NominationFilter, UserRole } from "@/enums";
-import { fetchNominations } from "@/lib/nominations";
+import { useNominations } from "@/lib/nominations";
 import { getStatusFromData } from "@/utils";
 import Unauthorized from "@/components/UnauthorizedAccess";
 import { useState, useEffect } from "react";
 import { NominationDataTableData } from "@/interfaces";
+import FallbackSpinner from "@/components/Common/FallbackSpinner";
 
 // ALL nominations made by staff of department of HOD
 // (pending, submitted/not endorsed, endorsed)
 
 const Endorsements: NextPage = () => {
   const { user } = useAuth();
-  const [nominations, setNominations] = useState<NominationDataTableData[]>([]);
+  const { data, error, loading } = useNominations(
+    user?.staff_id,
+    NominationFilter.SUBMITTED
+  );
 
-  useEffect(() => {
-    const fetchEndorsementNominations = async () => {
-      const resp = await fetchNominations(
-        user?.staff_id,
-        NominationFilter.SUBMITTED
-      );
-      console.log("fetched nominations endorsements: ", resp);
-      setNominations(resp);
-    };
-    fetchEndorsementNominations();
-  }, []);
-
-  if (true) {
+  if (user?.role.includes(UserRole.HOD)) {
     return (
       <Box>
         <Box mb={4}>
@@ -60,9 +52,13 @@ const Endorsements: NextPage = () => {
           </Breadcrumbs>
         </Box>
         <ShadowBox borderRadius="20px">
-          <EndorsementTable
-            data={nominations.map((data: any) => getStatusFromData(data))}
-          />
+          {data ? (
+            <EndorsementTable
+              data={data?.map((d: any) => getStatusFromData(d))}
+            />
+          ) : (
+            <FallbackSpinner />
+          )}
         </ShadowBox>
       </Box>
     );

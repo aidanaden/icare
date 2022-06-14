@@ -2,6 +2,7 @@ import { NominationDataTableData } from "@/interfaces";
 import { NominationFormStatus } from "@/enums";
 import { DataTableTabPanelProps } from "../Common/DataTableTabPanel";
 import DataTable from "../DataTable";
+import { submittedColumns } from "../Common/Columns";
 
 interface NominationDataTableProps {
   data?: NominationDataTableData[];
@@ -27,14 +28,18 @@ export default function EndorsementTable({
     (row) => row.nomination_status === NominationFormStatus.AWARDED
   );
 
-  const tabPanelData: Omit<DataTableTabPanelProps, "isDeletable">[] = [
+  const championData = data?.filter(
+    (row) => row.nomination_status === NominationFormStatus.CHAMPION
+  );
+
+  const tabPanelData: Omit<DataTableTabPanelProps, "columns">[] = [
     {
       headerLabel: NominationFormStatus.ALL.toString(),
       status: NominationFormStatus.ALL,
       data: data,
     },
     {
-      headerLabel: NominationFormStatus.ENDORSED.toString(),
+      headerLabel: `${NominationFormStatus.ENDORSED.toString()} by HOD`,
       status: NominationFormStatus.ENDORSED,
       data: endorsedData,
     },
@@ -44,16 +49,22 @@ export default function EndorsementTable({
       data: awardedData,
     },
     {
-      headerLabel: "Shortlisted Champions",
+      headerLabel: "Shortlisted Champions (< 3 votes)",
       status: NominationFormStatus.SHORTLISTED,
       data: shortlistedData,
     },
     {
-      headerLabel: "Champions",
-      status: NominationFormStatus.PENDING,
-      data: [],
+      headerLabel: "Champions (3 votes)",
+      status: NominationFormStatus.CHAMPION,
+      data: championData,
     },
   ];
 
-  return <DataTable tabPanelData={tabPanelData} isDeletable={false} />;
+  return (
+    <DataTable
+      tabPanelData={tabPanelData}
+      columns={submittedColumns}
+      {...other}
+    />
+  );
 }

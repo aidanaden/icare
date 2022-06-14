@@ -1,3 +1,4 @@
+import { INVALID_NOMINATABLE_STAFF } from "@/constants";
 import {
   DepartmentType,
   EndorsementStatus,
@@ -5,7 +6,11 @@ import {
   ServiceLevelWinner,
   ShortlistStatus,
 } from "@/enums";
-import { DataTableData, NominationDataTableData } from "@/interfaces";
+import {
+  DataTableData,
+  NominationDataTableData,
+  StaffData,
+} from "@/interfaces";
 import saveAs from "file-saver";
 
 const formatDateToString = (value: Date) => {
@@ -39,9 +44,11 @@ const getStatusFromData = (
   let status = NominationFormStatus.INCOMPLETE;
 
   if (data.is_champion_result) {
-    status = NominationFormStatus.AWARDED;
+    status = NominationFormStatus.CHAMPION;
   } else if (data.is_champion_shortlist_result) {
     status = NominationFormStatus.SHORTLISTED;
+  } else if (data.is_service_level_winner) {
+    status = NominationFormStatus.AWARDED;
   } else if (
     data.endorsement_status === EndorsementStatus.COMMENDABLE &&
     !data.draft_status
@@ -98,6 +105,37 @@ const downloadBase64Data = (base64String: string, fileName: string) => {
   saveAs(file, fileName);
 };
 
+const filterInvalidStaffRanksForNomination = (
+  data?: StaffData[],
+  nominator_id?: string
+) => {
+  const filteredData = data?.filter(
+    (staff) =>
+      staff.staff_id != nominator_id &&
+      staff.staff_corporate_rank !== null &&
+      !INVALID_NOMINATABLE_STAFF.includes(staff.staff_corporate_rank)
+  );
+  console.log("filtered data: ", filteredData);
+  return filteredData;
+};
+
+const hashFromString = (str: string) => {
+  let hash = 0,
+    i,
+    chr;
+  if (str.length === 0) return hash;
+  for (i = 0; i < str.length; i++) {
+    chr = str.charCodeAt(i);
+    hash = (hash << 5) - hash + chr;
+    hash |= 0; // Convert to 32bit integer
+  }
+  return hash;
+};
+
+// const convertCookieValueToString = (cookieValue: str) => {
+
+// }
+
 export {
   formatDateToString,
   getStatusFromData,
@@ -108,4 +146,6 @@ export {
   convertFileToBase64,
   convertBase64ToFile,
   downloadBase64Data,
+  filterInvalidStaffRanksForNomination,
+  hashFromString,
 };

@@ -20,6 +20,7 @@ interface HODDetailProps {
   endorsement_date?: string;
   comments?: string;
   isEditable?: boolean;
+  loading?: boolean;
 }
 
 export default function index(props: HODDetailProps) {
@@ -34,6 +35,7 @@ export default function index(props: HODDetailProps) {
     endorsement_date,
     comments,
     isEditable,
+    loading,
   } = props;
 
   return (
@@ -47,8 +49,8 @@ export default function index(props: HODDetailProps) {
       <DetailHeader>{title}</DetailHeader>
       <Stack direction="column" spacing={4}>
         <Stack
-          direction={{ xs: "column", md: "row" }}
-          spacing={{ xs: 4, md: 8, lg: 12 }}
+          direction={{ xs: "column", md: "column" }}
+          spacing={{ xs: 4, md: 4, lg: 4 }}
         >
           <Box>
             <DetailSubHeader>name</DetailSubHeader>
@@ -87,15 +89,21 @@ export default function index(props: HODDetailProps) {
                   <RedBadge>Not endorsed</RedBadge>
                 )}
               </Box>
-              <Box>
-                <DetailSubHeader>Endorsement date</DetailSubHeader>
-                <DetailText>{endorsement_date?.toString()}</DetailText>
-              </Box>
 
-              <Box>
-                <DetailSubHeader>Comments</DetailSubHeader>
-                <DetailText isMultiLine={true}>{comments}</DetailText>
-              </Box>
+              {endorsement_status === EndorsementStatus.COMMENDABLE ||
+                (endorsement_status === EndorsementStatus.NEUTRAL && (
+                  <Box>
+                    <DetailSubHeader>Endorsement date</DetailSubHeader>
+                    <DetailText>{endorsement_date?.toString()}</DetailText>
+                  </Box>
+                ))}
+
+              {comments && (
+                <Box>
+                  <DetailSubHeader>Comments</DetailSubHeader>
+                  <DetailText isMultiLine={true}>{comments}</DetailText>
+                </Box>
+              )}
             </Stack>
           </Box>
         )}

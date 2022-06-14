@@ -1,4 +1,4 @@
-import { Box, BoxProps, Stack } from "@mui/material";
+import { Box, BoxProps, CircularProgress, Stack } from "@mui/material";
 import ShadowBox from "../ShadowBox";
 import DetailHeader from "./DetailHeader";
 import DetailSubHeader from "./DetailSubHeader";
@@ -13,11 +13,12 @@ export interface DetailAttribute {
 interface DetailBoxProps extends BoxProps {
   title: string;
   data: DetailAttribute[];
+  loading?: boolean;
   isColumn?: boolean;
 }
 
 export default function index(props: DetailBoxProps) {
-  const { title, data, isColumn, ...other } = props;
+  const { loading, title, data, isColumn, ...other } = props;
   return (
     <ShadowBox
       display="flex"
@@ -33,18 +34,22 @@ export default function index(props: DetailBoxProps) {
         direction={{ xs: "column", md: isColumn ? "column" : "column" }}
         spacing={{ xs: 4 }}
       >
-        {data.map((attribute: DetailAttribute, i) => (
-          <>
-            {attribute.text && (
-              <Box key={`attribute ${i}`}>
-                <DetailSubHeader>{attribute.title}</DetailSubHeader>
-                <DetailText isMultiLine={attribute.isMultiLine}>
-                  {attribute.text}
-                </DetailText>
-              </Box>
-            )}
-          </>
-        ))}
+        {!loading ? (
+          data.map((attribute: DetailAttribute, i) => (
+            <>
+              {attribute.text && attribute.text !== "" && (
+                <Box key={`attribute ${i}`}>
+                  <DetailSubHeader>{attribute.title}</DetailSubHeader>
+                  <DetailText isMultiLine={attribute.isMultiLine}>
+                    {attribute.text}
+                  </DetailText>
+                </Box>
+              )}
+            </>
+          ))
+        ) : (
+          <CircularProgress />
+        )}
       </Stack>
     </ShadowBox>
   );

@@ -8,6 +8,7 @@ import {
   PDF_FILE_TYPE,
   WORD_FILE_TYPE,
   EXCEL_FILE_TYPE,
+  BASE64_SPLIT_KEY,
 } from "@/constants/";
 import { convertFileToBase64 } from "@/utils";
 import { FileNameString } from "@/interfaces";
@@ -57,11 +58,16 @@ export default function FileUploadButton() {
         onSave={async (files) => {
           const base64s = await Promise.all(
             files.map(async (file) => {
+              const base64String = (await convertFileToBase64(
+                file
+              )) as unknown as string;
+              const base64Split = base64String.split(BASE64_SPLIT_KEY);
+              const base64FileType = base64Split[0] + BASE64_SPLIT_KEY;
+              const base64FileString = base64Split[1];
               return {
                 file_name: file.name,
-                file_string: (await convertFileToBase64(
-                  file
-                )) as unknown as string,
+                file_string: base64FileString,
+                file_type: base64FileType,
               };
             })
           );

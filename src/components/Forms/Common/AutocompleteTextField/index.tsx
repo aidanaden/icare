@@ -8,7 +8,6 @@ import { TextFieldElementProps } from "react-hook-form-mui";
 import { useRecoilState } from "recoil";
 import { nominationFormState } from "@/atoms/nominationFormAtom";
 import { Control, Controller, useFormState, useWatch } from "react-hook-form";
-import { fetchStaff } from "@/lib/nominations";
 
 function sleep(delay = 0) {
   return new Promise((resolve) => {
@@ -16,29 +15,19 @@ function sleep(delay = 0) {
   });
 }
 
-const getStaffName = (staffDatas: StaffData[]): string[] => {
-  return staffDatas.map((staffData) => staffData.staff_name);
-};
-
 interface AutoCompleteProps {
   control: Control<Omit<NominationFormSubmissionDetails, "files">>;
-  getValues: any;
+  staffData: StaffData[] | [];
 }
 
-export default function Asynchronous({ control }: AutoCompleteProps) {
+export default function Asynchronous({
+  control,
+  staffData,
+}: AutoCompleteProps) {
   const [open, setOpen] = useState(false);
-  const [options, setOptions] = useState<StaffData[]>([]);
-  const loading = open && options.length === 0;
-  const [staffData, setStaffData] = useState<StaffData[]>([]);
+  const [options, setOptions] = useState<StaffData[] | []>([]);
+  const loading = open && options?.length === 0;
   const dept = useWatch({ control, name: "department" });
-
-  useEffect(() => {
-    const fetchStaffDataLoad = async () => {
-      const data = await fetchStaff("", "");
-      setStaffData(data);
-    };
-    fetchStaffDataLoad();
-  }, []);
 
   useEffect(() => {
     let active = true;
@@ -75,10 +64,6 @@ export default function Asynchronous({ control }: AutoCompleteProps) {
     }
   }, [open]);
 
-  useEffect(() => {
-    console.log("options changed to :", options);
-  }, [options]);
-
   return (
     <Controller
       render={({ field }) => (
@@ -91,7 +76,7 @@ export default function Asynchronous({ control }: AutoCompleteProps) {
             setOpen(false);
           }}
           isOptionEqualToValue={(option, value) => option === value}
-          getOptionLabel={(option) => option.staff_name}
+          getOptionLabel={(option) => option.staff_name ?? ""}
           options={options}
           loading={loading}
           fullWidth

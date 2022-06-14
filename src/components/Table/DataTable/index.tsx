@@ -7,15 +7,18 @@ import DataTableTabPanel, {
 } from "../Common/DataTableTabPanel";
 import { StyledTab } from "../Common/StyledTab";
 import { NominationFormStatus } from "@/enums";
+import { Column } from "../Common/Columns";
 
 interface DataTableProps {
-  tabPanelData: Omit<DataTableTabPanelProps, "isDeletable">[];
-  isDeletable: boolean;
+  tabPanelData: Omit<DataTableTabPanelProps, "columns" | "viewText">[];
+  columns: readonly Column[];
+  viewText?: string;
 }
 
 export default function DataTable({
   tabPanelData,
-  isDeletable,
+  columns,
+  viewText,
   ...other
 }: DataTableProps) {
   const [nominationValue, setNominationValue] = useState<NominationFormStatus>(
@@ -65,11 +68,12 @@ export default function DataTable({
       </Box>
       {tabPanelData.map((panelData, i) => (
         <DataTableTabPanel
+          viewText={viewText}
           headerLabel={panelData.headerLabel}
           data={panelData.data}
           status={panelData.status}
-          isDeletable={isDeletable}
           key={`panel ${i}`}
+          columns={columns}
         />
       ))}
     </TabContext>

@@ -15,10 +15,11 @@ import {
 import { getStatusFromData } from "@/utils";
 import CommitteeTable from "@/components/Table/CommitteeTable";
 import useAuth from "@/hooks/useAuth";
-import { fetchAPI, fetchNominations } from "@/lib/nominations";
+import { useNominations } from "@/lib/nominations";
 import Unauthorized from "@/components/UnauthorizedAccess";
 import { useEffect, useState } from "react";
 import { NominationDataTableData } from "@/interfaces";
+import FallbackSpinner from "@/components/Common/FallbackSpinner";
 
 // ALL nominations (endorsed, submitted/not endorsed,
 // service level award shortlisted, service level award winners,
@@ -26,18 +27,12 @@ import { NominationDataTableData } from "@/interfaces";
 
 const Nominations: NextPage = () => {
   const { user } = useAuth();
-  const [nominations, setNominations] = useState<NominationDataTableData[]>([]);
+  const { data, error, loading } = useNominations(
+    user?.staff_id,
+    NominationFilter.ALL
+  );
 
-  useEffect(() => {
-    const fetchCommitteeNominations = async () => {
-      const resp = await fetchNominations(user?.staff_id, NominationFilter.ALL);
-      console.log("fetched nominations committee: ", resp);
-      setNominations(resp);
-    };
-    fetchCommitteeNominations();
-  }, []);
-
-  if (user?.role === UserRole.COMMITTEE) {
+  if (user?.role.includes(UserRole.COMMITTEE)) {
     return (
       <Box>
         <Box mb={4}>
@@ -62,9 +57,13 @@ const Nominations: NextPage = () => {
           </Breadcrumbs>
         </Box>
         <ShadowBox borderRadius="20px">
-          <CommitteeTable
-            data={nominations.map((data: any) => getStatusFromData(data))}
-          />
+          {data ? (
+            <CommitteeTable
+              data={data?.map((d: any) => getStatusFromData(d))}
+            />
+          ) : (
+            <FallbackSpinner />
+          )}
         </ShadowBox>
       </Box>
     );

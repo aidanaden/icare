@@ -1,39 +1,98 @@
-import {
-  Box,
-  Stack,
-  OutlinedInput,
-  Select,
-  InputLabel,
-  SelectChangeEvent,
-} from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import { yupResolver } from "@hookform/resolvers/yup";
-import StyledTextField from "@/components/Common/StyledTextField";
 import PrimaryButton from "@/components/Common/PrimaryButton";
 import SectionHeader from "@/components/Common/SectionHeader";
 import SectionSubtitle from "@/components/Common/SectionSubtitle";
 import { nominationDetailSchema } from "../../Schemas";
-import { useRecoilState } from "recoil";
-import { nominationFormState } from "@/atoms/nominationFormAtom";
+import { RecoilState, useRecoilState, useResetRecoilState } from "recoil";
 import {
   NominationFormSubmissionData,
   NominationFormSubmissionDetails,
-  StaffData,
 } from "@/interfaces";
 import FileUploadButton from "@/components/Forms/Common/FileUploadButton";
 import FormDepartmentSelect from "@/components/Forms/Common/FormDepartmentSelect";
 import AutocompleteTextField from "../../Common/AutocompleteTextField";
 
-import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import StyledMenuItem from "@/components/Common/Menu/StyledMenuItem";
+import { useForm } from "react-hook-form";
 import FormTextField from "../../Common/FormTextField";
+import {
+  upsertNominationForm,
+  useNominationDetails,
+  useStaff,
+} from "@/lib/nominations";
+import { DepartmentType } from "@/enums";
+import { filterInvalidStaffRanksForNomination } from "@/utils";
+import useAuth from "@/hooks/useAuth";
+import { useEffect, useMemo } from "react";
 
 interface FirstStepProp {
+  recoilFormState: RecoilState<NominationFormSubmissionData>;
   handleNext: () => void;
+  case_id?: string;
 }
 
-export default function FirstStep({ handleNext }: FirstStepProp) {
+export default function FirstStep({
+  recoilFormState,
+  handleNext,
+  case_id,
+}: FirstStepProp) {
+  const { user } = useAuth();
   const [getNominationFormState, setNominationFormState] =
-    useRecoilState(nominationFormState);
+    useRecoilState(recoilFormState);
+  const resetFormState = useResetRecoilState(recoilFormState);
+
+  const { data } = useNominationDetails(case_id);
+  console.log("nomination details from editing existing case: ", data);
+
+  const { staffData, error, loading } = useStaff("", "");
+  const staffDepts = Array.from(
+    new Set(staffData?.map((staff) => staff.staff_department as DepartmentType))
+  );
+  const filteredStaff = filterInvalidStaffRanksForNomination(
+    staffData,
+    user?.staff_id
+  );
+
+  const draftUsers = staffData?.filter(
+    (staff) => staff.staff_id === data?.nominee_id
+  );
+  console.log("draft users found from existing case: ", draftUsers);
+  const draftUser =
+    draftUsers && draftUsers.length > 0 ? draftUsers[0] : undefined;
+
+  const defaultValues = useMemo(() => {
+    return {
+      user: draftUser ?? getNominationFormState.user,
+      department:
+        (data?.nominee_department as DepartmentType) ??
+        getNominationFormState.department ??
+        DepartmentType.ALL,
+      description:
+        data?.nomination_reason ?? getNominationFormState.description ?? "",
+    };
+  }, [getNominationFormState, draftUser, data]);
+
+  console.log("first step default values: ", defaultValues);
+
+  // set up form states
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<Omit<NominationFormSubmissionDetails, "files">>({
+    defaultValues: defaultValues,
+    resolver: yupResolver(nominationDetailSchema),
+  });
+
+  useEffect(() => {
+    if (draftUser) {
+      console.log(
+        "draft user found, resetting form to display draft user data"
+      );
+      reset(defaultValues);
+    }
+  }, [defaultValues, draftUser]);
 
   const onSubmit = (data: Omit<NominationFormSubmissionDetails, "files">) => {
     console.log("first step submit called!");
@@ -42,26 +101,16 @@ export default function FirstStep({ handleNext }: FirstStepProp) {
       ...data,
     };
     setNominationFormState(newFormData);
-    console.log("submitted data: ", data);
     console.log("new form data: ", newFormData);
     handleNext();
   };
 
-  const {
-    control,
-    register,
-    handleSubmit,
-    getValues,
-    watch,
-    formState: { errors },
-  } = useForm<Omit<NominationFormSubmissionDetails, "files">>({
-    defaultValues: {
-      user: getNominationFormState.user,
-      department: getNominationFormState.department,
-      description: getNominationFormState.description,
-    },
-    resolver: yupResolver(nominationDetailSchema),
-  });
+  const handleReset = () => {
+    console.log("resetting form!");
+    reset(defaultValues);
+    // reset();
+    resetFormState();
+  };
 
   return (
     <Box width="100%">
@@ -82,9 +131,12 @@ export default function FirstStep({ handleNext }: FirstStepProp) {
           minHeight={{ sm: "380px" }}
         >
           <Stack direction={"column"} spacing={3} height="100%" mb={{ xs: 4 }}>
-            <Stack direction={{ xs: "column", md: "row" }} spacing={3}>
-              <AutocompleteTextField control={control} getValues={getValues} />
-              <FormDepartmentSelect control={control} />
+            <Stack direction={{ xs: "column", sm: "row" }} spacing={3}>
+              <AutocompleteTextField
+                control={control}
+                staffData={filteredStaff ?? []}
+              />
+              <FormDepartmentSelect control={control} depts={staffDepts} />
             </Stack>
             <SectionSubtitle>
               Enter the reasons of why you&#39;re nominating this staff member.
@@ -99,18 +151,42 @@ export default function FirstStep({ handleNext }: FirstStepProp) {
             />
             <FileUploadButton />
           </Stack>
-          <Box display="flex" justifyContent="flex-end">
-            <PrimaryButton
-              type={"submit"}
-              size="large"
-              sx={{
-                borderRadius: "8px",
-                textTransform: "capitalize",
-                width: { xs: "100%", sm: "auto" },
-              }}
+          <Box
+            display="flex"
+            justifyContent="flex-end"
+            width={{ xs: "100%", sm: "auto" }}
+          >
+            <Box
+              display="flex"
+              flexDirection={{ xs: "column-reverse", md: "row" }}
+              width={{ xs: "100%", sm: "auto" }}
             >
-              Next
-            </PrimaryButton>
+              <PrimaryButton
+                size="large"
+                variant={"outlined"}
+                sx={{
+                  borderRadius: "8px",
+                  textTransform: "capitalize",
+                  marginTop: { xs: 1, sm: "auto" },
+                  marginRight: { md: "12px" },
+                }}
+                onClick={handleReset}
+                color="error"
+              >
+                Reset form
+              </PrimaryButton>
+              <PrimaryButton
+                type={"submit"}
+                size="large"
+                sx={{
+                  borderRadius: "8px",
+                  textTransform: "capitalize",
+                  width: { xs: "100%", sm: "auto" },
+                }}
+              >
+                Next
+              </PrimaryButton>
+            </Box>
           </Box>
         </Box>
       </form>

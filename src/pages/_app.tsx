@@ -46,9 +46,9 @@ const App = (props: MyAppProps) => {
             <CssBaseline />
             <Box bgcolor={"grey.100"} minHeight="100vh" color="text.primary">
               <MainLayout>
-                <ErrorBoundary FallbackComponent={ErrorFallback}>
-                  <Component {...pageProps} />
-                </ErrorBoundary>
+                {/* <ErrorBoundary FallbackComponent={ErrorFallback}> */}
+                <Component {...pageProps} />
+                {/* </ErrorBoundary> */}
               </MainLayout>
             </Box>
           </ThemeProvider>

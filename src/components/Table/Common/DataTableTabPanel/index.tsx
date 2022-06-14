@@ -1,6 +1,7 @@
 import TableMenu from "@/components/Common/Menu/TableMenu";
-import { NominationFormStatus, DepartmentType } from "@/enums";
-import { DataTableData, NominationDataTableData } from "@/interfaces";
+import FeedbackSnackbar from "@/components/Forms/Common/FeedbackSnackbar";
+import { NominationFormStatus, DepartmentType, ServiceLevel } from "@/enums";
+import { NominationDataTableData } from "@/interfaces";
 import { Search } from "@mui/icons-material";
 import { TabPanel } from "@mui/lab";
 import {
@@ -19,10 +20,9 @@ import {
   TableSortLabel,
 } from "@mui/material";
 import { useState, useEffect } from "react";
-import { columns } from "../Columns";
 import DepartmentSelect from "../DepartmentSelect";
 import { StyledTableCell, TextTableCell, BadgeTableCell } from "../TableCells";
-import TeamSelect from "../TeamSelect";
+import { Column } from "../Columns";
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -47,16 +47,18 @@ function getComparator<Key extends keyof NominationDataTableData>(
 
 export interface DataTableTabPanelProps {
   headerLabel: string;
+  viewText?: string;
   status: NominationFormStatus | "completed";
-  isDeletable: boolean;
   data?: NominationDataTableData[];
+  columns: readonly Column[];
 }
 
 export default function DataTableTabPanel({
   headerLabel,
+  viewText,
   status,
-  isDeletable,
   data,
+  columns,
 }: DataTableTabPanelProps) {
   const [displayedData, setDisplayedData] = useState<
     NominationDataTableData[] | undefined
@@ -67,8 +69,13 @@ export default function DataTableTabPanel({
 
   // set up order-by filter
   const [order, setOrder] = useState<Order>("asc");
-  const [orderBy, setOrderBy] =
-    useState<keyof NominationDataTableData>("nomination_date");
+  const [orderBy, setOrderBy] = useState<keyof NominationDataTableData>(
+    "nomination_created_date"
+  );
+
+  useEffect(() => {
+    console.log("order by value: ", orderBy);
+  }, [orderBy]);
 
   // set up department filter
   const [departmentType, setDepartmentType] = useState<DepartmentType>(
@@ -84,20 +91,24 @@ export default function DataTableTabPanel({
   );
 
   // set up team filter
-  const teamValues = Array.from(
-    new Set(
-      data
-        ?.flatMap((data) => [data.nominee_team])
-        .concat("All")
-        .reverse()
-    )
-  );
-  const hasTeamValues = teamValues.length > 0 && teamValues[0] !== undefined;
-  const [teamType, setTeamType] = useState<string>("All");
+  // const teamValues = Array.from(
+  //   new Set(
+  //     data
+  //       ?.flatMap((data) => [data.nominee_team])
+  //       .concat("All")
+  //       .reverse()
+  //   )
+  // );
+  // const hasTeamValues = teamValues.length > 0 && teamValues[0] !== undefined;
+  // const [teamType, setTeamType] = useState<string>("All");
 
   // set up championship nominations
   const championNominations = data?.filter((d) => d.is_champion_result);
   const hasChampions = championNominations && championNominations?.length > 0;
+
+  // set up delete snackbar states
+  const [deleteSuccessOpen, setDeleteSuccessOpen] = useState<boolean>(false);
+  const [deleteErrorOpen, setDeleteErrorOpen] = useState<boolean>(false);
 
   // sort filter effect
   const handleRequestSort = (
@@ -149,14 +160,13 @@ export default function DataTableTabPanel({
   }, [departmentType, data]);
 
   // team filter effect
-  useEffect(() => {
-    console.log("team type value: ", teamType);
-    if (teamType !== "All") {
-      setDisplayedData(data?.filter((row) => row.nominee_team === teamType));
-    } else {
-      setDisplayedData(data);
-    }
-  }, [teamType, data]);
+  // useEffect(() => {
+  //   if (teamType !== "All") {
+  //     setDisplayedData(data?.filter((row) => row.nominee_team === teamType));
+  //   } else {
+  //     setDisplayedData(data);
+  //   }
+  // }, [teamType, data]);
 
   return (
     <TabPanel value={status} sx={{ p: 0 }}>
@@ -166,13 +176,13 @@ export default function DataTableTabPanel({
           departmentType={departmentType}
           setDepartmentType={setDepartmentType}
         />
-        {hasTeamValues && (
+        {/* {hasTeamValues && (
           <TeamSelect
             teams={teamValues}
             teamType={teamType}
             setTeamType={setTeamType}
           />
-        )}
+        )} */}
         <TextField
           id="input-with-search-icon-textfield"
           placeholder="Enter nomination..."
@@ -218,7 +228,7 @@ export default function DataTableTabPanel({
             <TableRow>
               {columns.map((column) => (
                 <>
-                  {(column.id === "nominee_team" && !hasTeamValues) ||
+                  {column.id === "nominee_team" ||
                   (column.id === "nominator_name" && !hasChampions) ? (
                     <></>
                   ) : (
@@ -260,10 +270,29 @@ export default function DataTableTabPanel({
                           />
                         );
                       } else if (
-                        (column.id === "nominee_team" && !hasTeamValues) ||
+                        column.id === "nominee_team" ||
                         (column.id === "nominator_name" && !hasChampions)
                       ) {
                         return <></>;
+                      } else if (column.id === "quiz_service_level") {
+                        return (
+                          <TextTableCell
+                            key={`table-cell ${i}`}
+                            value={ServiceLevel[value as ServiceLevel]}
+                            column={column}
+                          />
+                        );
+                      } else if (column.id === "nomination_created_date") {
+                        const dateValue = row.draft_status
+                          ? row.nomination_created_date
+                          : row.nomination_submitted_date;
+                        return (
+                          <TextTableCell
+                            key={`table-cell ${i}`}
+                            value={dateValue}
+                            column={column}
+                          />
+                        );
                       } else {
                         return (
                           <TextTableCell
@@ -276,8 +305,20 @@ export default function DataTableTabPanel({
                     })}
                     <TableCell align="right">
                       <TableMenu
+                        viewText={viewText}
                         case_id={row.case_id}
-                        isDeletable={isDeletable}
+                        isEditable={
+                          row.nomination_status ===
+                          NominationFormStatus.INCOMPLETE
+                        }
+                        isDeletable={
+                          row.nomination_status ===
+                          NominationFormStatus.INCOMPLETE
+                        }
+                        displayedData={displayedData}
+                        setDisplayedData={setDisplayedData}
+                        setDeleteSuccessOpen={setDeleteSuccessOpen}
+                        setDeleteErrorOpen={setDeleteErrorOpen}
                       />
                     </TableCell>
                   </TableRow>
@@ -290,7 +331,7 @@ export default function DataTableTabPanel({
       <TablePagination
         rowsPerPageOptions={[5, 10, 20]}
         component="div"
-        count={displayedData!.length}
+        count={displayedData?.length ?? 0}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
@@ -304,6 +345,14 @@ export default function DataTableTabPanel({
             pr: 2,
           },
         }}
+      />
+      <FeedbackSnackbar
+        successOpen={deleteSuccessOpen}
+        errorOpen={deleteErrorOpen}
+        setSuccessOpen={setDeleteSuccessOpen}
+        setErrorOpen={setDeleteErrorOpen}
+        successMsg={"Deleted nomination successfully."}
+        errorMsg={"Error occurred while deleting nomination. Please try again."}
       />
     </TabPanel>
   );

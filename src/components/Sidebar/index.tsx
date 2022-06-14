@@ -64,23 +64,18 @@ const Content = ({ role, onClose }: ContentProps) => {
   );
 
   if (role?.includes(UserRole.STAFF) || role?.includes(UserRole.HOD)) {
-    console.log("Staff/HOD role found");
     contentItems.add(NewNominationItem);
   }
 
   contentItems.add(NominationsItem);
 
   if (role?.includes(UserRole.HOD)) {
-    console.log("HOD role found");
     contentItems.add(HodItem);
   }
 
   if (role?.includes(UserRole.COMMITTEE)) {
-    console.log("committee role found");
     contentItems.add(CommitteeItem);
   }
-
-  console.log("final content items: ", contentItems);
 
   return (
     <Box

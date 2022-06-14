@@ -26,7 +26,6 @@ export default function LoginForm() {
 
   const onSubmit = async (data: LoginProps) => {
     const { staff_id, password } = data;
-    console.log("submitted data: ", data);
     setLoginLoading(true);
     try {
       const response = await signIn(staff_id, password);

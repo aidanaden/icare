@@ -20,10 +20,7 @@ export default function TeamSelect({
   teamType,
   setTeamType,
 }: TeamSelectProps) {
-  console.log("initial team type value: ", teamType);
-
   const handleSelectChange = (event: SelectChangeEvent) => {
-    console.log("handle select change!");
     setTeamType(event.target.value as string);
   };
 

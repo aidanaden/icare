@@ -38,17 +38,10 @@ export default function Asynchronous({
 
     if (active) {
       if (dept?.toLowerCase() === "all") {
-        console.log("useEffect department changed to all: ", dept);
         setOptions(staffData);
       } else {
-        console.log("useEffect department changed to: ", dept);
         const filteredStaffNames =
           staffData?.filter((staff) => staff.staff_department === dept) ?? [];
-
-        console.log(
-          "new filtered staff names from dept change: ",
-          filteredStaffNames
-        );
         setOptions(filteredStaffNames);
       }
     }
@@ -75,8 +68,18 @@ export default function Asynchronous({
           onClose={() => {
             setOpen(false);
           }}
-          isOptionEqualToValue={(option, value) => option === value}
-          getOptionLabel={(option) => option.staff_name ?? ""}
+          isOptionEqualToValue={(option, value) => {
+            console.log(
+              "option ",
+              option,
+              " and value ",
+              value,
+              " equality is ",
+              option.staff_id === value.staff_id
+            );
+            return option.staff_id === value.staff_id;
+          }}
+          getOptionLabel={(option) => option.staff_name}
           options={options}
           loading={loading}
           fullWidth

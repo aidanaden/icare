@@ -58,7 +58,7 @@ export default function NominationQuestion({
             {answers.map((ans) => (
               <FormControlLabel
                 key={ans.answer_id}
-                value={ans.answer_id}
+                value={ans.answer_id.toString()}
                 control={<Radio />}
                 label={ans.answer_name}
               />

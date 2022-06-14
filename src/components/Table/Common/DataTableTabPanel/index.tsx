@@ -73,10 +73,6 @@ export default function DataTableTabPanel({
     "nomination_created_date"
   );
 
-  useEffect(() => {
-    console.log("order by value: ", orderBy);
-  }, [orderBy]);
-
   // set up department filter
   const [departmentType, setDepartmentType] = useState<DepartmentType>(
     DepartmentType.ALL
@@ -146,6 +142,7 @@ export default function DataTableTabPanel({
       row.nominee_name.toLowerCase().includes(event.target.value.toLowerCase())
     );
     setDisplayedData(filteredData);
+    setPage(0);
   };
 
   // department filter effect
@@ -185,7 +182,7 @@ export default function DataTableTabPanel({
         )} */}
         <TextField
           id="input-with-search-icon-textfield"
-          placeholder="Enter nomination..."
+          placeholder="Search for nominee..."
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">

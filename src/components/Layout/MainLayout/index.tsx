@@ -24,7 +24,6 @@ export default function MainLayout({ children, ...other }: BoxProps) {
   const { user } = useAuth();
 
   useEffect(() => {
-    console.log("setting layout user value to: ", user);
     setLayoutUser(user);
   }, [user]);
 

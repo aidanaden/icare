@@ -21,9 +21,6 @@ const View: NextPage = () => {
   const { id } = router.query;
   const { data, error, loading } = useNominationDetails(id?.toString());
 
-  console.log("id is: ", id);
-  console.log("nomination detail data: ", data);
-
   return (
     <Box>
       <Box mb={4}>

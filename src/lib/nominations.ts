@@ -52,7 +52,6 @@ const fetchAPI = async <JSON = any>(
 };
 
 const postAPI = async <JSON = any>(path: string, body?: any): Promise<JSON> => {
-  console.log("posting api with body: ", body);
   return callAPI(path, "POST", body);
 };
 

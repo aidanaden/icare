@@ -53,7 +53,6 @@ export default function Menu({
   };
 
   const handleDelete = async () => {
-    console.log("delete button pressed!");
     try {
       const response = await deleteDraftNomination(case_id);
       if (response?.status_code === 200) {

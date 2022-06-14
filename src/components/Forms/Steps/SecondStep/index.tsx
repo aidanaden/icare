@@ -20,6 +20,10 @@ import { LoadingButton } from "@mui/lab";
 import { NominationFormSubmissionData } from "@/interfaces";
 import FeedbackSnackbar from "../../Common/FeedbackSnackbar";
 
+interface QuizKeyAnswer {
+  [quizKey: string]: string;
+}
+
 interface SecondStepProp {
   recoilFormState: RecoilState<NominationFormSubmissionData>;
   handleNext: () => void;
@@ -39,6 +43,12 @@ export default function SecondStep({
     useRecoilState(recoilFormState);
   const resetFormState = useResetRecoilState(recoilFormState);
   const [hasDraftReset, setHasDraftReset] = useState<boolean>(false);
+  const [hasReadDraft, setHasReadDraft] = useState<boolean>(false);
+
+  const [resetSnackbarOpen, setResetSnackbarOpen] = useState<boolean>(false);
+  const [resetErrorSnackbarOpen, setResetErrorSnackbarOpen] =
+    useState<boolean>(false);
+  const [resetButtonLoading, setResetButtonLoading] = useState<boolean>(false);
 
   const [saveSnackbarOpen, setSaveSnackbarOpen] = useState<boolean>(false);
   const [errorSnackbarOpen, setErrorSnackbarOpen] = useState<boolean>(false);
@@ -48,7 +58,6 @@ export default function SecondStep({
     getNominationFormState.user?.staff_id
   );
 
-  console.log("quiz data: ", data);
   const quizAnswerToKeyMap = new Map<string, string>();
 
   const quizQnaKeys = data?.qna_questions.map(
@@ -75,10 +84,9 @@ export default function SecondStep({
     }
   );
   const quizKeys = quizQnaKeys?.concat(quizRatingKeys ?? []) ?? [];
-  console.log("quiz keys: ", quizKeys);
-  console.log("answer to quiz map: ", quizAnswerToKeyMap);
-
-  const draftQuizAnswerMap = new Map<string, string>();
+  const quizKeysObject = quizKeys.reduce((acc, v) => {
+    return { ...acc, [v]: "" };
+  }, {});
 
   const {
     draftQuizResponseData,
@@ -88,29 +96,29 @@ export default function SecondStep({
 
   console.log("draft quiz response data: ", draftQuizResponseData);
 
-  draftQuizResponseData?.response_list.map((quizAns) => {
-    const qnKey = quizAnswerToKeyMap.get(quizAns);
-    if (qnKey) {
-      draftQuizAnswerMap.set(qnKey, quizAns);
-    }
-  });
-
-  console.log("nomination form atom answers: ", getNominationFormState.answers);
-  console.log("draft quiz answer map:", draftQuizAnswerMap);
+  // console.log("nomination form atom answers: ", getNominationFormState.answers);
+  // console.log("draft quiz answer map:", draftQuizAnswerMap);
 
   // get previously saved quiz answer values
   const defaultQuizValues = useMemo(() => {
+    const draftQuizAnswerMap = new Map<string, string>();
+    draftQuizResponseData?.response_list.map((quizAns) => {
+      const qnKey = quizAnswerToKeyMap.get(quizAns);
+      if (qnKey) {
+        draftQuizAnswerMap.set(qnKey, quizAns);
+      }
+    });
     return (
       Object.fromEntries(getNominationFormState.answers) ??
-      Object.fromEntries(draftQuizAnswerMap)
+      Object.fromEntries(draftQuizAnswerMap) ??
+      quizKeysObject
     );
-  }, [getNominationFormState, draftQuizAnswerMap]);
-
-  // get previously saved quiz answer values
-  // const defaultQuizValues =
-  //   draftQuizAnswerMap.size > 0
-  //     ? Object.fromEntries(draftQuizAnswerMap)
-  //     : Object.fromEntries(getNominationFormState.answers) ?? undefined;
+  }, [
+    draftQuizResponseData,
+    getNominationFormState.answers,
+    quizAnswerToKeyMap,
+    quizKeysObject,
+  ]);
 
   console.log("default quiz values: ", defaultQuizValues);
 
@@ -120,16 +128,27 @@ export default function SecondStep({
     reset,
     getValues,
     formState: { errors },
-  } = useForm<any>({
+  } = useForm<QuizKeyAnswer>({
     defaultValues: defaultQuizValues,
   });
 
   useEffect(() => {
-    if (defaultQuizValues) {
-      console.log("new default value: ", defaultQuizValues);
+    if (
+      Object.keys(defaultQuizValues).length > 0 &&
+      draftQuizResponseData &&
+      !hasDraftReset
+    ) {
       reset(defaultQuizValues);
+      console.log("RESETTED form data from getValues: ", getValues());
+      setHasDraftReset(true);
     }
-  }, [defaultQuizValues, reset]);
+  }, [
+    defaultQuizValues,
+    draftQuizResponseData,
+    getValues,
+    hasDraftReset,
+    reset,
+  ]);
 
   // useEffect(() => {
   //   console.log("default quiz value: ", defaultQuizValues);
@@ -140,23 +159,45 @@ export default function SecondStep({
   //   }
   // }, [defaultQuizValues, draftQuizAnswerMap, hasDraftReset, reset]);
 
-  const handleReset = () => {
-    console.log("resetting form!");
+  const handleReset = async () => {
+    if (user) {
+      console.log("resetting form!");
 
-    const clearedNominationFormState = {
-      ...getNominationFormState,
-      answers: new Map<string, string>(),
-    };
-    console.log("cleared nomination form state: ", clearedNominationFormState);
-    reset(Object.fromEntries(new Map<string, string>()));
-    resetFormState();
-    setNominationFormState(clearedNominationFormState);
-    console.log("post reset form recoil state: ", getNominationFormState);
+      const clearedNominationFormState = {
+        ...getNominationFormState,
+        answers: new Map<string, string>(),
+      };
+      reset(Object.fromEntries(new Map<string, string>()));
+      resetFormState();
+      setNominationFormState(clearedNominationFormState);
+      console.log(
+        "cleared nomination form state: ",
+        clearedNominationFormState
+      );
+
+      // try {
+      //   console.log("saving form!");
+      //   const response = await upsertNominationForm(
+      //     user?.staff_id,
+      //     clearedNominationFormState,
+      //     true,
+      //     case_id ?? getNominationFormState.case_id
+      //   );
+      //   console.log("reponse value: ", response);
+      //   setResetButtonLoading(false);
+      //   if (response.status_code !== 200) {
+      //     setResetErrorSnackbarOpen(true);
+      //   } else {
+      //     setResetSnackbarOpen(true);
+      //   }
+      // } catch (err) {
+      //   console.error(err);
+      // }
+    }
   };
 
   const onSubmit = (data: any) => {
     const mapData = new Map(Array.from(Object.entries(data)));
-    console.log("submitted data: ", mapData);
     const newFormData = {
       ...getNominationFormState,
       answers: mapData as Map<string, string>,
@@ -203,10 +244,6 @@ export default function SecondStep({
     }
   };
 
-  useEffect(() => {
-    console.log("form errors occurred: ", errors);
-  }, [errors]);
-
   return (
     <Box width="100%">
       <Box>
@@ -230,7 +267,7 @@ export default function SecondStep({
           Complete the quiz and answer the questions as accurately as possible.
         </SectionSubtitle>
       </Box>
-      {data ? (
+      {data && ((draftQuizResponseData && hasDraftReset) || !case_id) ? (
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack direction={"column"} spacing={3} mb={8}>
             {data?.qna_questions.map(({ quiz_question_name, answers }) => (
@@ -342,6 +379,14 @@ export default function SecondStep({
         setErrorOpen={setErrorSnackbarOpen}
         errorMsg="Error occurred while trying to save your nomination quiz answers! Please try again."
       />
+      {/* <FeedbackSnackbar
+        successOpen={resetSnackbarOpen}
+        setSuccessOpen={setResetSnackbarOpen}
+        successMsg="Successfully reset nomination quiz answers."
+        errorOpen={resetErrorSnackbarOpen}
+        setErrorOpen={setResetErrorSnackbarOpen}
+        errorMsg="Error occurred while trying to reset your nomination quiz answers! Please try again."
+      /> */}
     </Box>
   );
 }

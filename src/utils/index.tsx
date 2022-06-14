@@ -113,9 +113,10 @@ const filterInvalidStaffRanksForNomination = (
     (staff) =>
       staff.staff_id != nominator_id &&
       staff.staff_corporate_rank !== null &&
-      !INVALID_NOMINATABLE_STAFF.includes(staff.staff_corporate_rank)
+      !INVALID_NOMINATABLE_STAFF.includes(
+        staff.staff_corporate_rank.toLowerCase()
+      )
   );
-  console.log("filtered data: ", filteredData);
   return filteredData;
 };
 

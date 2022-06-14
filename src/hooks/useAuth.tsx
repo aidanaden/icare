@@ -36,12 +36,7 @@ interface AuthProviderProps {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | undefined>(undefined);
 
-  useEffect(() => {
-    console.log("user value has changed: ", user);
-  }, [user]);
-
   const signIn = async (staff_id: string, password: string) => {
-    console.log("trying to sign in...");
     const data = { staff_id: staff_id, password: password };
     const response = await postAPI<LoginQueryData>("AuthenticationToken", data);
     console.log("log in response data: ", response);
@@ -54,15 +49,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       name: response.name,
       role: userRoles,
     };
-
-    console.log("setting user value: ", userValue);
     setUser(userValue);
 
     return response;
   };
 
   const logout = async () => {
-    console.log("trying to sign out...");
     const response = await postAPI("LogOut");
     console.log("logged out with response: ", response);
     if (response.Status_Code === 200) {
@@ -72,7 +64,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const refreshToken = async () => {
-    console.log("trying to refresh tokens...");
     return await postAPI<LoginQueryData>("RefreshToken");
   };
 

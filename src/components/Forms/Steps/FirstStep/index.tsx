@@ -24,6 +24,7 @@ import { DepartmentType } from "@/enums";
 import { filterInvalidStaffRanksForNomination } from "@/utils";
 import useAuth from "@/hooks/useAuth";
 import { useEffect, useMemo } from "react";
+import FallbackSpinner from "@/components/Common/FallbackSpinner";
 
 interface FirstStepProp {
   recoilFormState: RecoilState<NominationFormSubmissionData>;
@@ -62,7 +63,13 @@ export default function FirstStep({
 
   const defaultValues = useMemo(() => {
     return {
-      user: draftUser ?? getNominationFormState.user,
+      user: draftUser ??
+        getNominationFormState.user ?? {
+          staff_corporate_rank: "",
+          staff_department: "",
+          staff_id: "",
+          staff_name: "",
+        },
       department:
         (data?.nominee_department as DepartmentType) ??
         getNominationFormState.department ??
@@ -87,15 +94,12 @@ export default function FirstStep({
 
   useEffect(() => {
     if (draftUser) {
-      console.log(
-        "draft user found, resetting form to display draft user data"
-      );
+      console.log("RESETTING with new default values:", defaultValues);
       reset(defaultValues);
     }
-  }, [defaultValues, draftUser]);
+  }, [defaultValues, draftUser, reset]);
 
   const onSubmit = (data: Omit<NominationFormSubmissionDetails, "files">) => {
-    console.log("first step submit called!");
     const newFormData = {
       ...getNominationFormState,
       ...data,
@@ -122,74 +126,85 @@ export default function FirstStep({
           Enter the details of the staff member you want to nominate.
         </SectionSubtitle>
       </Box>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Box
-          display="flex"
-          flexDirection="column"
-          justifyContent="space-between"
-          height="100%"
-          minHeight={{ sm: "380px" }}
-        >
-          <Stack direction={"column"} spacing={3} height="100%" mb={{ xs: 4 }}>
-            <Stack direction={{ xs: "column", sm: "row" }} spacing={3}>
-              <AutocompleteTextField
-                control={control}
-                staffData={filteredStaff ?? []}
-              />
-              <FormDepartmentSelect control={control} depts={staffDepts} />
-            </Stack>
-            <SectionSubtitle>
-              Enter the reasons of why you&#39;re nominating this staff member.
-            </SectionSubtitle>
-            <FormTextField
-              control={control}
-              name="description"
-              label="Description"
-              error={errors.description?.message}
-              multiLine={true}
-              placeholder="Enter description here..."
-            />
-            <FileUploadButton />
-          </Stack>
-          <Box
-            display="flex"
-            justifyContent="flex-end"
-            width={{ xs: "100%", sm: "auto" }}
-          >
+      <Box minHeight={{ sm: "380px" }}>
+        {staffData && (!case_id || data) ? (
+          <form onSubmit={handleSubmit(onSubmit)}>
             <Box
               display="flex"
-              flexDirection={{ xs: "column-reverse", md: "row" }}
-              width={{ xs: "100%", sm: "auto" }}
+              flexDirection="column"
+              justifyContent="space-between"
+              height="100%"
             >
-              <PrimaryButton
-                size="large"
-                variant={"outlined"}
-                sx={{
-                  borderRadius: "8px",
-                  textTransform: "capitalize",
-                  marginTop: { xs: 1, sm: "auto" },
-                  marginRight: { md: "12px" },
-                }}
-                onClick={handleReset}
-                color="error"
+              <Stack
+                direction={"column"}
+                spacing={3}
+                height="100%"
+                mb={{ xs: 4 }}
               >
-                Reset form
-              </PrimaryButton>
-              <PrimaryButton
-                type={"submit"}
-                size="large"
-                sx={{
-                  borderRadius: "8px",
-                  textTransform: "capitalize",
-                  width: { xs: "100%", sm: "auto" },
-                }}
+                <Stack direction={{ xs: "column", sm: "row" }} spacing={3}>
+                  <AutocompleteTextField
+                    control={control}
+                    staffData={filteredStaff ?? []}
+                  />
+                  <FormDepartmentSelect control={control} depts={staffDepts} />
+                </Stack>
+                <SectionSubtitle>
+                  Enter the reasons of why you&#39;re nominating this staff
+                  member.
+                </SectionSubtitle>
+                <FormTextField
+                  control={control}
+                  name="description"
+                  label="Description"
+                  error={errors.description?.message}
+                  multiLine={true}
+                  placeholder="Enter description here..."
+                />
+                <FileUploadButton />
+              </Stack>
+              <Box
+                display="flex"
+                justifyContent="flex-end"
+                width={{ xs: "100%", sm: "auto" }}
               >
-                Next
-              </PrimaryButton>
+                <Box
+                  display="flex"
+                  flexDirection={{ xs: "column-reverse", md: "row" }}
+                  width={{ xs: "100%", sm: "auto" }}
+                >
+                  <PrimaryButton
+                    size="large"
+                    variant={"outlined"}
+                    sx={{
+                      borderRadius: "8px",
+                      textTransform: "capitalize",
+                      marginTop: { xs: 1, sm: "auto" },
+                      marginRight: { md: "12px" },
+                    }}
+                    onClick={handleReset}
+                    color="error"
+                  >
+                    Reset form
+                  </PrimaryButton>
+                  <PrimaryButton
+                    type={"submit"}
+                    size="large"
+                    sx={{
+                      borderRadius: "8px",
+                      textTransform: "capitalize",
+                      width: { xs: "100%", sm: "auto" },
+                    }}
+                  >
+                    Next
+                  </PrimaryButton>
+                </Box>
+              </Box>
             </Box>
-          </Box>
-        </Box>
-      </form>
+          </form>
+        ) : (
+          <FallbackSpinner />
+        )}
+      </Box>
     </Box>
   );
 }

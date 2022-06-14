@@ -55,7 +55,6 @@ export default function EndorsementForm({
   const onSubmit = async (data: any) => {
     setEndorseLoading(true);
     try {
-      console.log("endorsing form!");
       const transformedData = {
         case_id: case_id,
         hod_id: hod_id,
@@ -64,7 +63,6 @@ export default function EndorsementForm({
         hod_comments: data.comments ?? "",
       };
       const response = await upsertNominationFormHODComments(transformedData);
-      console.log("reponse value: ", response);
       setEndorseLoading(false);
       if (response.status_code !== 200) {
         setEndorseErrorOpen(true);

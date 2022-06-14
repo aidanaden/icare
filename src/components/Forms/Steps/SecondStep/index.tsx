@@ -98,18 +98,19 @@ export default function SecondStep({
   console.log("nomination form atom answers: ", getNominationFormState.answers);
   console.log("draft quiz answer map:", draftQuizAnswerMap);
 
-  // const defaultQuizValues = useMemo(() => {
-  //   return (
-  //     Object.fromEntries(getNominationFormState.answers) ??
-  //     Object.fromEntries(draftQuizAnswerMap)
-  //   );
-  // }, [getNominationFormState, draftQuizAnswerMap]);
+  // get previously saved quiz answer values
+  const defaultQuizValues = useMemo(() => {
+    return (
+      Object.fromEntries(getNominationFormState.answers) ??
+      Object.fromEntries(draftQuizAnswerMap)
+    );
+  }, [getNominationFormState, draftQuizAnswerMap]);
 
   // get previously saved quiz answer values
-  const defaultQuizValues =
-    draftQuizAnswerMap.size > 0
-      ? Object.fromEntries(draftQuizAnswerMap)
-      : Object.fromEntries(getNominationFormState.answers) ?? undefined;
+  // const defaultQuizValues =
+  //   draftQuizAnswerMap.size > 0
+  //     ? Object.fromEntries(draftQuizAnswerMap)
+  //     : Object.fromEntries(getNominationFormState.answers) ?? undefined;
 
   console.log("default quiz values: ", defaultQuizValues);
 
@@ -123,19 +124,21 @@ export default function SecondStep({
     defaultValues: defaultQuizValues,
   });
 
-  // useEffect(() => {
-  //   console.log("default value: ", defaultQuizValues);
-  //   reset(defaultQuizValues);
-  // }, [defaultQuizValues, reset]);
-
   useEffect(() => {
-    console.log("default quiz value: ", defaultQuizValues);
-    if (draftQuizAnswerMap.size > 0 && !hasDraftReset) {
-      console.log("default quiz values found");
-      setHasDraftReset(true);
-      reset(Object.fromEntries(draftQuizAnswerMap));
+    if (defaultQuizValues) {
+      console.log("new default value: ", defaultQuizValues);
+      reset(defaultQuizValues);
     }
-  }, [defaultQuizValues, draftQuizAnswerMap, hasDraftReset, reset]);
+  }, [defaultQuizValues, reset]);
+
+  // useEffect(() => {
+  //   console.log("default quiz value: ", defaultQuizValues);
+  //   if (draftQuizAnswerMap.size > 0 && !hasDraftReset) {
+  //     console.log("default quiz values found");
+  //     setHasDraftReset(true);
+  //     reset(Object.fromEntries(draftQuizAnswerMap));
+  //   }
+  // }, [defaultQuizValues, draftQuizAnswerMap, hasDraftReset, reset]);
 
   const handleReset = () => {
     console.log("resetting form!");

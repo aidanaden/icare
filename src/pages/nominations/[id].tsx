@@ -3,27 +3,17 @@ import type { NextPage } from "next";
 // import Image from "next/image";
 import Box from "@mui/material/Box";
 import SectionHeader from "@/components/Common/SectionHeader";
-import ShadowBox from "@/components/Common/ShadowBox";
 import { Breadcrumbs, Grid, Stack } from "@mui/material";
 import NextMuiLink from "@/components/Common/NextMuiLink";
-import EndorsementTable from "@/components/Table/EndorsementTable";
-import theme from "@/styles/theme";
 import UserDetails from "@/components/UserDetails";
 import HODDetails from "@/components/HODDetails";
 import NominationDetails from "@/components/NominationDetails";
 import CommitteeDetails from "@/components/CommitteeDetails";
 import CommitteeMemberDetails from "@/components/CommitteeMemberDetails";
-import {
-  EndorsementStatus,
-  ServiceLevel,
-  ShortlistStatus,
-  UserRole,
-} from "@/enums";
+import { EndorsementStatus, UserRole } from "@/enums";
 import { useNominationDetails } from "@/lib/nominations";
 import { useRouter } from "next/router";
 import useAuth from "@/hooks/useAuth";
-import { useState, useEffect } from "react";
-import { NominationDetailQueryData } from "@/interfaces";
 
 const View: NextPage = () => {
   const { user } = useAuth();
@@ -105,7 +95,10 @@ const View: NextPage = () => {
               endorsement_date={data.endorsement_date}
               comments={data.hod_comments}
               loading={!data}
-              isEditable={data.hod_id === user?.staff_id}
+              isEditable={
+                data.hod_id === user?.staff_id &&
+                data.endorsement_status === EndorsementStatus.PENDING
+              }
             />
           </Grid>
           {user?.role.includes(UserRole.COMMITTEE) && (

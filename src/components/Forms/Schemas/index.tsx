@@ -22,7 +22,7 @@ export const committeeSchema = yup
     service_level: yup.string().required(),
     comments: yup.string().required(),
     service_level_award: yup.boolean().required(),
-    is_champion_result: yup.boolean().required(),
+    is_champion_result: yup.boolean(),
   })
   .required();
 

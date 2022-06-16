@@ -64,6 +64,12 @@ const getStatusFromData = (
     !data.draft_status
   ) {
     status = NominationFormStatus.PENDING;
+  } else if (
+    data.endorsement_status !== EndorsementStatus.PENDING &&
+    !data.draft_status &&
+    data.is_service_level_winner === ServiceLevelWinner.PENDING
+  ) {
+    status = NominationFormStatus.REJECTED;
   } else if (data.draft_status) {
     status = NominationFormStatus.INCOMPLETE;
   }

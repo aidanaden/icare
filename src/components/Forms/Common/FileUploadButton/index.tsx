@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Chip, Stack } from "@mui/material";
 import { DropzoneDialog } from "react-mui-dropzone";
 import { useRecoilState } from "recoil";
-import { nominationFormState } from "@/atoms/nominationFormAtom";
 import {
   IMAGE_FILE_TYPE,
   PDF_FILE_TYPE,
@@ -14,21 +13,53 @@ import { convertFileToBase64 } from "@/utils";
 import { FileNameString } from "@/interfaces";
 import SectionSubtitle from "@/components/Common/SectionSubtitle";
 import DetailSubHeader from "@/components/Common/DetailBox/DetailSubHeader";
+import { newNominationFormState } from "@/atoms/newNominationFormAtom";
+import { editNominationFormState } from "@/atoms/editNominationFormAtom";
+import { deleteFile } from "@/lib/nominations";
 
-export default function FileUploadButton() {
+interface FileUploadSectionProps {
+  case_id?: string;
+  isEdit?: boolean;
+}
+
+export default function FileUploadButton({
+  case_id,
+  isEdit,
+}: FileUploadSectionProps) {
   const [open, setOpen] = useState(false);
-  const [getNominationFormState, setNominationFormState] =
-    useRecoilState(nominationFormState);
-  const handleFileDelete = (file: FileNameString) => {
+  const [files, setFiles] = useState<FileNameString[]>([]);
+  const [getNominationFormState, setNominationFormState] = useRecoilState(
+    isEdit ? editNominationFormState : newNominationFormState
+  );
+  const handleFileDelete = async (file: FileNameString) => {
     setNominationFormState({
       ...getNominationFormState,
       files: getNominationFormState.files?.filter((f) => f != file),
     });
+
+    try {
+      const response = await deleteFile(
+        case_id ?? getNominationFormState.case_id,
+        file.file_name
+      );
+      if (response.status_code === 200) {
+        console.log("successfully deleted file");
+      } else {
+        console.log("failed to delete file");
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
+
+  useEffect(() => {
+    setFiles(getNominationFormState.files ?? []);
+  }, [getNominationFormState.files]);
+
   return (
     <>
       <Stack direction={{ xs: "column", sm: "row" }} gap={1} flexWrap={"wrap"}>
-        {getNominationFormState.files?.map((file, i) => (
+        {files.map((file, i) => (
           <Chip
             key={`file ${i}`}
             variant="outlined"

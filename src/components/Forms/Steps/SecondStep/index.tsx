@@ -5,8 +5,7 @@ import PrimaryButton from "@/components/Common/PrimaryButton";
 import SectionHeader from "@/components/Common/SectionHeader";
 import SectionSubtitle from "@/components/Common/SectionSubtitle";
 import NominationQuestion from "../../Common/NominationQuestion";
-import { RecoilState, useRecoilState, useResetRecoilState } from "recoil";
-import { nominationFormState } from "@/atoms/nominationFormAtom";
+import { RecoilState, useRecoilState } from "recoil";
 import {
   upsertNominationForm,
   useDraftQuizResponse,
@@ -14,11 +13,11 @@ import {
 } from "@/lib/nominations";
 import FallbackSpinner from "@/components/Common/FallbackSpinner";
 import { hashFromString } from "@/utils";
-import CustomSnackbar from "@/components/Common/Snackbar";
 import useAuth from "@/hooks/useAuth";
-import { LoadingButton } from "@mui/lab";
 import { NominationFormSubmissionData } from "@/interfaces";
 import FeedbackSnackbar from "../../Common/FeedbackSnackbar";
+import { newNominationFormState } from "@/atoms/newNominationFormAtom";
+import { editNominationFormState } from "@/atoms/editNominationFormAtom";
 
 interface QuizKeyAnswer {
   [quizKey: string]: string;
@@ -29,6 +28,7 @@ interface SecondStepProp {
   handleNext: () => void;
   handleBack: () => void;
   case_id?: string;
+  isEdit?: boolean;
 }
 
 export default function SecondStep({
@@ -36,13 +36,14 @@ export default function SecondStep({
   handleNext,
   handleBack,
   case_id,
+  isEdit,
 }: SecondStepProp) {
   const { user } = useAuth();
+  const [getNominationFormState, setNominationFormState] = useRecoilState(
+    isEdit ? editNominationFormState : newNominationFormState
+  );
 
-  const [getNominationFormState, setNominationFormState] =
-    useRecoilState(recoilFormState);
-  const resetFormState = useResetRecoilState(recoilFormState);
-  const [hasDraftReset, setHasDraftReset] = useState<boolean>(false);
+  const [hasDraftReset, setHasDraftReset] = useState<number>(0);
   const [hasReadDraft, setHasReadDraft] = useState<boolean>(false);
 
   const [resetSnackbarOpen, setResetSnackbarOpen] = useState<boolean>(false);
@@ -58,35 +59,43 @@ export default function SecondStep({
     getNominationFormState.user?.staff_id
   );
 
-  const quizAnswerToKeyMap = new Map<string, string>();
-
-  const quizQnaKeys = data?.qna_questions.map(
-    ({ quiz_question_name, answers }) => {
-      const hash = hashFromString(quiz_question_name);
-      answers.map((ans) =>
-        quizAnswerToKeyMap.set(`${ans.answer_id}`, `${hash}`)
-      );
-      return hash;
-    }
-  );
-  const quizRatingKeys = data?.rating_questions?.flatMap(
-    ({ quiz_question_name, rating_child_quiz_questions }) => {
-      const quizRatingChildrenKeys = rating_child_quiz_questions.map(
-        ({ child_quiz_question_name, answers }) => {
-          const hash = hashFromString(child_quiz_question_name);
-          answers.map((ans) =>
-            quizAnswerToKeyMap.set(`${ans.answer_id}`, `${hash}`)
-          );
-          return hash;
-        }
-      );
-      return quizRatingChildrenKeys;
-    }
-  );
-  const quizKeys = quizQnaKeys?.concat(quizRatingKeys ?? []) ?? [];
-  const quizKeysObject = quizKeys.reduce((acc, v) => {
-    return { ...acc, [v]: "" };
-  }, {});
+  const { quizAnswerToKeyMap, quizKeysObject, quizKeysMap } = useMemo(() => {
+    const quizAnsToKeyMapTemp = new Map<string, string>();
+    const quizQnaKeys = data?.qna_questions.map(
+      ({ quiz_question_name, answers }) => {
+        const hash = hashFromString(quiz_question_name);
+        answers.map((ans) =>
+          quizAnsToKeyMapTemp.set(`${ans.answer_id}`, `${hash}`)
+        );
+        return hash;
+      }
+    );
+    const quizRatingKeys = data?.rating_questions?.flatMap(
+      ({ quiz_question_name, rating_child_quiz_questions }) => {
+        const quizRatingChildrenKeys = rating_child_quiz_questions.map(
+          ({ child_quiz_question_name, answers }) => {
+            const hash = hashFromString(child_quiz_question_name);
+            answers.map((ans) =>
+              quizAnsToKeyMapTemp.set(`${ans.answer_id}`, `${hash}`)
+            );
+            return hash;
+          }
+        );
+        return quizRatingChildrenKeys;
+      }
+    );
+    const quizKeys = quizQnaKeys?.concat(quizRatingKeys ?? []) ?? [];
+    const quizKeysMap = new Map<string, string>();
+    quizKeys.map((quizKey) => quizKeysMap.set(`${quizKey}`, ""));
+    const quizKeysObject = quizKeys.reduce((acc, v) => {
+      return { ...acc, [v]: "" };
+    }, {});
+    return {
+      quizAnswerToKeyMap: quizAnsToKeyMapTemp,
+      quizKeysObject: quizKeysObject,
+      quizKeysMap: quizKeysMap,
+    };
+  }, [data?.qna_questions, data?.rating_questions]);
 
   const {
     draftQuizResponseData,
@@ -94,33 +103,32 @@ export default function SecondStep({
     draftQuizResponseLoading,
   } = useDraftQuizResponse(case_id);
 
-  console.log("draft quiz response data: ", draftQuizResponseData);
-
-  // console.log("nomination form atom answers: ", getNominationFormState.answers);
-  // console.log("draft quiz answer map:", draftQuizAnswerMap);
-
-  // get previously saved quiz answer values
-  const defaultQuizValues = useMemo(() => {
-    const draftQuizAnswerMap = new Map<string, string>();
+  const draftQuizAnswerMap = useMemo(() => {
+    const temp = new Map<string, string>();
     draftQuizResponseData?.response_list.map((quizAns) => {
       const qnKey = quizAnswerToKeyMap.get(quizAns);
       if (qnKey) {
-        draftQuizAnswerMap.set(qnKey, quizAns);
+        temp.set(qnKey, quizAns);
       }
     });
-    return (
-      Object.fromEntries(getNominationFormState.answers) ??
-      Object.fromEntries(draftQuizAnswerMap) ??
-      quizKeysObject
-    );
+    return temp;
+  }, [draftQuizResponseData?.response_list, quizAnswerToKeyMap]);
+
+  // get previously saved quiz answer values
+  const defaultQuizValues = useMemo(() => {
+    return getNominationFormState.answers.size > 0
+      ? Object.fromEntries(getNominationFormState.answers)
+      : draftQuizResponseData &&
+        draftQuizResponseData.status_code === 200 &&
+        draftQuizResponseData.response_list.length > 0
+      ? Object.fromEntries(draftQuizAnswerMap)
+      : quizKeysObject;
   }, [
+    draftQuizAnswerMap,
     draftQuizResponseData,
     getNominationFormState.answers,
-    quizAnswerToKeyMap,
     quizKeysObject,
   ]);
-
-  console.log("default quiz values: ", defaultQuizValues);
 
   const {
     handleSubmit,
@@ -133,65 +141,39 @@ export default function SecondStep({
   });
 
   useEffect(() => {
-    if (
-      Object.keys(defaultQuizValues).length > 0 &&
-      draftQuizResponseData &&
-      !hasDraftReset
-    ) {
-      reset(defaultQuizValues);
-      console.log("RESETTED form data from getValues: ", getValues());
-      setHasDraftReset(true);
-    }
-  }, [
-    defaultQuizValues,
-    draftQuizResponseData,
-    getValues,
-    hasDraftReset,
-    reset,
-  ]);
+    console.log("default quiz value has changed: ", defaultQuizValues);
+    reset(defaultQuizValues);
+  }, [defaultQuizValues, reset, getValues]);
 
-  // useEffect(() => {
-  //   console.log("default quiz value: ", defaultQuizValues);
-  //   if (draftQuizAnswerMap.size > 0 && !hasDraftReset) {
-  //     console.log("default quiz values found");
-  //     setHasDraftReset(true);
-  //     reset(Object.fromEntries(draftQuizAnswerMap));
-  //   }
-  // }, [defaultQuizValues, draftQuizAnswerMap, hasDraftReset, reset]);
-
-  const handleReset = async () => {
+  const handleReset = () => {
     if (user) {
-      console.log("resetting form!");
-
       const clearedNominationFormState = {
         ...getNominationFormState,
-        answers: new Map<string, string>(),
+        answers: quizKeysMap,
       };
-      reset(Object.fromEntries(new Map<string, string>()));
-      resetFormState();
+      reset(quizKeysObject);
       setNominationFormState(clearedNominationFormState);
-      console.log(
-        "cleared nomination form state: ",
-        clearedNominationFormState
-      );
 
-      // try {
-      //   console.log("saving form!");
-      //   const response = await upsertNominationForm(
-      //     user?.staff_id,
-      //     clearedNominationFormState,
-      //     true,
-      //     case_id ?? getNominationFormState.case_id
-      //   );
-      //   console.log("reponse value: ", response);
-      //   setResetButtonLoading(false);
-      //   if (response.status_code !== 200) {
-      //     setResetErrorSnackbarOpen(true);
-      //   } else {
-      //     setResetSnackbarOpen(true);
+      //   try {
+      //     const response = await upsertNominationForm(
+      //       user?.staff_id,
+      //       clearedNominationFormState,
+      //       true,
+      //       case_id ?? getNominationFormState.case_id
+      //     );
+      //     setResetButtonLoading(false);
+      //     if (response.status_code === 200) {
+      //       setNominationFormState({
+      //         ...clearedNominationFormState,
+      //         case_id: response.case_id,
+      //       });
+      //       setResetSnackbarOpen(true);
+      //     } else {
+      //       setResetErrorSnackbarOpen(true);
+      //     }
+      //   } catch (err) {
+      //     console.error(err);
       //   }
-      // } catch (err) {
-      //   console.error(err);
       // }
     }
   };
@@ -202,7 +184,6 @@ export default function SecondStep({
       ...getNominationFormState,
       answers: mapData as Map<string, string>,
     };
-    console.log("new form data: ", newFormData);
     setNominationFormState(newFormData);
     handleNext();
   };
@@ -213,10 +194,8 @@ export default function SecondStep({
     } else {
       setSaveButtonLoading(true);
       const data = getValues();
-      console.log("form data from getValues: ", data);
       const mapData = new Map(Array.from(Object.entries(data)));
       try {
-        console.log("saving form!");
         const newFormData = {
           ...getNominationFormState,
           answers: mapData as Map<string, string>,
@@ -227,16 +206,15 @@ export default function SecondStep({
           true,
           case_id ?? getNominationFormState.case_id
         );
-        setNominationFormState({
-          ...getNominationFormState,
-          case_id: response.case_id,
-        });
-        console.log("reponse value: ", response);
         setSaveButtonLoading(false);
-        if (response.status_code !== 200) {
-          setErrorSnackbarOpen(true);
-        } else {
+        if (response.status_code === 200) {
+          setNominationFormState({
+            ...newFormData,
+            case_id: response.case_id,
+          });
           setSaveSnackbarOpen(true);
+        } else {
+          setErrorSnackbarOpen(true);
         }
       } catch (err) {
         console.error(err);
@@ -267,7 +245,7 @@ export default function SecondStep({
           Complete the quiz and answer the questions as accurately as possible.
         </SectionSubtitle>
       </Box>
-      {data && ((draftQuizResponseData && hasDraftReset) || !case_id) ? (
+      {data && (Object.keys(getValues()).length > 0 || !case_id) ? (
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack direction={"column"} spacing={3} mb={8}>
             {data?.qna_questions.map(({ quiz_question_name, answers }) => (
@@ -277,6 +255,7 @@ export default function SecondStep({
                 question={quiz_question_name}
                 questionName={`${hashFromString(quiz_question_name)}`}
                 answers={answers}
+                isEdit={isEdit}
               />
             ))}
             {data?.rating_questions?.map(
@@ -295,6 +274,7 @@ export default function SecondStep({
                           child_quiz_question_name
                         )}`}
                         answers={answers}
+                        isEdit={isEdit}
                       />
                     )
                   )}
@@ -333,10 +313,11 @@ export default function SecondStep({
                 }}
                 onClick={handleReset}
                 color="error"
+                loading={resetButtonLoading}
               >
                 Reset form
               </PrimaryButton>
-              <LoadingButton
+              <PrimaryButton
                 size="large"
                 variant={"outlined"}
                 sx={{
@@ -351,7 +332,7 @@ export default function SecondStep({
                 loading={saveButtonLoading}
               >
                 Save draft
-              </LoadingButton>
+              </PrimaryButton>
               <PrimaryButton
                 type={"submit"}
                 size="large"
@@ -379,14 +360,14 @@ export default function SecondStep({
         setErrorOpen={setErrorSnackbarOpen}
         errorMsg="Error occurred while trying to save your nomination quiz answers! Please try again."
       />
-      {/* <FeedbackSnackbar
+      <FeedbackSnackbar
         successOpen={resetSnackbarOpen}
         setSuccessOpen={setResetSnackbarOpen}
         successMsg="Successfully reset nomination quiz answers."
         errorOpen={resetErrorSnackbarOpen}
         setErrorOpen={setResetErrorSnackbarOpen}
         errorMsg="Error occurred while trying to reset your nomination quiz answers! Please try again."
-      /> */}
+      />
     </Box>
   );
 }

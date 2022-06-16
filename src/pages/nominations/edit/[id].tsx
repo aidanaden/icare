@@ -46,8 +46,8 @@ const Nomination: NextPage = () => {
           <NextMuiLink color="#212B36" href="/dashboard" fontSize="14px">
             Dashboard
           </NextMuiLink>
-          <NextMuiLink color="#919EAB" href="/nomination" fontSize="14px">
-            Nomination
+          <NextMuiLink color="#919EAB" href="#" fontSize="14px">
+            Edit
           </NextMuiLink>
         </Breadcrumbs>
       </Box>
@@ -56,6 +56,7 @@ const Nomination: NextPage = () => {
           <StepForm
             recoilFormState={editNominationFormState}
             case_id={id as string}
+            isEdit={true}
           />
         </ShadowBox>
       )}

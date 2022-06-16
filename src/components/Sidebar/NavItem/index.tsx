@@ -1,6 +1,7 @@
 import { MouseEventHandler, useState } from "react";
 import { useRouter } from "next/router";
 import {
+  Box,
   Collapse,
   List,
   ListItem,
@@ -29,6 +30,14 @@ export default function NavItem(props: NavItemProps) {
     ? router.pathname.replace("/", "") === href.replace("/", "")
     : false;
 
+  const handleClose = (
+    event: unknown,
+    reason: "backdropClick" | "escapeKeyDown"
+  ) => {
+    onClose(event, reason);
+    router.push(href);
+  };
+
   return (
     <>
       <ListItem
@@ -41,10 +50,10 @@ export default function NavItem(props: NavItemProps) {
         }}
         //   {...others}
       >
-        <NextMuiLink href={href} width="100%" variant="button" borderRadius={2}>
+        <Box width="100%" borderRadius={2}>
           <StyledListItemButton
             active={active}
-            onClick={onClose as MouseEventHandler<HTMLDivElement>}
+            onClick={handleClose as MouseEventHandler<HTMLDivElement>}
           >
             <ListItemIcon>{icon}</ListItemIcon>
             <ListItemText sx={{ flexGrow: 1, py: 0.5 }} primary={title} />
@@ -56,7 +65,7 @@ export default function NavItem(props: NavItemProps) {
               <></>
             )}
           </StyledListItemButton>
-        </NextMuiLink>
+        </Box>
       </ListItem>
       {items && (
         <Collapse in={open} timeout="auto">

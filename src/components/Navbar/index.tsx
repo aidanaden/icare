@@ -1,3 +1,5 @@
+import { UserRole } from "@/enums";
+import useAuth from "@/hooks/useAuth";
 import { Add, DensityMedium } from "@mui/icons-material";
 import {
   AppBar,
@@ -27,26 +29,20 @@ const StyledToolbar = styled(Toolbar)({
   justifyContent: "space-between",
 });
 
-const Search = styled("div")(({ theme }) => ({
-  backgroundColor: "grey.100",
-  padding: "0 10px",
-  borderRadius: theme.shape.borderRadius,
-  width: "40%",
-}));
+// const Search = styled("div")(({ theme }) => ({
+//   backgroundColor: "grey.100",
+//   padding: "0 10px",
+//   borderRadius: theme.shape.borderRadius,
+//   width: "40%",
+// }));
 
 interface NavbarProps extends AppBarProps {
   handleSidebar: () => void;
-  handleNomination: () => void;
-  handleLogin: () => void;
 }
 
-export default function Navbar({
-  handleSidebar,
-  handleLogin,
-  handleNomination,
-  ...other
-}: NavbarProps) {
+export default function Navbar({ handleSidebar, ...other }: NavbarProps) {
   const router = useRouter();
+  const { user } = useAuth();
   return (
     <DashboardNavbarRoot
       sx={{
@@ -67,26 +63,28 @@ export default function Navbar({
         >
           <DensityMedium />
         </IconButton>
-        <Stack
-          justifyContent="space-between"
-          flexDirection="row"
-          width="100%"
-          maxWidth="1150px"
-          mx="auto"
-        >
-          <PrimaryButton
-            sx={{
-              marginLeft: { xs: "auto" },
-              textTransform: "capitalize",
-              borderRadius: "6px",
-            }}
-            size="large"
-            endIcon={<Add />}
-            onClick={() => router.push("/nominations/new")}
+        {!user?.role.includes(UserRole.COMMITTEE) && (
+          <Stack
+            justifyContent="space-between"
+            flexDirection="row"
+            width="100%"
+            maxWidth="1150px"
+            mx="auto"
           >
-            Create nomination
-          </PrimaryButton>
-        </Stack>
+            <PrimaryButton
+              sx={{
+                marginLeft: { xs: "auto" },
+                textTransform: "capitalize",
+                borderRadius: "6px",
+              }}
+              size="large"
+              endIcon={<Add />}
+              onClick={() => router.push("/nominations/new")}
+            >
+              Create nomination
+            </PrimaryButton>
+          </Stack>
+        )}
       </StyledToolbar>
     </DashboardNavbarRoot>
   );

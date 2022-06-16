@@ -12,7 +12,7 @@ import theme from "@/styles/theme";
 import StepForm from "@/components/Forms/StepForm";
 import useAuth from "@/hooks/useAuth";
 import { useEffect } from "react";
-import { nominationFormState } from "@/atoms/nominationFormAtom";
+import { newNominationFormState } from "@/atoms/newNominationFormAtom";
 
 const Nomination: NextPage = () => {
   const { user } = useAuth();
@@ -54,7 +54,7 @@ const Nomination: NextPage = () => {
       </Box>
       {user && (
         <ShadowBox p={{ xs: 4, md: 8 }}>
-          <StepForm recoilFormState={nominationFormState} />
+          <StepForm recoilFormState={newNominationFormState} isEdit={false} />
         </ShadowBox>
       )}
     </Box>

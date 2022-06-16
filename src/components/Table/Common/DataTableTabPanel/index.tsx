@@ -51,6 +51,7 @@ export interface DataTableTabPanelProps {
   status: NominationFormStatus | "completed";
   data?: NominationDataTableData[];
   columns: readonly Column[];
+  displayCommitteeVote?: boolean;
 }
 
 export default function DataTableTabPanel({
@@ -59,6 +60,7 @@ export default function DataTableTabPanel({
   status,
   data,
   columns,
+  displayCommitteeVote,
 }: DataTableTabPanelProps) {
   const [displayedData, setDisplayedData] = useState<
     NominationDataTableData[] | undefined
@@ -68,10 +70,13 @@ export default function DataTableTabPanel({
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   // set up order-by filter
-  const [order, setOrder] = useState<Order>("asc");
+  const [order, setOrder] = useState<Order>("desc");
   const [orderBy, setOrderBy] = useState<keyof NominationDataTableData>(
     "nomination_created_date"
   );
+  const [secondOrderBy, setSecondOrderBy] = useState<
+    keyof NominationDataTableData
+  >("nomination_submitted_date");
 
   // set up department filter
   const [departmentType, setDepartmentType] = useState<DepartmentType>(
@@ -238,7 +243,11 @@ export default function DataTableTabPanel({
                       <TableSortLabel
                         active={orderBy === column.id}
                         direction={orderBy === column.id ? order : "asc"}
-                        onClick={createSortHandler(column.id)}
+                        onClick={
+                          column.id !== "committee_scores"
+                            ? createSortHandler(column.id)
+                            : undefined
+                        }
                       >
                         {column.label}
                       </TableSortLabel>
@@ -252,12 +261,14 @@ export default function DataTableTabPanel({
           <TableBody>
             {displayedData
               ?.sort(getComparator(order, orderBy))
+              ?.sort(getComparator(order, secondOrderBy))
               ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               ?.map((row: NominationDataTableData, i: number) => {
                 return (
                   <TableRow hover role="checkbox" tabIndex={-1} key={i}>
                     {columns.map((column, i) => {
-                      const value = row[column.id];
+                      const value =
+                        column.id !== "committee_scores" ? row[column.id] : "";
                       if (column.id === "nomination_status") {
                         return (
                           <BadgeTableCell
@@ -268,14 +279,19 @@ export default function DataTableTabPanel({
                         );
                       } else if (
                         column.id === "nominee_team" ||
-                        (column.id === "nominator_name" && !hasChampions)
+                        (column.id === "nominator_name" && !hasChampions) ||
+                        column.id === "committee_scores"
                       ) {
                         return <></>;
                       } else if (column.id === "quiz_service_level") {
                         return (
                           <TextTableCell
                             key={`table-cell ${i}`}
-                            value={ServiceLevel[value as ServiceLevel]}
+                            value={
+                              row.draft_status
+                                ? "Not Available"
+                                : ServiceLevel[value as ServiceLevel]
+                            }
                             column={column}
                           />
                         );

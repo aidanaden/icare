@@ -8,7 +8,12 @@ import DashboardCarousel from "@/components/Common/Carousel/DashboardCarousel";
 import SimpleTable from "@/components/Table/SimpleTable/";
 import SimpleTableLink from "@/components/Table/Common/SimpleTableLink";
 import useAuth from "@/hooks/useAuth";
-import { EndorsementStatus, NominationFilter } from "@/enums";
+import {
+  EndorsementStatus,
+  NominationFilter,
+  ServiceLevelWinner,
+  UserRole,
+} from "@/enums";
 import { useNominations } from "@/lib/nominations";
 import { getStatusFromData } from "@/utils";
 import { useState, useEffect } from "react";
@@ -26,12 +31,29 @@ const Dashboard: NextPage = () => {
   const { user } = useAuth();
   const { data, error, loading } = useNominations(
     user?.staff_id,
-    NominationFilter.USER
+    user?.role.includes(UserRole.COMMITTEE)
+      ? NominationFilter.ALL
+      : NominationFilter.USER
   );
-  const draftNominations = data?.filter((nom: any) => nom.draft_status);
-  const completedNominations = data?.filter((nom: any) => !nom.draft_status);
+  const draftNominations = data?.filter(
+    (nom: NominationDataTableData) => nom.draft_status
+  );
+  const completedNominations = data?.filter(
+    (nom: NominationDataTableData) => !nom.draft_status
+  );
   const endorsedNominations = data?.filter(
-    (nom: any) => nom.endorsement_status === EndorsementStatus.COMMENDABLE
+    (nom: NominationDataTableData) =>
+      nom.endorsement_status === EndorsementStatus.COMMENDABLE
+  );
+  const awardedNominations = data?.filter(
+    (nom: NominationDataTableData) =>
+      nom.is_service_level_winner === ServiceLevelWinner.TRUE
+  );
+  const shortlistedNominations = data?.filter(
+    (nom: NominationDataTableData) => nom.is_champion_shortlist_result
+  );
+  const championNominations = data?.filter(
+    (nom: NominationDataTableData) => nom.is_champion_result
   );
 
   return (
@@ -45,22 +67,46 @@ const Dashboard: NextPage = () => {
         </Grid>
         <Grid item xs={12} sm={4}>
           <Statistic
-            title="Nominations created"
-            value={data?.length ?? 0}
+            title={
+              user?.role.includes(UserRole.COMMITTEE)
+                ? "Service level winners (at least 2 votes)"
+                : "Nominations created"
+            }
+            value={
+              user?.role.includes(UserRole.COMMITTEE)
+                ? awardedNominations?.length ?? 0
+                : data?.length ?? 0
+            }
             loading={loading}
           />
         </Grid>
         <Grid item xs={12} sm={4}>
           <Statistic
-            title="Nominations incomplete"
-            value={draftNominations?.length ?? 0}
+            title={
+              user?.role.includes(UserRole.COMMITTEE)
+                ? "Shortlisted champions (3 votes given)"
+                : "Incomplete nominations"
+            }
+            value={
+              user?.role.includes(UserRole.COMMITTEE)
+                ? shortlistedNominations?.length ?? 0
+                : draftNominations?.length ?? 0
+            }
             loading={loading}
           />
         </Grid>
         <Grid item xs={12} sm={4}>
           <Statistic
-            title="Nominations endorsed"
-            value={endorsedNominations?.length ?? 0}
+            title={
+              user?.role.includes(UserRole.COMMITTEE)
+                ? "Champions (3 votes given)"
+                : "Nominations endorsed"
+            }
+            value={
+              user?.role.includes(UserRole.COMMITTEE)
+                ? championNominations?.length ?? 0
+                : endorsedNominations?.length ?? 0
+            }
             loading={loading}
           />
         </Grid>
@@ -72,29 +118,39 @@ const Dashboard: NextPage = () => {
               alignItems="center"
               mb={4}
             >
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "baseline",
-                }}
-              >
-                <SectionHeader>Incompleted nominations</SectionHeader>
+              <Box>
+                <SectionHeader>
+                  {user?.role.includes(UserRole.COMMITTEE)
+                    ? "Awarded nominations"
+                    : "Incompleted nominations"}
+                </SectionHeader>
                 <Typography
                   variant="caption"
                   display="block"
                   gutterBottom
                   color="#212b36"
-                  sx={{
-                    marginLeft: "12px",
-                    alignItems: "baseline",
-                  }}
+                  mt={1}
                 >
-                  based on last 10 nominations
+                  last 10 nominations
                 </Typography>
               </Box>
-              <SimpleTableLink href="/nominations">View all</SimpleTableLink>
+              <SimpleTableLink
+                href={
+                  user?.role.includes(UserRole.COMMITTEE)
+                    ? "/nominations?tab=awarded"
+                    : "/nominations?tab=incomplete"
+                }
+              >
+                View all
+              </SimpleTableLink>
             </Stack>
-            <SimpleTable rows={draftNominations ?? []} />
+            <SimpleTable
+              rows={
+                user?.role.includes(UserRole.COMMITTEE)
+                  ? awardedNominations ?? []
+                  : draftNominations ?? []
+              }
+            />
           </ShadowBox>
         </Grid>
         <Grid item xs={12} md={6}>
@@ -105,29 +161,39 @@ const Dashboard: NextPage = () => {
               alignItems="center"
               mb={4}
             >
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "baseline",
-                }}
-              >
-                <SectionHeader>Completed nominations</SectionHeader>
+              <Box>
+                <SectionHeader>
+                  {user?.role.includes(UserRole.COMMITTEE)
+                    ? "Champion nominations"
+                    : "Completed nominations"}
+                </SectionHeader>
                 <Typography
                   variant="caption"
                   display="block"
                   gutterBottom
                   color="#212b36"
-                  sx={{
-                    marginLeft: "12px",
-                    alignItems: "baseline",
-                  }}
+                  mt={1}
                 >
-                  based on last 10 nominations
+                  last 10 nominations
                 </Typography>
               </Box>
-              <SimpleTableLink href="/nominations">View all</SimpleTableLink>
+              <SimpleTableLink
+                href={
+                  user?.role.includes(UserRole.COMMITTEE)
+                    ? "/nominations?tab=champion"
+                    : "/nominations?tab=incomplete"
+                }
+              >
+                View all
+              </SimpleTableLink>
             </Stack>
-            <SimpleTable rows={completedNominations ?? []} />
+            <SimpleTable
+              rows={
+                user?.role.includes(UserRole.COMMITTEE)
+                  ? championNominations ?? []
+                  : completedNominations ?? []
+              }
+            />
           </ShadowBox>
         </Grid>
       </Grid>

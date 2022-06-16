@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import DataTableTabPanel, {
@@ -8,29 +8,40 @@ import DataTableTabPanel, {
 import { StyledTab } from "../Common/StyledTab";
 import { NominationFormStatus } from "@/enums";
 import { Column } from "../Common/Columns";
+import { useRouter } from "next/router";
 
 interface DataTableProps {
   tabPanelData: Omit<DataTableTabPanelProps, "columns" | "viewText">[];
   columns: readonly Column[];
   viewText?: string;
+  displayCommitteeVote?: boolean;
 }
 
 export default function DataTable({
   tabPanelData,
   columns,
   viewText,
+  displayCommitteeVote,
   ...other
 }: DataTableProps) {
   const [nominationValue, setNominationValue] = useState<NominationFormStatus>(
     NominationFormStatus.ALL
   );
+  const router = useRouter();
 
   const handleTabChange = (
     event: React.SyntheticEvent,
     newValue: NominationFormStatus
   ) => {
     setNominationValue(newValue);
+    router.query.tab = newValue.toString();
   };
+
+  useEffect(() => {
+    if (router.query.tab) {
+      setNominationValue(router.query.tab as NominationFormStatus);
+    }
+  }, []);
 
   return (
     <TabContext value={nominationValue}>
@@ -74,6 +85,7 @@ export default function DataTable({
           status={panelData.status}
           key={`panel ${i}`}
           columns={columns}
+          displayCommitteeVote={displayCommitteeVote}
         />
       ))}
     </TabContext>

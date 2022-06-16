@@ -14,17 +14,19 @@ import { formatDateToString } from "@/utils";
 // }
 
 export interface Column {
-  id: keyof Pick<
-    NominationDataTableData,
-    | "nominee_name"
-    | "nominator_name"
-    | "nominee_department"
-    | "nominee_team"
-    | "nomination_status"
-    | "nomination_created_date"
-    | "nomination_submitted_date"
-    | "quiz_service_level"
-  >;
+  id:
+    | keyof Pick<
+        NominationDataTableData,
+        | "nominee_name"
+        | "nominator_name"
+        | "nominee_department"
+        | "nominee_team"
+        | "nomination_status"
+        | "nomination_created_date"
+        | "nomination_submitted_date"
+        | "quiz_service_level"
+      >
+    | "committee_scores";
   label: string;
   minWidth?: number;
   align?: "right" | "center" | "left";
@@ -73,6 +75,31 @@ export const submittedColumns: readonly Column[] = [
   },
   { id: "nominee_team", label: "Team", minWidth: 100 },
   { id: "nomination_status", label: "Status", align: "center", minWidth: 100 },
+  {
+    id: "nomination_submitted_date",
+    label: "Submitted",
+    minWidth: 100,
+    align: "right",
+  },
+];
+
+export const committeeColumns: readonly Column[] = [
+  { id: "nominator_name", label: "Nominator", minWidth: 100 },
+  { id: "nominee_name", label: "Nominee", minWidth: 100 },
+  { id: "nominee_department", label: "Department", minWidth: 100 },
+  {
+    id: "quiz_service_level",
+    label: "Service Level",
+    minWidth: 100,
+  },
+  { id: "nominee_team", label: "Team", minWidth: 100 },
+  { id: "nomination_status", label: "Status", align: "center", minWidth: 100 },
+  {
+    id: "committee_scores",
+    label: "Committee scoring",
+    align: "center",
+    minWidth: 100,
+  },
   {
     id: "nomination_submitted_date",
     label: "Submitted",

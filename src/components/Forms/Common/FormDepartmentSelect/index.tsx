@@ -6,11 +6,13 @@ import FormSelect, { SelectValue } from "../FormSelect";
 interface DepartmentSelectProps {
   control: Control<Omit<NominationFormSubmissionDetails, "files">>;
   depts: DepartmentType[];
+  disabled?: boolean;
 }
 
 export default function DepartmentSelect({
   control,
   depts,
+  disabled,
 }: DepartmentSelectProps) {
   const departmentTypeData: SelectValue[] = Object.values(depts)
     .concat(DepartmentType.ALL)
@@ -26,6 +28,7 @@ export default function DepartmentSelect({
         label="Department"
         defaultValue={"All"}
         data={departmentTypeData}
+        disabled={disabled}
       />
     </>
   );

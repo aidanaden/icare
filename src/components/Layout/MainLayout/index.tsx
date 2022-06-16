@@ -1,7 +1,7 @@
+import RefreshDialog from "@/components/Common/Dialog/RefreshDialog";
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
 import useAuth from "@/hooks/useAuth";
-import { User } from "@/interfaces";
 import { Box, BoxProps, Container, styled } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import LoginLayout from "../LoginLayout/";
@@ -20,39 +20,34 @@ const MainLayoutRoot = styled("div")(({ theme }) => ({
 
 export default function MainLayout({ children, ...other }: BoxProps) {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
-  const [layoutUser, setLayoutUser] = useState<User | undefined>();
   const { user } = useAuth();
-
-  useEffect(() => {
-    setLayoutUser(user);
-  }, [user]);
-
-  if (layoutUser) {
-    return (
-      <Box {...other}>
-        <MainLayoutRoot>
-          <Container
-            sx={{
-              display: "flex",
-              flex: "1 1 auto",
-              flexDirection: "column",
-              width: "100%",
-            }}
-          >
-            {children}
-          </Container>
-        </MainLayoutRoot>
-        <Navbar
-          handleSidebar={() => setSidebarOpen(true)}
-          handleNomination={() => console.log("handling nomination!")}
-          handleLogin={() => console.log("handling login!")}
-        />
-        <Sidebar open={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
-        {/* <Navbar onSidebarOpen={() => setSidebarOpen(true)} /> */}
-        {/* <Sidebar onClose={() => setSidebarOpen(false)} open={isSidebarOpen} /> */}
-      </Box>
-    );
-  } else {
-    return <LoginLayout>{children}</LoginLayout>;
-  }
+  return (
+    <>
+      {user ? (
+        <Box {...other}>
+          <MainLayoutRoot>
+            <Container
+              sx={{
+                display: "flex",
+                flex: "1 1 auto",
+                flexDirection: "column",
+                width: "100%",
+              }}
+            >
+              {children}
+            </Container>
+          </MainLayoutRoot>
+          <Navbar handleSidebar={() => setSidebarOpen(true)} />
+          <Sidebar
+            open={isSidebarOpen}
+            onOpen={() => setSidebarOpen(true)}
+            onClose={() => setSidebarOpen(false)}
+          />
+          <RefreshDialog />
+        </Box>
+      ) : (
+        <LoginLayout>{children}</LoginLayout>
+      )}
+    </>
+  );
 }

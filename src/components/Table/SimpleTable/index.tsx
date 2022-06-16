@@ -95,7 +95,13 @@ export default function SimpleTable({ rows, ...other }: SimpleTableProps) {
                     }}
                   >
                     {simpleColumns.map((column: SimpleColumn) => {
-                      const value = row[column.id];
+                      let value = row[column.id];
+                      if (column.id === "nomination_created_date") {
+                        value =
+                          column.id === "nomination_created_date" && !value
+                            ? row.nomination_submitted_date
+                            : row.nomination_created_date;
+                      }
                       return (
                         <StyledTableCell
                           key={column.id}
@@ -103,9 +109,6 @@ export default function SimpleTable({ rows, ...other }: SimpleTableProps) {
                           sx={{ px: 4 }}
                         >
                           {value?.toString()}
-                          {/* {column.format && value instanceof Date
-                            ? column.format(value)
-                            : value!.toString()} */}
                         </StyledTableCell>
                       );
                     })}

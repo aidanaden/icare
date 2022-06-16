@@ -15,6 +15,7 @@ interface FormSelectProps {
   label: string;
   name: string;
   defaultValue: unknown;
+  disabled?: boolean;
 }
 
 export default function FormSelect({
@@ -23,9 +24,13 @@ export default function FormSelect({
   label,
   name,
   defaultValue,
+  disabled,
 }: FormSelectProps) {
   return (
-    <FormControl sx={{ width: { xs: "full", sm: "240px" } }}>
+    <FormControl
+      sx={{ width: { xs: "full", sm: "240px" } }}
+      disabled={disabled}
+    >
       <InputLabel
         id={`${name}-simple-select-helper-label`}
         sx={{ color: "black" }}

@@ -1,13 +1,9 @@
 import StyledTextField from "@/components/Common/StyledTextField";
-import { DepartmentType } from "@/enums";
-import { NominationFormSubmissionDetails, StaffData, User } from "@/interfaces";
+import { NominationFormSubmissionDetails, StaffData } from "@/interfaces";
 import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useEffect, useState } from "react";
-import { TextFieldElementProps } from "react-hook-form-mui";
-import { useRecoilState } from "recoil";
-import { nominationFormState } from "@/atoms/nominationFormAtom";
-import { Control, Controller, useFormState, useWatch } from "react-hook-form";
+import { Control, Controller, useWatch } from "react-hook-form";
 
 function sleep(delay = 0) {
   return new Promise((resolve) => {
@@ -15,15 +11,17 @@ function sleep(delay = 0) {
   });
 }
 
-interface AutoCompleteProps {
+interface AutoCompleteFieldProps {
   control: Control<Omit<NominationFormSubmissionDetails, "files">>;
   staffData: StaffData[] | [];
+  disabled?: boolean;
 }
 
 export default function Asynchronous({
   control,
   staffData,
-}: AutoCompleteProps) {
+  disabled,
+}: AutoCompleteFieldProps) {
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState<StaffData[] | []>([]);
   const loading = open && options?.length === 0;
@@ -68,21 +66,14 @@ export default function Asynchronous({
           onClose={() => {
             setOpen(false);
           }}
-          isOptionEqualToValue={(option, value) => {
-            console.log(
-              "option ",
-              option,
-              " and value ",
-              value,
-              " equality is ",
-              option.staff_id === value.staff_id
-            );
-            return option.staff_id === value.staff_id;
-          }}
+          isOptionEqualToValue={(option, value) =>
+            option.staff_id === value.staff_id
+          }
           getOptionLabel={(option) => option.staff_name}
           options={options}
           loading={loading}
           fullWidth
+          disabled={disabled}
           renderInput={(params) => (
             <StyledTextField
               {...params}

@@ -2,7 +2,7 @@ import { NominationDataTableData } from "@/interfaces";
 import { NominationFormStatus } from "@/enums";
 import { DataTableTabPanelProps } from "../Common/DataTableTabPanel";
 import DataTable from "../DataTable";
-import { submittedColumns } from "../Common/Columns";
+import { committeeColumns } from "../Common/Columns";
 
 interface NominationDataTableProps {
   data?: NominationDataTableData[];
@@ -63,7 +63,8 @@ export default function EndorsementTable({
   return (
     <DataTable
       tabPanelData={tabPanelData}
-      columns={submittedColumns}
+      columns={committeeColumns}
+      displayCommitteeVote={true}
       {...other}
     />
   );

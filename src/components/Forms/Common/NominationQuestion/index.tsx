@@ -1,4 +1,3 @@
-import { nominationFormState } from "@/atoms/nominationFormAtom";
 import { NominationQuestionAnswerData } from "@/interfaces";
 import {
   FormControl,
@@ -10,12 +9,15 @@ import {
 } from "@mui/material";
 import { Controller, useFormState } from "react-hook-form";
 import { useRecoilState } from "recoil";
+import { newNominationFormState } from "@/atoms/newNominationFormAtom";
+import { editNominationFormState } from "@/atoms/editNominationFormAtom";
 
 interface NominationQuestion {
   control: any;
   question: string;
   questionName: string;
   answers: NominationQuestionAnswerData[];
+  isEdit?: boolean;
 }
 
 export default function NominationQuestion({
@@ -23,9 +25,11 @@ export default function NominationQuestion({
   question,
   questionName,
   answers,
+  isEdit,
 }: NominationQuestion) {
-  const [getNominationFormState, setNominationFormState] =
-    useRecoilState(nominationFormState);
+  const [getNominationFormState, setNominationFormState] = useRecoilState(
+    isEdit ? editNominationFormState : newNominationFormState
+  );
 
   const { errors } = useFormState({ control });
 

@@ -3,15 +3,17 @@ import {
   Article,
   ThumbUp,
   Dashboard,
-  Login,
   People,
-  Person,
-  Edit,
 } from "@mui/icons-material";
-import { Box, Drawer, List, useMediaQuery } from "@mui/material";
-import { useRouter } from "next/router";
+import {
+  Box,
+  Drawer,
+  List,
+  SwipeableDrawer,
+  useMediaQuery,
+} from "@mui/material";
 import LogoutNavItem from "./LogoutNavItem";
-import NavItem, { NavItemProps } from "./NavItem";
+import NavItem from "./NavItem";
 import NextImage from "next/image";
 import useAuth from "@/hooks/useAuth";
 import { UserRole } from "@/enums";
@@ -63,11 +65,13 @@ const Content = ({ role, onClose }: ContentProps) => {
     new Set([DashboardItem])
   );
 
-  if (role?.includes(UserRole.STAFF) || role?.includes(UserRole.HOD)) {
+  if (
+    role?.includes(UserRole.STAFF) ||
+    (role?.includes(UserRole.HOD) && !role.includes(UserRole.COMMITTEE))
+  ) {
     contentItems.add(NewNominationItem);
+    contentItems.add(NominationsItem);
   }
-
-  contentItems.add(NominationsItem);
 
   if (role?.includes(UserRole.HOD)) {
     contentItems.add(HodItem);
@@ -114,11 +118,12 @@ const Content = ({ role, onClose }: ContentProps) => {
 
 interface SidebarProps {
   open: boolean;
-  onClose: (event: unknown, reason: "backdropClick" | "escapeKeyDown") => void;
+  onClose: () => void;
+  onOpen: () => void;
 }
 
 export default function Sidebar(props: SidebarProps) {
-  const { open, onClose } = props;
+  const { open, onClose, onOpen } = props;
   const { user } = useAuth();
   const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up("lg"), {
     defaultMatches: true,
@@ -145,9 +150,10 @@ export default function Sidebar(props: SidebarProps) {
   }
 
   return (
-    <Drawer
+    <SwipeableDrawer
       anchor="left"
       open={open}
+      onOpen={onOpen}
       onClose={onClose}
       PaperProps={{
         sx: {
@@ -160,6 +166,6 @@ export default function Sidebar(props: SidebarProps) {
       variant="temporary"
     >
       <Content role={user?.role} onClose={onClose} />
-    </Drawer>
+    </SwipeableDrawer>
   );
 }

@@ -1,23 +1,15 @@
-import { nominationFormState } from "@/atoms/nominationFormAtom";
-import { DepartmentType, NominationFilter } from "@/enums";
-import useAuth from "@/hooks/useAuth";
+import { NominationFormSubmissionData } from "@/interfaces";
 import {
-  NominationFormSubmissionData,
-  NominationQuestionsQueryData,
-} from "@/interfaces";
-import {
-  Box,
   Typography,
   Stepper,
   Step,
   StepLabel,
   Stack,
-  StepIcon,
   StepConnector,
   CircularProgress,
 } from "@mui/material";
 import { Suspense, useState } from "react";
-import { RecoilState, useRecoilState } from "recoil";
+import { RecoilState } from "recoil";
 import FinalStep from "../Steps/FinalStep";
 import FirstStep from "../Steps/FirstStep";
 import SecondStep from "../Steps/SecondStep";
@@ -29,7 +21,8 @@ const handleSteps = (
   step: number,
   handleNext: () => void,
   handleBack: () => void,
-  case_id?: string
+  case_id?: string,
+  isEdit?: boolean
 ) => {
   switch (step) {
     case 0:
@@ -38,6 +31,7 @@ const handleSteps = (
           recoilFormState={recoilFormState}
           handleNext={handleNext}
           case_id={case_id}
+          isEdit={isEdit}
         />
       );
     case 1:
@@ -47,6 +41,7 @@ const handleSteps = (
           handleNext={handleNext}
           handleBack={handleBack}
           case_id={case_id}
+          isEdit={isEdit}
         />
       );
     case 2:
@@ -78,9 +73,10 @@ const Success = () => {
 interface StepFormProps {
   recoilFormState: RecoilState<NominationFormSubmissionData>;
   case_id?: string;
+  isEdit?: boolean;
 }
 
-const StepForm = ({ recoilFormState, case_id }: StepFormProps) => {
+const StepForm = ({ recoilFormState, case_id, isEdit }: StepFormProps) => {
   const [activeStep, setActiveStep] = useState<number>(0);
   const handleNext = () => {
     setActiveStep(activeStep + 1);
@@ -142,7 +138,8 @@ const StepForm = ({ recoilFormState, case_id }: StepFormProps) => {
               activeStep,
               handleNext,
               handleBack,
-              case_id
+              case_id,
+              isEdit
             )}
           </Suspense>
         </Stack>

@@ -17,7 +17,9 @@ export default function CommitteeServiceLevelSelect({
         label: k.toString(),
         value: ServiceLevel[k as ServiceLevel],
       };
-    });
+    })
+    .filter(({ label, value }) => label.toLowerCase() !== "pending");
+  console.log("values filtered: ", committeeServiceLevelData);
   return (
     <>
       <FormSelect

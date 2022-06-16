@@ -14,12 +14,9 @@ interface CommitteeMemberDetailProps {
   case_id: string;
   committee_id: string;
   name: string;
-  designation: string;
-  department: string;
   default_service_level: ServiceLevel;
   service_level?: ServiceLevel;
   service_level_award?: ServiceLevelWinner;
-  champion_shortlist_status?: boolean;
   champion_status?: boolean;
   comments?: string;
   isEditable?: boolean;
@@ -30,12 +27,9 @@ export default function index(props: CommitteeMemberDetailProps) {
     case_id,
     committee_id,
     name,
-    designation,
-    department,
     default_service_level,
     service_level,
     service_level_award,
-    champion_shortlist_status,
     champion_status,
     comments,
     isEditable,
@@ -51,24 +45,10 @@ export default function index(props: CommitteeMemberDetailProps) {
     >
       <DetailHeader>{name}</DetailHeader>
       <Stack direction="column" spacing={4}>
-        <Stack
-          flexWrap="wrap"
-          direction={{ xs: "column", md: "row" }}
-          spacing={{ xs: 4, md: 8, lg: 8 }}
-        >
-          <Box>
-            <DetailSubHeader>name</DetailSubHeader>
-            <DetailText>{name}</DetailText>
-          </Box>
-          {/* <Box>
-            <DetailSubHeader>designation</DetailSubHeader>
-            <DetailText>{designation}</DetailText>
-          </Box> */}
-          <Box>
-            <DetailSubHeader>department</DetailSubHeader>
-            <DetailText>{department}</DetailText>
-          </Box>
-        </Stack>
+        <Box>
+          <DetailSubHeader>name</DetailSubHeader>
+          <DetailText>{name}</DetailText>
+        </Box>
 
         {isEditable ? (
           <CommitteeForm
@@ -79,7 +59,6 @@ export default function index(props: CommitteeMemberDetailProps) {
             service_level_award={convertServiceLevelWinnerToBoolean(
               service_level_award
             )}
-            champion_shortlist_status={champion_shortlist_status}
             champion_status={champion_status}
             comments={comments}
           />

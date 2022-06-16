@@ -7,6 +7,7 @@ export enum UserRole {
 export enum NominationFormStatus {
   ALL = "all",
   PENDING = "pending",
+  REJECTED = "rejected",
   ENDORSED = "endorsed",
   SUBMITTED = "submitted",
   INCOMPLETE = "incomplete",
@@ -32,6 +33,7 @@ export enum ShortlistStatus {
 export enum ServiceLevelWinner {
   TRUE = 170740000,
   FALSE = 170740001,
+  PENDING = 0,
 }
 
 export enum ServiceLevel {
@@ -40,7 +42,6 @@ export enum ServiceLevel {
   DESIRED = 170740002,
   EXPECTED = 170740003,
   BASIC = 170740004,
-  CRIMINAL = 170740005,
   PENDING = 0,
 }
 

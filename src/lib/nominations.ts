@@ -62,7 +62,7 @@ const upsertNominationForm = async (
   case_id?: string
 ) => {
   const answersArray: string[] = Array.from(formState.answers.values()).filter(
-    (d) => d !== undefined && d !== null
+    (d) => d !== undefined && d !== null && d !== ""
   );
   const data = {
     nominator_id: id,
@@ -102,7 +102,10 @@ const upsertNominationFormHODComments = async (hodData: HODQueryData) => {
 const upsertNominationFormCommitteeComments = async (
   committeeData: Omit<
     CommitteeMemberQueryData,
-    "committee_name" | "committee_designation" | "committee_department"
+    | "committee_name"
+    | "committee_designation"
+    | "committee_department"
+    | "shortlist_status"
   >
 ) => {
   const data = {
@@ -111,10 +114,9 @@ const upsertNominationFormCommitteeComments = async (
     committee_comments: committeeData.committee_comments,
     committee_service_level: committeeData.committee_service_level,
     service_level_winner_status: committeeData.service_level_winner_status,
-    shortlist_status: committeeData.shortlist_status,
     champion_status: committeeData.champion_status,
   };
-  return await postAPI("/nominations/id", data);
+  return await postAPI<QueryData>("UpsertCommitteeComments", data);
 };
 
 const useNominations = (id?: string, filter?: NominationFilter) => {
@@ -127,7 +129,8 @@ const useNominations = (id?: string, filter?: NominationFilter) => {
         year: "2022",
       },
     ],
-    postAPI
+    postAPI,
+    { refreshInterval: 1000 }
   );
   return { data: data, error: error, loading: !data && !error };
 };
@@ -148,8 +151,7 @@ const useQuiz = (staff_id?: string) => {
 const useDraftQuizResponse = (case_id?: string) => {
   const { data, error } = useSWR<DraftQuizResponseQueryData>(
     ["RetrieveQuizResponseForDraft", { case_id: case_id }],
-    postAPI,
-    { shouldRetryOnError: false }
+    postAPI
   );
   return {
     draftQuizResponseData: data,
@@ -176,13 +178,10 @@ const fetchFile = async (
   case_id?: string,
   file_name?: string
 ): Promise<FileStringNameData> => {
-  // const data = recursivelyLowercaseJSONKeys(fileData);
-  const data = recursivelyLowercaseJSONKeys(
-    await postAPI<FileQueryData>("RetrieveFile", {
-      case_id: case_id,
-      file_name: file_name,
-    })
-  ) as FileQueryData;
+  const data = (await postAPI<FileQueryData>("RetrieveFile", {
+    case_id: case_id,
+    file_name: file_name,
+  })) as FileQueryData;
   return {
     file_name: file_name!,
     file_string: data.file_string,
@@ -211,6 +210,16 @@ const fetchFileStrings = (fileFetchDatas: FileFetchData[]) => {
   return files;
 };
 
+const deleteFile = async (
+  case_id?: string,
+  file_name?: string
+): Promise<QueryData> => {
+  return await postAPI<QueryData>("DeleteFile", {
+    case_id: case_id,
+    file_name: file_name,
+  });
+};
+
 const deleteDraftNomination = async (case_id: string) => {
   const data = {
     case_id: case_id,
@@ -232,5 +241,6 @@ export {
   useStaff,
   fetchFile,
   fetchFileStrings,
+  deleteFile,
   deleteDraftNomination,
 };

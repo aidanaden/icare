@@ -9,6 +9,7 @@ import { upsertNominationFormHODComments } from "@/lib/nominations";
 import FeedbackSnackbar from "../Common/FeedbackSnackbar";
 import { useEffect, useMemo, useState } from "react";
 import { LoadingButton } from "@mui/lab";
+import { useRouter } from "next/router";
 
 interface EndorsementForm {
   endorsement_status?: EndorsementStatus;
@@ -26,13 +27,17 @@ export default function EndorsementForm({
   endorsement_status,
   comments,
 }: EndorsementFormProps) {
+  const router = useRouter();
   const [endorseSuccessOpen, setEndorseSuccessOpen] = useState<boolean>(false);
   const [endorseErrorOpen, setEndorseErrorOpen] = useState<boolean>(false);
   const [endorseLoading, setEndorseLoading] = useState<boolean>(false);
 
   const defaultValues = useMemo(() => {
     return {
-      endorsement_status: endorsement_status,
+      endorsement_status:
+        endorsement_status === EndorsementStatus.PENDING
+          ? EndorsementStatus.NEUTRAL
+          : endorsement_status,
       comments: comments,
     };
   }, [endorsement_status, comments]);
@@ -58,17 +63,17 @@ export default function EndorsementForm({
       const transformedData = {
         case_id: case_id,
         hod_id: hod_id,
-        endorsement_status:
-          data.endorsement_status ?? EndorsementStatus.PENDING,
+        endorsement_status: data.endorsement_status,
         hod_comments: data.comments ?? "",
       };
       const response = await upsertNominationFormHODComments(transformedData);
-      setEndorseLoading(false);
-      if (response.status_code !== 200) {
-        setEndorseErrorOpen(true);
-      } else {
+      if (response.status_code === 200) {
         setEndorseSuccessOpen(true);
+        router.push("/endorsements");
+      } else {
+        setEndorseErrorOpen(true);
       }
+      setEndorseLoading(false);
     } catch (err) {
       console.error(err);
     }

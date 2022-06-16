@@ -1,5 +1,5 @@
-export const API_URL =
-  "https://testicare.stoneforest.com.sg/api/Api/icare/crm/";
+export const BASE_URL = "https://testicare.stoneforest.com.sg";
+export const API_URL = `${BASE_URL}/api/Api/icare/crm/`;
 export const BASE64_SPLIT_KEY = ";base64,";
 export const IMAGE_FILE_TYPE = "image/*";
 export const PDF_FILE_TYPE = "application/pdf";

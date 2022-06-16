@@ -1,11 +1,11 @@
 import { DepartmentType } from "@/enums";
 import { NominationFormSubmissionData } from "@/interfaces";
-import { upsertNominationForm } from "@/lib/nominations";
 import { atom } from "recoil";
 
-export const editNominationFormState = atom<NominationFormSubmissionData>({
-  key: "editNominationFormState",
+export const newNominationFormState = atom<NominationFormSubmissionData>({
+  key: "newNominationFormState",
   default: {
+    case_id: undefined,
     user: undefined,
     department: DepartmentType.ALL,
     description: undefined,

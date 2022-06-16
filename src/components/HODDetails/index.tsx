@@ -8,6 +8,7 @@ import { EndorsementStatus } from "@/enums";
 import EndorsementForm from "../Forms/EndorsementForm";
 import GreenBadge from "../Common/Badge/GreenBadge";
 import RedBadge from "../Common/Badge/RedBadge";
+import GrayBadge from "../Common/Badge/GrayBadge";
 
 interface HODDetailProps {
   case_id: string;
@@ -83,21 +84,20 @@ export default function index(props: HODDetailProps) {
             <Stack direction={"column"} spacing={4} height="100%">
               <Box>
                 <DetailSubHeader mb={1.5}>Endorsement status</DetailSubHeader>
-                {endorsement_status ? (
+                {endorsement_status === EndorsementStatus.COMMENDABLE ? (
                   <GreenBadge>Endorsed</GreenBadge>
-                ) : (
+                ) : endorsement_status === EndorsementStatus.NEUTRAL ? (
                   <RedBadge>Not endorsed</RedBadge>
+                ) : (
+                  <GrayBadge>Pending</GrayBadge>
                 )}
               </Box>
-
-              {endorsement_status === EndorsementStatus.COMMENDABLE ||
-                (endorsement_status === EndorsementStatus.NEUTRAL && (
-                  <Box>
-                    <DetailSubHeader>Endorsement date</DetailSubHeader>
-                    <DetailText>{endorsement_date?.toString()}</DetailText>
-                  </Box>
-                ))}
-
+              {endorsement_status !== EndorsementStatus.PENDING && (
+                <Box>
+                  <DetailSubHeader>Endorsement date</DetailSubHeader>
+                  <DetailText>{endorsement_date?.toString()}</DetailText>
+                </Box>
+              )}
               {comments && (
                 <Box>
                   <DetailSubHeader>Comments</DetailSubHeader>

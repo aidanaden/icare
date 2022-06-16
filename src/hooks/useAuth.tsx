@@ -51,6 +51,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     };
     setUser(userValue);
 
+    console.log("user roles: ", userRoles);
+
     return response;
   };
 
@@ -66,24 +68,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const refreshToken = async () => {
     return await postAPI<LoginQueryData>("RefreshToken");
   };
-
-  // run refreshToken api call every 10 mins
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      try {
-        const response = await refreshToken();
-        if (response.status_code == 200) {
-          console.log("successfully refreshed token with resp: ", response);
-        }
-      } catch (err) {
-        console.error("Token failed to refresh with error: ", err);
-      }
-    }, 600000);
-
-    // This represents the unmount function, in which you need
-    // to clear your interval to prevent memory leaks.
-    return () => clearInterval(interval);
-  }, []);
 
   return (
     <AuthContext.Provider value={{ user, signIn, logout, refreshToken }}>

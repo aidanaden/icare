@@ -3,11 +3,10 @@ import { Logout } from "@mui/icons-material";
 import React, { useState } from "react";
 import SidebarListItem from "../SidebarListItem";
 import useAuth from "@/hooks/useAuth";
-import { useRouter } from "next/router";
 import FeedbackSnackbar from "@/components/Forms/Common/FeedbackSnackbar";
+import { BASE_URL } from "@/constants";
 
 export default function LogoutNavItem() {
-  const router = useRouter();
   const { logout } = useAuth();
 
   const [logoutSuccessOpen, setLogoutSuccessOpen] = useState<boolean>(false);
@@ -23,7 +22,7 @@ export default function LogoutNavItem() {
         setLogoutSuccessOpen(true);
         setLogoutLoading(false);
         setTimeout(() => {
-          router.reload();
+          window.location.replace(BASE_URL);
         }, 2500);
       }
     } catch (err) {

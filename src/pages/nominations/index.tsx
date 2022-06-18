@@ -8,12 +8,13 @@ import { Breadcrumbs, CircularProgress } from "@mui/material";
 import NextMuiLink from "@/components/Common/NextMuiLink";
 import NominationTable from "@/components/Table/NominationTable";
 import { useNominations } from "@/lib/nominations";
-import { NominationFilter } from "@/enums";
+import { NominationFilter, UserRole } from "@/enums";
 import useAuth from "@/hooks/useAuth";
 import { getStatusFromData } from "@/utils";
 import { Suspense, useEffect, useState } from "react";
 import { NominationDataTableData } from "@/interfaces";
 import FallbackSpinner from "@/components/Common/FallbackSpinner";
+import Unauthorized from "@/components/UnauthorizedAccess";
 
 // ALL nominations made by staff (draft AND completed)
 
@@ -24,38 +25,47 @@ const Nominations: NextPage = () => {
     NominationFilter.USER
   );
 
-  return (
-    <Box>
-      <Box mb={4}>
-        <SectionHeader mb={2}>Nominations</SectionHeader>
-        <Breadcrumbs
-          separator="•"
-          aria-label="breadcrumb"
-          sx={{
-            "& .MuiBreadcrumbs-separator": {
-              color: "#637381",
-              opacity: 0.8,
-              px: 1,
-            },
-          }}
-        >
-          <NextMuiLink color="#212B36" href="/dashboard" fontSize="14px">
-            Dashboard
-          </NextMuiLink>
-          <NextMuiLink color="#919EAB" href="/nominations" fontSize="14px">
-            Nominations
-          </NextMuiLink>
-        </Breadcrumbs>
+  if (
+    !user?.role.includes(UserRole.STAFF) &&
+    !user?.role.includes(UserRole.HOD)
+  ) {
+    return (
+      <Box>
+        <Box mb={4}>
+          <SectionHeader mb={2}>Nominations</SectionHeader>
+          <Breadcrumbs
+            separator="•"
+            aria-label="breadcrumb"
+            sx={{
+              "& .MuiBreadcrumbs-separator": {
+                color: "#637381",
+                opacity: 0.8,
+                px: 1,
+              },
+            }}
+          >
+            <NextMuiLink color="#212B36" href="/dashboard" fontSize="14px">
+              Dashboard
+            </NextMuiLink>
+            <NextMuiLink color="#919EAB" href="/nominations" fontSize="14px">
+              Nominations
+            </NextMuiLink>
+          </Breadcrumbs>
+        </Box>
+        <ShadowBox borderRadius="20px">
+          {data ? (
+            <NominationTable
+              data={data?.map((d: any) => getStatusFromData(d))}
+            />
+          ) : (
+            <FallbackSpinner />
+          )}
+        </ShadowBox>
       </Box>
-      <ShadowBox borderRadius="20px">
-        {data ? (
-          <NominationTable data={data?.map((d: any) => getStatusFromData(d))} />
-        ) : (
-          <FallbackSpinner />
-        )}
-      </ShadowBox>
-    </Box>
-  );
+    );
+  } else {
+    return <Unauthorized />;
+  }
 };
 
 export default Nominations;

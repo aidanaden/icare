@@ -23,7 +23,7 @@ export default function LogoutNavItem() {
         setLogoutLoading(false);
         setTimeout(() => {
           window.location.replace(BASE_URL);
-        }, 2500);
+        }, 1500);
       }
     } catch (err) {
       console.log("error occurred while logging out: ", err);

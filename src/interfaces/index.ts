@@ -40,6 +40,7 @@ export interface NominationDataTableData {
   is_champion_shortlist_result: boolean;
   answers: string[];
   quiz_service_level: ServiceLevel;
+  committee_vote?: CommitteeMemberVote[];
 }
 
 export interface QueryData {
@@ -54,17 +55,13 @@ export interface HODQueryData {
   endorsement_status: EndorsementStatus;
 }
 
-// {
-//       "Committee_ID": "4444",
-//       "Committee_Name": "Doreen Quek",
-//       "Committee_Designation": "HQ Director",
-//       "Committee_Department": "SFIT",
-//       "Committee_Team": "CRM",
-//       "Committee_Comments": "doreen comments",
-//       "Committee_Service_Level": 170740002,
-//       "Service_Level_Winner_Status": 170740000,
-//       "Champion_Status": true
-//     },
+export interface CommitteeMemberVote {
+  committee_id: string;
+  committee_name: string;
+  committee_service_level: ServiceLevel;
+  service_level_winner_status: ServiceLevelWinner;
+  champion_status: boolean;
+}
 
 // nomination form detail committee member data
 export interface CommitteeMemberQueryData {
@@ -106,7 +103,7 @@ export interface NominationDetailQueryData extends QueryData {
   committee_service_level_result: ServiceLevel;
   committee_total_score: number;
   draft_status: boolean;
-  is_service_level_winner: boolean;
+  is_service_level_winner: ServiceLevelWinner;
   is_champion_shortlist_result: boolean;
   is_champion_result: boolean;
   committee_comment: CommitteeMemberQueryData[];

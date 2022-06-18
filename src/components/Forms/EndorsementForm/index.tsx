@@ -96,7 +96,7 @@ export default function EndorsementForm({
               name="comments"
               error={errors.comments?.message}
               multiLine={true}
-              placeholder="Enter comments here..."
+              placeholder="Share your views on the nomination. Is the service quality consistent?"
             />
           </Stack>
           <Box display="flex" justifyContent="flex-end">

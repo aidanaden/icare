@@ -1,6 +1,6 @@
 import Box, { BoxProps } from "@mui/material/Box";
 
-export default function index({ children }: BoxProps) {
+export default function index({ children, ...other }: BoxProps) {
   return (
     <Box
       sx={{
@@ -10,6 +10,7 @@ export default function index({ children }: BoxProps) {
         flex: "1 1 auto",
         flexDirection: "column",
       }}
+      {...other}
     >
       {children}
     </Box>

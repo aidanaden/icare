@@ -31,11 +31,13 @@ export default function FinalStep({
   const [successSnackbarOpen, setSuccessSnackbarOpen] =
     useState<boolean>(false);
   const [errorSnackbarOpen, setErrorSnackbarOpen] = useState<boolean>(false);
+  const [submitLoading, setSubmitLoading] = useState<boolean>(false);
 
   const handleFinalFormSubmit = async () => {
     if (!user) {
       console.error("user not logged in!");
     } else {
+      setSubmitLoading(true);
       try {
         const response = await upsertNominationForm(
           user?.staff_id,
@@ -55,6 +57,7 @@ export default function FinalStep({
       } catch (err) {
         console.error(err);
       }
+      setSubmitLoading(false);
     }
   };
 
@@ -103,6 +106,7 @@ export default function FinalStep({
               justifyContent: { xs: "center", sm: "flex-end" },
             }}
             onClick={handleFinalFormSubmit}
+            loading={submitLoading}
           >
             Submit
           </PrimaryButton>

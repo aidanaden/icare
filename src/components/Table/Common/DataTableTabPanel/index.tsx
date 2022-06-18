@@ -1,7 +1,7 @@
 import TableMenu from "@/components/Common/Menu/TableMenu";
 import FeedbackSnackbar from "@/components/Forms/Common/FeedbackSnackbar";
 import { NominationFormStatus, DepartmentType, ServiceLevel } from "@/enums";
-import { NominationDataTableData } from "@/interfaces";
+import { CommitteeMemberVote, NominationDataTableData } from "@/interfaces";
 import { Search } from "@mui/icons-material";
 import { TabPanel } from "@mui/lab";
 import {
@@ -21,7 +21,12 @@ import {
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import DepartmentSelect from "../DepartmentSelect";
-import { StyledTableCell, TextTableCell, BadgeTableCell } from "../TableCells";
+import {
+  StyledTableCell,
+  TextTableCell,
+  BadgeTableCell,
+  CommitteeVoteTableCell,
+} from "../TableCells";
 import { Column } from "../Columns";
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -231,7 +236,8 @@ export default function DataTableTabPanel({
               {columns.map((column) => (
                 <>
                   {column.id === "nominee_team" ||
-                  (column.id === "nominator_name" && !hasChampions) ? (
+                  (column.id === "nominator_name" && !hasChampions) ||
+                  (column.id === "committee_vote" && !displayCommitteeVote) ? (
                     <></>
                   ) : (
                     <StyledTableCell
@@ -242,12 +248,11 @@ export default function DataTableTabPanel({
                     >
                       <TableSortLabel
                         active={orderBy === column.id}
-                        direction={orderBy === column.id ? order : "asc"}
-                        onClick={
-                          column.id !== "committee_scores"
-                            ? createSortHandler(column.id)
-                            : undefined
-                        }
+                        direction={orderBy === column.id ? order : "desc"}
+                        onClick={createSortHandler(column.id)}
+                        sx={{
+                          textAlign: `${column.align}`,
+                        }}
                       >
                         {column.label}
                       </TableSortLabel>
@@ -266,27 +271,33 @@ export default function DataTableTabPanel({
               ?.map((row: NominationDataTableData, i: number) => {
                 return (
                   <TableRow hover role="checkbox" tabIndex={-1} key={i}>
-                    {columns.map((column, i) => {
-                      const value =
-                        column.id !== "committee_scores" ? row[column.id] : "";
+                    {columns.map((column) => {
+                      const value = row[column.id];
                       if (column.id === "nomination_status") {
                         return (
                           <BadgeTableCell
-                            key={`table-cell ${i}`}
-                            value={value}
+                            value={value as string}
+                            column={column}
+                          />
+                        );
+                      } else if (
+                        column.id === "committee_vote" &&
+                        displayCommitteeVote
+                      ) {
+                        return (
+                          <CommitteeVoteTableCell
+                            value={value as CommitteeMemberVote[]}
                             column={column}
                           />
                         );
                       } else if (
                         column.id === "nominee_team" ||
-                        (column.id === "nominator_name" && !hasChampions) ||
-                        column.id === "committee_scores"
+                        (column.id === "nominator_name" && !hasChampions)
                       ) {
                         return <></>;
                       } else if (column.id === "quiz_service_level") {
                         return (
                           <TextTableCell
-                            key={`table-cell ${i}`}
                             value={
                               row.draft_status
                                 ? "Not Available"
@@ -300,17 +311,12 @@ export default function DataTableTabPanel({
                           ? row.nomination_created_date
                           : row.nomination_submitted_date;
                         return (
-                          <TextTableCell
-                            key={`table-cell ${i}`}
-                            value={dateValue}
-                            column={column}
-                          />
+                          <TextTableCell value={dateValue} column={column} />
                         );
                       } else {
                         return (
                           <TextTableCell
-                            key={`table-cell ${i}`}
-                            value={value}
+                            value={value as string}
                             column={column}
                           />
                         );

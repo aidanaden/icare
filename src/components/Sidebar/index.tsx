@@ -155,6 +155,9 @@ export default function Sidebar(props: SidebarProps) {
       open={open}
       onOpen={onOpen}
       onClose={onClose}
+      ModalProps={{
+        keepMounted: true, // Better open performance on mobile.
+      }}
       PaperProps={{
         sx: {
           backgroundColor: "neutral.900",
@@ -162,7 +165,6 @@ export default function Sidebar(props: SidebarProps) {
           width: { xs: "80%", sm: "320px" },
         },
       }}
-      sx={{ zIndex: (theme: any) => theme.zIndex.appBar + 100 }}
       variant="temporary"
     >
       <Content role={user?.role} onClose={onClose} />

@@ -47,29 +47,28 @@ const getStatusFromData = (
     status = NominationFormStatus.CHAMPION;
   } else if (data.is_champion_shortlist_result) {
     status = NominationFormStatus.SHORTLISTED;
-  } else if (data.is_service_level_winner) {
+  } else if (data.is_service_level_winner === ServiceLevelWinner.TRUE) {
     status = NominationFormStatus.AWARDED;
+  } else if (data.is_service_level_winner === ServiceLevelWinner.FALSE) {
+    status = NominationFormStatus.REJECTED;
   } else if (
     data.endorsement_status === EndorsementStatus.COMMENDABLE &&
-    !data.draft_status
+    !data.draft_status &&
+    data.is_service_level_winner === ServiceLevelWinner.PENDING
   ) {
     status = NominationFormStatus.ENDORSED;
   } else if (
     data.endorsement_status === EndorsementStatus.NEUTRAL &&
-    !data.draft_status
+    !data.draft_status &&
+    data.is_service_level_winner === ServiceLevelWinner.PENDING
   ) {
     status = NominationFormStatus.SUBMITTED;
   } else if (
     data.endorsement_status === EndorsementStatus.PENDING &&
-    !data.draft_status
-  ) {
-    status = NominationFormStatus.PENDING;
-  } else if (
-    data.endorsement_status !== EndorsementStatus.PENDING &&
     !data.draft_status &&
     data.is_service_level_winner === ServiceLevelWinner.PENDING
   ) {
-    status = NominationFormStatus.REJECTED;
+    status = NominationFormStatus.PENDING;
   } else if (data.draft_status) {
     status = NominationFormStatus.INCOMPLETE;
   }

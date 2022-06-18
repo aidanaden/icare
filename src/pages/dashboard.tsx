@@ -122,7 +122,7 @@ const Dashboard: NextPage = () => {
                 <SectionHeader>
                   {user?.role.includes(UserRole.COMMITTEE)
                     ? "Awarded nominations"
-                    : "Incompleted nominations"}
+                    : "Incomplete nominations"}
                 </SectionHeader>
                 <Typography
                   variant="caption"
@@ -137,7 +137,7 @@ const Dashboard: NextPage = () => {
               <SimpleTableLink
                 href={
                   user?.role.includes(UserRole.COMMITTEE)
-                    ? "/nominations?tab=awarded"
+                    ? "/committee?tab=awarded"
                     : "/nominations?tab=incomplete"
                 }
               >
@@ -180,7 +180,7 @@ const Dashboard: NextPage = () => {
               <SimpleTableLink
                 href={
                   user?.role.includes(UserRole.COMMITTEE)
-                    ? "/nominations?tab=champion"
+                    ? "/committee?tab=champion"
                     : "/nominations?tab=incomplete"
                 }
               >

@@ -25,8 +25,8 @@ export interface Column {
         | "nomination_created_date"
         | "nomination_submitted_date"
         | "quiz_service_level"
-      >
-    | "committee_scores";
+        | "committee_vote"
+      >;
   label: string;
   minWidth?: number;
   align?: "right" | "center" | "left";
@@ -90,15 +90,15 @@ export const committeeColumns: readonly Column[] = [
   {
     id: "quiz_service_level",
     label: "Service Level",
-    minWidth: 100,
+    minWidth: 180,
   },
   { id: "nominee_team", label: "Team", minWidth: 100 },
   { id: "nomination_status", label: "Status", align: "center", minWidth: 100 },
   {
-    id: "committee_scores",
-    label: "Committee scoring",
+    id: "committee_vote",
+    label: "Champion Vote",
     align: "center",
-    minWidth: 100,
+    minWidth: 200,
   },
   {
     id: "nomination_submitted_date",
@@ -109,7 +109,7 @@ export const committeeColumns: readonly Column[] = [
 ];
 
 export const simpleColumns: readonly SimpleColumn[] = [
-  { id: "nominee_name", label: "Nominee", minWidth: 170 },
+  { id: "nominee_name", label: "Nominee", minWidth: 160 },
   { id: "nominee_department", label: "Department", minWidth: 100 },
   {
     id: "nomination_created_date",

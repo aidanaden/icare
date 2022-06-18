@@ -1,4 +1,4 @@
-import { ServiceLevel } from "@/enums";
+import { ServiceLevel, ServiceLevelWinner } from "@/enums";
 import DetailBox, { DetailAttribute } from "../Common/DetailBox";
 
 interface CommitteeDetailProps {
@@ -6,7 +6,7 @@ interface CommitteeDetailProps {
   title: string;
   final_score?: number;
   final_service_level?: ServiceLevel;
-  is_service_level_winner: boolean;
+  is_service_level_winner: ServiceLevelWinner;
   is_champion_shortlist_result: boolean;
   is_champion_result: boolean;
 }
@@ -32,14 +32,19 @@ export default function index(props: CommitteeDetailProps) {
     },
     {
       title: "service level award winner",
-      text: is_service_level_winner ? "Winner" : "",
+      text:
+        is_service_level_winner === ServiceLevelWinner.TRUE
+          ? "Awarded"
+          : is_service_level_winner === ServiceLevelWinner.FALSE
+          ? "Not Awarded"
+          : "Pending",
     },
     {
       title: "championship status",
-      text: is_champion_shortlist_result
-        ? "Shortlisted"
-        : is_champion_result
+      text: is_champion_result
         ? "Champion"
+        : is_champion_shortlist_result
+        ? "Shortlisted"
         : "",
     },
   ];

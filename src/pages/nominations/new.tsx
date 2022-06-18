@@ -6,13 +6,14 @@ import SectionHeader from "@/components/Common/SectionHeader";
 import ShadowBox from "@/components/Common/ShadowBox";
 import { Breadcrumbs } from "@mui/material";
 import NextMuiLink from "@/components/Common/NextMuiLink";
-import { DepartmentType, NominationFormStatus } from "@/enums";
+import { DepartmentType, NominationFormStatus, UserRole } from "@/enums";
 import EndorsementTable from "@/components/Table/EndorsementTable";
 import theme from "@/styles/theme";
 import StepForm from "@/components/Forms/StepForm";
 import useAuth from "@/hooks/useAuth";
 import { useEffect } from "react";
 import { newNominationFormState } from "@/atoms/newNominationFormAtom";
+import Unauthorized from "@/components/UnauthorizedAccess";
 
 const Nomination: NextPage = () => {
   const { user } = useAuth();
@@ -29,36 +30,43 @@ const Nomination: NextPage = () => {
     return () => window.removeEventListener("beforeunload", unloadCallback);
   }, []);
 
-  return (
-    <Box>
-      <Box mb={4}>
-        <SectionHeader mb={2}>New Nomination</SectionHeader>
-        <Breadcrumbs
-          separator="•"
-          aria-label="breadcrumb"
-          sx={{
-            "& .MuiBreadcrumbs-separator": {
-              color: "#637381",
-              opacity: 0.8,
-              px: 1,
-            },
-          }}
-        >
-          <NextMuiLink color="#212B36" href="/dashboard" fontSize="14px">
-            Dashboard
-          </NextMuiLink>
-          <NextMuiLink color="#919EAB" href="/nomination" fontSize="14px">
-            Nomination
-          </NextMuiLink>
-        </Breadcrumbs>
+  if (
+    !user?.role.includes(UserRole.STAFF) &&
+    !user?.role.includes(UserRole.HOD)
+  ) {
+    return (
+      <Box>
+        <Box mb={4}>
+          <SectionHeader mb={2}>New Nomination</SectionHeader>
+          <Breadcrumbs
+            separator="•"
+            aria-label="breadcrumb"
+            sx={{
+              "& .MuiBreadcrumbs-separator": {
+                color: "#637381",
+                opacity: 0.8,
+                px: 1,
+              },
+            }}
+          >
+            <NextMuiLink color="#212B36" href="/dashboard" fontSize="14px">
+              Dashboard
+            </NextMuiLink>
+            <NextMuiLink color="#919EAB" href="/nomination" fontSize="14px">
+              Nomination
+            </NextMuiLink>
+          </Breadcrumbs>
+        </Box>
+        {user && (
+          <ShadowBox p={{ xs: 4, md: 8 }}>
+            <StepForm recoilFormState={newNominationFormState} isEdit={false} />
+          </ShadowBox>
+        )}
       </Box>
-      {user && (
-        <ShadowBox p={{ xs: 4, md: 8 }}>
-          <StepForm recoilFormState={newNominationFormState} isEdit={false} />
-        </ShadowBox>
-      )}
-    </Box>
-  );
+    );
+  } else {
+    return <Unauthorized />;
+  }
 };
 
 export default Nomination;

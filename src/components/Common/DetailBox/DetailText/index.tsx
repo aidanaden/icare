@@ -15,7 +15,7 @@ export default function index({
       fontWeight={500}
       fontSize="16px"
       color="#212b36"
-      textTransform="capitalize"
+      // textTransform=''
       noWrap={!isMultiLine}
       // maxWidth={isMultiLine ? "100%" : 160}
       {...props}

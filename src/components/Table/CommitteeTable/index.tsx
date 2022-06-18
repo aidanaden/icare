@@ -65,6 +65,7 @@ export default function EndorsementTable({
       tabPanelData={tabPanelData}
       columns={committeeColumns}
       displayCommitteeVote={true}
+      viewText="Vote"
       {...other}
     />
   );

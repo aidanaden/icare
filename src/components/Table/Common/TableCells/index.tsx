@@ -5,9 +5,17 @@ import OrangeBadge from "@/components/Common/Badge/OrangeBadge";
 import PurpleBadge from "@/components/Common/Badge/PurpleBadge";
 import RedBadge from "@/components/Common/Badge/RedBadge";
 import { NominationFormStatus, ServiceLevel } from "@/enums";
+import { CommitteeMemberVote } from "@/interfaces";
 import styled from "@emotion/styled";
-import { TableCell, tableCellClasses } from "@mui/material";
+import {
+  Avatar,
+  AvatarGroup,
+  TableCell,
+  tableCellClasses,
+} from "@mui/material";
 import { Column } from "../Columns";
+import { teal, lightBlue, lightGreen } from "@mui/material/colors";
+import AmberBadge from "@/components/Common/Badge/AmberBadge";
 
 export const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -41,6 +49,8 @@ export const BadgeTableCell = ({ value, column }: TextTableCellProps) => {
         <PurpleBadge>{value.toString()}</PurpleBadge>
       ) : value === NominationFormStatus.AWARDED ? (
         <OrangeBadge>{value.toString()}</OrangeBadge>
+      ) : value === NominationFormStatus.CHAMPION ? (
+        <AmberBadge>{value.toString()}</AmberBadge>
       ) : (
         <RedBadge>{value?.toString()}</RedBadge>
       )}
@@ -52,6 +62,50 @@ export const TextTableCell = ({ value, column }: TextTableCellProps) => {
   return (
     <StyledTableCell key={column.id} align={column.align} sx={{ px: 4 }}>
       {value?.toString()}
+    </StyledTableCell>
+  );
+};
+
+interface CommitteeVoteTableCellProps {
+  value: CommitteeMemberVote[];
+  column: Column;
+}
+
+const getAvatarColor = (i: number) => {
+  if (i === 0) {
+    return teal[300];
+  } else if (i === 1) {
+    return lightBlue[300];
+  } else {
+    return lightGreen[300];
+  }
+};
+
+export const CommitteeVoteTableCell = ({
+  value,
+  column,
+}: CommitteeVoteTableCellProps) => {
+  return (
+    <StyledTableCell key={column.id} align={column.align} sx={{ px: 4 }}>
+      <AvatarGroup
+        max={3}
+        sx={{
+          alignItems: "self-start",
+          justifyContent: "left",
+        }}
+      >
+        {value.map((committeeMemberVote, i) => {
+          if (committeeMemberVote.champion_status) {
+            return (
+              <Avatar
+                sx={{ bgcolor: `${getAvatarColor(i)}`, width: 32, height: 32 }}
+              >
+                {committeeMemberVote.committee_name.slice(0, 1)}
+              </Avatar>
+            );
+          }
+        })}
+      </AvatarGroup>
     </StyledTableCell>
   );
 };

@@ -11,9 +11,12 @@ import useAuth from "@/hooks/useAuth";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { editNominationFormState } from "@/atoms/editNominationFormAtom";
+import Unauthorized from "@/components/UnauthorizedAccess";
+import { UserRole } from "@/enums";
 
 const Nomination: NextPage = () => {
   const router = useRouter();
+  const { user } = useAuth();
   const { id } = router.query;
 
   // add check when user attempts to leave page
@@ -28,40 +31,47 @@ const Nomination: NextPage = () => {
     return () => window.removeEventListener("beforeunload", unloadCallback);
   }, []);
 
-  return (
-    <Box>
-      <Box mb={4}>
-        <SectionHeader mb={2}>Edit Nomination</SectionHeader>
-        <Breadcrumbs
-          separator="•"
-          aria-label="breadcrumb"
-          sx={{
-            "& .MuiBreadcrumbs-separator": {
-              color: "#637381",
-              opacity: 0.8,
-              px: 1,
-            },
-          }}
-        >
-          <NextMuiLink color="#212B36" href="/dashboard" fontSize="14px">
-            Dashboard
-          </NextMuiLink>
-          <NextMuiLink color="#919EAB" href="#" fontSize="14px">
-            Edit
-          </NextMuiLink>
-        </Breadcrumbs>
+  if (
+    !user?.role.includes(UserRole.STAFF) &&
+    !user?.role.includes(UserRole.HOD)
+  ) {
+    return (
+      <Box>
+        <Box mb={4}>
+          <SectionHeader mb={2}>Edit Nomination</SectionHeader>
+          <Breadcrumbs
+            separator="•"
+            aria-label="breadcrumb"
+            sx={{
+              "& .MuiBreadcrumbs-separator": {
+                color: "#637381",
+                opacity: 0.8,
+                px: 1,
+              },
+            }}
+          >
+            <NextMuiLink color="#212B36" href="/dashboard" fontSize="14px">
+              Dashboard
+            </NextMuiLink>
+            <NextMuiLink color="#919EAB" href="#" fontSize="14px">
+              Edit
+            </NextMuiLink>
+          </Breadcrumbs>
+        </Box>
+        {id && (
+          <ShadowBox p={{ xs: 4, md: 8 }}>
+            <StepForm
+              recoilFormState={editNominationFormState}
+              case_id={id as string}
+              isEdit={true}
+            />
+          </ShadowBox>
+        )}
       </Box>
-      {id && (
-        <ShadowBox p={{ xs: 4, md: 8 }}>
-          <StepForm
-            recoilFormState={editNominationFormState}
-            case_id={id as string}
-            isEdit={true}
-          />
-        </ShadowBox>
-      )}
-    </Box>
-  );
+    );
+  } else {
+    return <Unauthorized />;
+  }
 };
 
 export default Nomination;

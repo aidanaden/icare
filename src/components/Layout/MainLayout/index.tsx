@@ -46,7 +46,9 @@ export default function MainLayout({ children, ...other }: BoxProps) {
           <RefreshDialog />
         </Box>
       ) : (
-        <LoginLayout>{children}</LoginLayout>
+        <Box {...other}>
+          <LoginLayout>{children}</LoginLayout>
+        </Box>
       )}
     </>
   );

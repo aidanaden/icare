@@ -156,39 +156,54 @@ const View: NextPage = () => {
                         isEditable={true}
                       />
                     ) : (
-                      <ShadowBox height="120px">
-                        <CenterBox height="100%">
+                      <ShadowBox height={{ xs: "360px", md: "480px" }}>
+                        <CenterBox height="100%" fontWeight="bold" p={4}>
                           You are the nominee&apos;s HOD, your vote is
                           retracted.
                         </CenterBox>
                       </ShadowBox>
                     )}
                   </Grid>
-                  {otherData?.map((committeeData) => {
-                    if (committeeData.committee_id !== user.staff_id) {
-                      return (
-                        <Grid item xs={12} sm={6} key={committeeData.case_id}>
-                          <CommitteeMemberDetails
-                            case_id={id as string}
-                            committee_id={committeeData.committee_id}
-                            name={committeeData.committee_name}
-                            default_service_level={data.quiz_service_level}
-                            service_level={
-                              committeeData.committee_service_level
-                            }
-                            service_level_award={
-                              committeeData.service_level_winner_status
-                            }
-                            champion_status={committeeData.champion_status}
-                            comments={committeeData.committee_comments}
-                            isEditable={
-                              committeeData.committee_id === user?.staff_id
-                            }
-                          />
-                        </Grid>
-                      );
-                    }
-                  })}
+                  {otherData && otherData.length > 0 ? (
+                    otherData?.map((committeeData) => {
+                      if (committeeData.committee_id !== user.staff_id) {
+                        return (
+                          <Grid item xs={12} sm={6}>
+                            <CommitteeMemberDetails
+                              key={committeeData.case_id}
+                              case_id={id as string}
+                              committee_id={committeeData.committee_id}
+                              name={committeeData.committee_name}
+                              default_service_level={data.quiz_service_level}
+                              service_level={
+                                committeeData.committee_service_level
+                              }
+                              service_level_award={
+                                committeeData.service_level_winner_status
+                              }
+                              champion_status={committeeData.champion_status}
+                              comments={committeeData.committee_comments}
+                              isEditable={
+                                committeeData.committee_id === user?.staff_id
+                              }
+                            />
+                          </Grid>
+                        );
+                      }
+                    })
+                  ) : (
+                    <Grid item xs={12} sm={6}>
+                      <ShadowBox
+                        height="100%"
+                        minHeight={{ xs: "360px", md: "480px" }}
+                      >
+                        <CenterBox height="100%" fontWeight="bold" p={4}>
+                          Waiting for the other committee member(s) to submit
+                          their vote...
+                        </CenterBox>
+                      </ShadowBox>
+                    </Grid>
+                  )}
                 </Grid>
               </Stack>
             </Grid>

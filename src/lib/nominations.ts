@@ -127,7 +127,7 @@ const useNominations = (id?: string, filter?: NominationFilter) => {
       {
         staff_id: id,
         filter: filter,
-        year: "2022",
+        year: new Date().getFullYear().toString(),
       },
     ],
     postAPI

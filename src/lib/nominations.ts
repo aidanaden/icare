@@ -129,8 +129,7 @@ const useNominations = (id?: string, filter?: NominationFilter) => {
         year: "2022",
       },
     ],
-    postAPI,
-    { refreshInterval: 1000 }
+    postAPI
   );
   return { data: data, error: error, loading: !data && !error };
 };

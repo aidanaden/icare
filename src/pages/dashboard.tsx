@@ -11,6 +11,7 @@ import useAuth from "@/hooks/useAuth";
 import {
   EndorsementStatus,
   NominationFilter,
+  NominationFormStatus,
   ServiceLevelWinner,
   UserRole,
 } from "@/enums";
@@ -43,17 +44,19 @@ const Dashboard: NextPage = () => {
   );
   const endorsedNominations = data?.filter(
     (nom: NominationDataTableData) =>
-      nom.endorsement_status === EndorsementStatus.COMMENDABLE
+      nom.nomination_status === NominationFormStatus.ENDORSED
   );
   const awardedNominations = data?.filter(
     (nom: NominationDataTableData) =>
-      nom.is_service_level_winner === ServiceLevelWinner.TRUE
+      nom.nomination_status === NominationFormStatus.AWARDED
   );
   const shortlistedNominations = data?.filter(
-    (nom: NominationDataTableData) => nom.is_champion_shortlist_result
+    (nom: NominationDataTableData) =>
+      nom.nomination_status === NominationFormStatus.SHORTLISTED
   );
   const championNominations = data?.filter(
-    (nom: NominationDataTableData) => nom.is_champion_result
+    (nom: NominationDataTableData) =>
+      nom.nomination_status === NominationFormStatus.CHAMPION
   );
 
   return (

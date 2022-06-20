@@ -57,13 +57,7 @@ const Nominations: NextPage = () => {
           </Breadcrumbs>
         </Box>
         <ShadowBox borderRadius="20px">
-          {data ? (
-            <CommitteeTable
-              data={data?.map((d: any) => getStatusFromData(d))}
-            />
-          ) : (
-            <FallbackSpinner />
-          )}
+          {data ? <CommitteeTable data={data} /> : <FallbackSpinner />}
         </ShadowBox>
       </Box>
     );

@@ -8,7 +8,7 @@ interface NominationDataTableProps {
   data?: NominationDataTableData[];
 }
 
-export default function EndorsementTable({
+export default function CommitteeTable({
   data,
   ...other
 }: NominationDataTableProps) {

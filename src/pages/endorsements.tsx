@@ -7,14 +7,10 @@ import ShadowBox from "@/components/Common/ShadowBox";
 import { Breadcrumbs } from "@mui/material";
 import NextMuiLink from "@/components/Common/NextMuiLink";
 import EndorsementTable from "@/components/Table/EndorsementTable";
-import theme from "@/styles/theme";
 import useAuth from "@/hooks/useAuth";
 import { NominationFilter, UserRole } from "@/enums";
 import { useNominations } from "@/lib/nominations";
-import { getStatusFromData } from "@/utils";
 import Unauthorized from "@/components/UnauthorizedAccess";
-import { useState, useEffect } from "react";
-import { NominationDataTableData } from "@/interfaces";
 import FallbackSpinner from "@/components/Common/FallbackSpinner";
 
 // ALL nominations made by staff of department of HOD
@@ -52,13 +48,7 @@ const Endorsements: NextPage = () => {
           </Breadcrumbs>
         </Box>
         <ShadowBox borderRadius="20px">
-          {data ? (
-            <EndorsementTable
-              data={data?.map((d: any) => getStatusFromData(d))}
-            />
-          ) : (
-            <FallbackSpinner />
-          )}
+          {data ? <EndorsementTable data={data} /> : <FallbackSpinner />}
         </ShadowBox>
       </Box>
     );

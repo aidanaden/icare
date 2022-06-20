@@ -26,6 +26,7 @@ import fileData from "@/constants/RetrieveFile/retrieveFile_response.json";
 import staffData from "@/constants/RetrieveStaffList/retrievestafflist_response.json";
 import recursivelyLowercaseJSONKeys from "recursive-lowercase-json";
 import { API_URL } from "@/constants";
+import { getStatusFromData } from "@/utils";
 
 const callAPI = async <JSON = any>(
   path: string,
@@ -131,7 +132,8 @@ const useNominations = (id?: string, filter?: NominationFilter) => {
     ],
     postAPI
   );
-  return { data: data, error: error, loading: !data && !error };
+  const transformedData = data?.map((d) => getStatusFromData(d));
+  return { data: transformedData, error: error, loading: !data && !error };
 };
 
 const useQuiz = (staff_id?: string) => {

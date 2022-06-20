@@ -25,10 +25,7 @@ const Nominations: NextPage = () => {
     NominationFilter.USER
   );
 
-  if (
-    !user?.role.includes(UserRole.STAFF) &&
-    !user?.role.includes(UserRole.HOD)
-  ) {
+  if (!user?.role.includes(UserRole.COMMITTEE)) {
     return (
       <Box>
         <Box mb={4}>
@@ -53,13 +50,7 @@ const Nominations: NextPage = () => {
           </Breadcrumbs>
         </Box>
         <ShadowBox borderRadius="20px">
-          {data ? (
-            <NominationTable
-              data={data?.map((d: any) => getStatusFromData(d))}
-            />
-          ) : (
-            <FallbackSpinner />
-          )}
+          {data ? <NominationTable data={data} /> : <FallbackSpinner />}
         </ShadowBox>
       </Box>
     );

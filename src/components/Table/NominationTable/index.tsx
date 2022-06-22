@@ -16,7 +16,10 @@ export default function NominationTable({ data }: TableProps) {
     (row) => row.nomination_status !== NominationFormStatus.INCOMPLETE
   );
 
-  const tabPanelData: Omit<DataTableTabPanelProps, "columns" | "viewText">[] = [
+  const tabPanelData: Omit<
+    DataTableTabPanelProps,
+    "columns" | "viewText" | "displayCommitteeVote"
+  >[] = [
     {
       headerLabel: NominationFormStatus.ALL.toString(),
       status: NominationFormStatus.ALL,

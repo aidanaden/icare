@@ -1,31 +1,30 @@
 import { Box } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
-import DataTableTabPanel, {
-  DataTableTabPanelProps,
-} from "../Common/DataTableTabPanel";
-import { StyledTab } from "../Common/StyledTab";
 import { NominationFormStatus } from "@/enums";
-import { Column } from "../Common/Columns";
 import { useRouter } from "next/router";
+import { WinnerData } from "@/interfaces";
+import WinnerTableTabPanel, {
+  WinnerTabPanelProps,
+} from "../WinnerTableTabPanel";
+import { PastWinnerTableKeys } from "../../Common/Columns";
+import { StyledTab } from "../../Common/StyledTab";
 
-interface DataTableProps {
-  tabPanelData: Omit<
-    DataTableTabPanelProps,
-    "columns" | "viewText" | "displayCommitteeVote"
-  >[];
-  columns: readonly Column[];
-  viewText?: string;
-  displayCommitteeVote?: boolean;
+interface WinnerDataTableProps {
+  tabPanelData: Omit<WinnerTabPanelProps, "year" | "years" | "setYear">[];
+  year: string;
+  years: string[];
+  setYear: Dispatch<SetStateAction<string | undefined>>;
 }
 
-export default function DataTable({
+export default function WinnerDataTable({
   tabPanelData,
-  columns,
-  viewText,
-  displayCommitteeVote,
-}: DataTableProps) {
+  year,
+  years,
+  setYear,
+  ...other
+}: WinnerDataTableProps) {
   const [nominationValue, setNominationValue] = useState<NominationFormStatus>(
     NominationFormStatus.ALL
   );
@@ -80,14 +79,12 @@ export default function DataTable({
         </TabList>
       </Box>
       {tabPanelData.map((panelData, i) => (
-        <DataTableTabPanel
-          headerLabel={panelData.headerLabel}
-          viewText={viewText}
+        <WinnerTableTabPanel
+          year={year}
+          years={years}
+          setYear={setYear}
           data={panelData.data}
-          status={panelData.status}
           key={`panel ${i}`}
-          columns={columns}
-          displayCommitteeVote={displayCommitteeVote}
         />
       ))}
     </TabContext>

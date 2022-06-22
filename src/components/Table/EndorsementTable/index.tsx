@@ -22,7 +22,10 @@ export default function EndorsementTable({
     (row) => row.nomination_status === NominationFormStatus.SUBMITTED
   );
 
-  const tabPanelData: Omit<DataTableTabPanelProps, "columns" | "viewText">[] = [
+  const tabPanelData: Omit<
+    DataTableTabPanelProps,
+    "columns" | "viewText" | "displayCommitteeVote"
+  >[] = [
     {
       headerLabel: NominationFormStatus.ALL.toString(),
       status: NominationFormStatus.ALL,

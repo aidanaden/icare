@@ -60,7 +60,6 @@ export interface DataTableTabPanelProps {
 }
 
 export default function DataTableTabPanel({
-  headerLabel,
   viewText,
   status,
   data,

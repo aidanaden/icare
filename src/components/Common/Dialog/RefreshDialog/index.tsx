@@ -13,6 +13,7 @@ export default function RefreshDialog() {
   const { refreshToken, logout } = useAuth();
   const [refreshDialogOpen, setRefreshDialogOpen] = useState<boolean>(false);
   const [refreshLoading, setRefreshLoading] = useState<boolean>(false);
+  let logoutTimeout;
 
   const handleRefresh = async () => {
     setRefreshLoading(true);
@@ -41,15 +42,30 @@ export default function RefreshDialog() {
     }
   };
 
-  // run refreshToken api call every 10 mins
+  // run refreshToken api call every 12 mins, logout after 15 mins
   useEffect(() => {
+    // logout if no response after 15 mins
+    const logoutInterval = setInterval(async () => {
+      try {
+        const response = await logout();
+        if (response?.status_code === 200) {
+          window.location.replace(BASE_URL);
+        }
+      } catch (err) {
+        console.log("error occurred while logging out: ", err);
+      }
+    }, 120000);
+
     const interval = setInterval(() => {
       setRefreshDialogOpen(true);
-    }, 720000); // 720000 (12 mins)
+    }, 60000); // 720000 (12 mins)
 
     // This represents the unmount function, in which you need
     // to clear your interval to prevent memory leaks.
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      clearInterval(logoutInterval);
+    };
   }, []);
 
   return (

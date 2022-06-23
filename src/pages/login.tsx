@@ -1,7 +1,7 @@
 import CenterBox from "@/components/Common/CenterBox";
 import SectionHeader from "@/components/Common/SectionHeader";
 import SectionSubtitle from "@/components/Common/SectionSubtitle";
-import LoginForm from "@/components/Forms/LoginForm";
+import LoginForm from "@/components/Form/LoginForm";
 import { Box } from "@mui/material";
 import NextImage from "next/image";
 

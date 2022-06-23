@@ -5,11 +5,11 @@ import Box from "@mui/material/Box";
 import SectionHeader from "@/components/Common/SectionHeader";
 import { Breadcrumbs, Grid, Stack } from "@mui/material";
 import NextMuiLink from "@/components/Common/NextMuiLink";
-import UserDetails from "@/components/UserDetails";
-import HODDetails from "@/components/HODDetails";
-import NominationDetails from "@/components/NominationDetails";
-import CommitteeDetails from "@/components/CommitteeDetails";
-import CommitteeMemberDetails from "@/components/CommitteeMemberDetails";
+import UserDetails from "@/components/Details/UserDetails";
+import HODDetails from "@/components/Details/HODDetails";
+import NominationDetails from "@/components/Details/NominationDetails";
+import CommitteeDetails from "@/components/Details/CommitteeDetails";
+import CommitteeMemberDetails from "@/components/Details/CommitteeMemberDetails";
 import {
   EndorsementStatus,
   ServiceLevel,

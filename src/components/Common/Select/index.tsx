@@ -34,11 +34,11 @@ export default function index({
         labelId="team-simple-select-helper-label"
         id="team-simple-select-helper"
         value={defaultValue}
-        label="Team"
+        label={header}
         onChange={handleSelectChange}
         input={
           <OutlinedInput
-            label="Team"
+            label={header}
             sx={{
               borderRadius: "8px",
               fontSize: "16px",

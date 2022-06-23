@@ -1,19 +1,35 @@
 import { BASE_URL } from "@/constants";
 import useAuth from "@/hooks/useAuth";
+import useInterval from "@/hooks/useInterval";
 import {
   Dialog,
   DialogContent,
   DialogContentText,
   DialogActions,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import PrimaryButton from "../../PrimaryButton";
 
 export default function RefreshDialog() {
   const { refreshToken, logout } = useAuth();
   const [refreshDialogOpen, setRefreshDialogOpen] = useState<boolean>(false);
   const [refreshLoading, setRefreshLoading] = useState<boolean>(false);
-  let logoutTimeout;
+
+  const resetLogoutInterval = useInterval(async () => {
+    try {
+      console.log("logging out now...");
+      const response = await logout();
+      if (response?.status_code === 200) {
+        window.location.replace(BASE_URL);
+      }
+    } catch (err) {
+      console.log("error occurred while logging out: ", err);
+    }
+  }, 900000);
+
+  const resetRefreshDialogInterval = useInterval(() => {
+    setRefreshDialogOpen(true);
+  }, 720000);
 
   const handleRefresh = async () => {
     setRefreshLoading(true);
@@ -27,10 +43,11 @@ export default function RefreshDialog() {
     }
     setRefreshLoading(false);
     setRefreshDialogOpen(false);
+    resetRefreshDialogInterval();
+    resetLogoutInterval();
   };
 
   const handleClose = async () => {
-    console.log("log out!");
     setRefreshDialogOpen(false);
     try {
       const response = await logout();
@@ -41,32 +58,6 @@ export default function RefreshDialog() {
       console.log("error occurred while logging out: ", err);
     }
   };
-
-  // run refreshToken api call every 12 mins, logout after 15 mins
-  useEffect(() => {
-    // logout if no response after 15 mins
-    const logoutInterval = setInterval(async () => {
-      try {
-        const response = await logout();
-        if (response?.status_code === 200) {
-          window.location.replace(BASE_URL);
-        }
-      } catch (err) {
-        console.log("error occurred while logging out: ", err);
-      }
-    }, 120000);
-
-    const interval = setInterval(() => {
-      setRefreshDialogOpen(true);
-    }, 60000); // 720000 (12 mins)
-
-    // This represents the unmount function, in which you need
-    // to clear your interval to prevent memory leaks.
-    return () => {
-      clearInterval(interval);
-      clearInterval(logoutInterval);
-    };
-  }, []);
 
   return (
     <Dialog open={refreshDialogOpen} onClose={handleClose}>

@@ -1,6 +1,5 @@
 import FallbackSpinner from "@/components/Common/FallbackSpinner";
 import { NominationDataTableData } from "@/interfaces";
-import { formatDateToString } from "@/utils";
 import {
   Box,
   BoxProps,
@@ -14,12 +13,11 @@ import {
   TableRow,
 } from "@mui/material";
 import { tableCellClasses } from "@mui/material/TableCell";
-import { Column, SimpleColumn, simpleColumns } from "../Common/Columns";
-interface Data {
-  nominee: string;
-  department: string;
-  date: Date;
-}
+import {
+  Column,
+  simpleColumns,
+  SimpleDataTableKeys,
+} from "../Components/Columns";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -67,7 +65,7 @@ export default function SimpleTable({ rows, ...other }: SimpleTableProps) {
             }}
           >
             <TableRow>
-              {simpleColumns.map((column: Column) => (
+              {simpleColumns.map((column: Column<SimpleDataTableKeys>) => (
                 <StyledTableCell
                   key={column.id}
                   align={column.align}
@@ -94,24 +92,26 @@ export default function SimpleTable({ rows, ...other }: SimpleTableProps) {
                       },
                     }}
                   >
-                    {simpleColumns.map((column: SimpleColumn) => {
-                      let value = row[column.id];
-                      if (column.id === "nomination_created_date") {
-                        value =
-                          column.id === "nomination_created_date" && !value
-                            ? row.nomination_submitted_date
-                            : row.nomination_created_date;
+                    {simpleColumns.map(
+                      (column: Column<SimpleDataTableKeys>) => {
+                        let value = row[column.id];
+                        if (column.id === "nomination_created_date") {
+                          value =
+                            column.id === "nomination_created_date" && !value
+                              ? row.nomination_submitted_date
+                              : row.nomination_created_date;
+                        }
+                        return (
+                          <StyledTableCell
+                            key={column.id}
+                            align={column.align}
+                            sx={{ px: 4 }}
+                          >
+                            {value?.toString()}
+                          </StyledTableCell>
+                        );
                       }
-                      return (
-                        <StyledTableCell
-                          key={column.id}
-                          align={column.align}
-                          sx={{ px: 4 }}
-                        >
-                          {value?.toString()}
-                        </StyledTableCell>
-                      );
-                    })}
+                    )}
                   </TableRow>
                 );
               })

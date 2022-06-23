@@ -9,11 +9,8 @@ import theme from "../styles/theme";
 import createEmotionCache from "../../src/lib/createEmotionCache";
 import MainLayout from "@/components/Layout/MainLayout";
 import { Box } from "@mui/material";
-import LoginLayout from "@/components/Layout/LoginLayout";
 import useAuth, { AuthProvider } from "@/hooks/useAuth";
 import { RecoilRoot } from "recoil";
-import { ErrorBoundary } from "react-error-boundary";
-import ErrorFallback from "@/components/ErrorFallback";
 
 interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;

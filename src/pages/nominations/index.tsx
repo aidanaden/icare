@@ -10,20 +10,25 @@ import NominationTable from "@/components/Table/NominationTable";
 import { useNominations } from "@/lib/nominations";
 import { NominationFilter, UserRole } from "@/enums";
 import useAuth from "@/hooks/useAuth";
-import { getStatusFromData } from "@/utils";
-import { Suspense, useEffect, useState } from "react";
-import { NominationDataTableData } from "@/interfaces";
 import FallbackSpinner from "@/components/Common/FallbackSpinner";
-import Unauthorized from "@/components/UnauthorizedAccess";
+import Unauthorized from "@/components/Common/UnauthorizedAccess";
+import { useRecoilState } from "recoil";
+import { nominationYearState } from "@/atoms/nominationYearAtom";
 
 // ALL nominations made by staff (draft AND completed)
 
 const Nominations: NextPage = () => {
   const { user } = useAuth();
+  const [getNominationYearState, setNominationYearState] =
+    useRecoilState(nominationYearState);
+  console.log("nomination year state: ", getNominationYearState);
   const { data, error, loading } = useNominations(
     user?.staff_id,
-    NominationFilter.USER
+    NominationFilter.USER,
+    getNominationYearState
   );
+
+  console.log("nomination data: ", data);
 
   if (!user?.role.includes(UserRole.COMMITTEE)) {
     return (

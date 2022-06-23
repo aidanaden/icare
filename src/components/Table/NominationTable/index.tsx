@@ -1,7 +1,7 @@
 import { NominationFormStatus } from "@/enums";
-import { DataTableData, NominationDataTableData } from "@/interfaces";
-import { columns } from "../Common/Columns";
-import { DataTableTabPanelProps } from "../Common/DataTableTabPanel";
+import { NominationDataTableData } from "@/interfaces";
+import { columns } from "../Components/Columns";
+import { DataTableTabPanelProps } from "../Components/DataTableTabPanel";
 import DataTable from "../DataTable";
 
 interface TableProps {
@@ -36,5 +36,7 @@ export default function NominationTable({ data }: TableProps) {
       data: incompleteData,
     },
   ];
-  return <DataTable tabPanelData={tabPanelData} columns={columns} />;
+  return (
+    <DataTable tabPanelData={tabPanelData} columns={columns} hasYear={true} />
+  );
 }

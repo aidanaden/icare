@@ -13,3 +13,4 @@ export const INVALID_NOMINATABLE_STAFF = [
   "director",
   "associate director",
 ];
+export const STARTING_YEAR = "2021";

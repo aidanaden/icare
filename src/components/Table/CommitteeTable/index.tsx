@@ -1,8 +1,8 @@
 import { NominationDataTableData } from "@/interfaces";
 import { NominationFormStatus } from "@/enums";
-import { DataTableTabPanelProps } from "../Common/DataTableTabPanel";
+import { DataTableTabPanelProps } from "../Components/DataTableTabPanel";
 import DataTable from "../DataTable";
-import { committeeColumns } from "../Common/Columns";
+import { committeeColumns } from "../Components/Columns";
 
 interface NominationDataTableProps {
   data?: NominationDataTableData[];
@@ -66,6 +66,7 @@ export default function CommitteeTable({
       columns={committeeColumns}
       displayCommitteeVote={true}
       viewText="Vote"
+      hasYear={true}
       {...other}
     />
   );

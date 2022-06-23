@@ -14,6 +14,7 @@ import {
   QueryData,
   DraftQuizResponseQueryData,
   NominationFormQueryData,
+  WinnerHistoryQueryData,
 } from "@/interfaces";
 import axios from "axios";
 import useSWR from "swr";
@@ -120,14 +121,18 @@ const upsertNominationFormCommitteeComments = async (
   return await postAPI<QueryData>("UpsertCommitteeComments", data);
 };
 
-const useNominations = (id?: string, filter?: NominationFilter) => {
+const useNominations = (
+  id?: string,
+  filter?: NominationFilter,
+  year?: string
+) => {
   const { data, error } = useSWR<NominationDataTableData[]>(
     [
       "RetrieveNomination",
       {
         staff_id: id,
         filter: filter,
-        year: new Date().getFullYear().toString(),
+        year: year,
       },
     ],
     postAPI
@@ -228,6 +233,23 @@ const deleteDraftNomination = async (case_id: string) => {
   return await postAPI("DeleteDraft", data);
 };
 
+const usePastWinners = async (year: string) => {
+  const { data, error } = useSWR<WinnerHistoryQueryData>(
+    [
+      "RetrieveAwardWinnerHistory",
+      {
+        year: year,
+      },
+    ],
+    postAPI
+  );
+  return {
+    pastWinnerData: data,
+    pastWinnerError: error,
+    pastWinnerLoading: !data && !error,
+  };
+};
+
 export {
   fetchAPI,
   postAPI,
@@ -244,4 +266,5 @@ export {
   fetchFileStrings,
   deleteFile,
   deleteDraftNomination,
+  usePastWinners,
 };

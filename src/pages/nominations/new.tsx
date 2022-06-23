@@ -9,11 +9,11 @@ import NextMuiLink from "@/components/Common/NextMuiLink";
 import { DepartmentType, NominationFormStatus, UserRole } from "@/enums";
 import EndorsementTable from "@/components/Table/EndorsementTable";
 import theme from "@/styles/theme";
-import StepForm from "@/components/Forms/StepForm";
+import StepForm from "@/components/Form/StepForm";
 import useAuth from "@/hooks/useAuth";
 import { useEffect } from "react";
 import { newNominationFormState } from "@/atoms/newNominationFormAtom";
-import Unauthorized from "@/components/UnauthorizedAccess";
+import Unauthorized from "@/components/Common/UnauthorizedAccess";
 
 const Nomination: NextPage = () => {
   const { user } = useAuth();

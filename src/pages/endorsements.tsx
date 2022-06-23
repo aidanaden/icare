@@ -10,7 +10,7 @@ import EndorsementTable from "@/components/Table/EndorsementTable";
 import useAuth from "@/hooks/useAuth";
 import { NominationFilter, UserRole } from "@/enums";
 import { useNominations } from "@/lib/nominations";
-import Unauthorized from "@/components/UnauthorizedAccess";
+import Unauthorized from "@/components/Common/UnauthorizedAccess";
 import FallbackSpinner from "@/components/Common/FallbackSpinner";
 
 // ALL nominations made by staff of department of HOD
@@ -20,7 +20,8 @@ const Endorsements: NextPage = () => {
   const { user } = useAuth();
   const { data, error, loading } = useNominations(
     user?.staff_id,
-    NominationFilter.SUBMITTED
+    NominationFilter.SUBMITTED,
+    user?.year ?? new Date().getFullYear().toString()
   );
 
   if (user?.role.includes(UserRole.HOD)) {

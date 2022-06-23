@@ -7,7 +7,12 @@
 // } from "firebase/auth";
 
 import { UserRole } from "@/enums";
-import { LoginQueryData, QueryData, User } from "@/interfaces";
+import {
+  CommitteeMemberListQueryData,
+  LoginQueryData,
+  QueryData,
+  User,
+} from "@/interfaces";
 import { postAPI } from "@/lib/nominations";
 import { createContext, useContext, useEffect, useState } from "react";
 import { getCookie, getCookies } from "cookies-next";
@@ -44,15 +49,20 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const cookieUserRoles = getCookie("User_Role")?.toString();
     const userRoles = cookieUserRoles?.split("-") as UserRole[];
 
-    const userValue = {
+    const committeeMembersData = await postAPI<CommitteeMemberListQueryData>(
+      "RetrieveCommitteeMembers"
+    );
+
+    const userValue: User = {
       staff_id: staff_id,
       name: response.name,
       role: userRoles,
+      year: response.current_financial_year,
+      committeeMembers: committeeMembersData.committee_member_list,
     };
+
     setUser(userValue);
-
     console.log("user roles: ", userRoles);
-
     return response;
   };
 

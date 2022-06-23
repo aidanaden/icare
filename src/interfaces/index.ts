@@ -8,17 +8,15 @@ import {
   UserRole,
 } from "@/enums";
 
-export interface User {
-  staff_id: string;
+export interface ID {
   name: string;
-  role: UserRole[];
+  staff_id: string;
 }
 
-export interface DataTableData {
-  nominee: string;
-  department: DepartmentType;
-  status: NominationFormStatus;
-  date: Date;
+export interface User extends ID {
+  role: UserRole[];
+  year: string;
+  committeeMembers: ID[];
 }
 
 export interface NominationDataTableData {
@@ -186,8 +184,27 @@ export interface DraftQuizResponseQueryData extends QueryData {
 
 export interface LoginQueryData extends QueryData {
   name: string;
+  current_financial_year: string;
 }
 
 export interface NominationFormQueryData extends QueryData {
   case_id: string;
+}
+
+export interface WinnerData {
+  nominee_name: string;
+  nominee_department: string;
+  nominator_name: string;
+  committee_service_level: ServiceLevel;
+  is_champion_result: boolean;
+  nominee_prize: string;
+  nominator_prize: string;
+}
+
+export interface WinnerHistoryQueryData extends QueryData {
+  award_winner_list: WinnerData[];
+}
+
+export interface CommitteeMemberListQueryData extends QueryData {
+  committee_member_list: ID[];
 }

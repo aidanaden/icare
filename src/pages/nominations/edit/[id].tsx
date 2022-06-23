@@ -6,12 +6,12 @@ import SectionHeader from "@/components/Common/SectionHeader";
 import ShadowBox from "@/components/Common/ShadowBox";
 import { Breadcrumbs } from "@mui/material";
 import NextMuiLink from "@/components/Common/NextMuiLink";
-import StepForm from "@/components/Forms/StepForm";
+import StepForm from "@/components/Form/StepForm";
 import useAuth from "@/hooks/useAuth";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { editNominationFormState } from "@/atoms/editNominationFormAtom";
-import Unauthorized from "@/components/UnauthorizedAccess";
+import Unauthorized from "@/components/Common/UnauthorizedAccess";
 import { UserRole } from "@/enums";
 
 const Nomination: NextPage = () => {

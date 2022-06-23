@@ -1,8 +1,8 @@
-import { DataTableData, NominationDataTableData } from "@/interfaces";
+import { NominationDataTableData } from "@/interfaces";
 import { NominationFormStatus } from "@/enums";
-import { DataTableTabPanelProps } from "../Common/DataTableTabPanel";
+import { DataTableTabPanelProps } from "../Components/DataTableTabPanel";
 import DataTable from "../DataTable";
-import { submittedColumns } from "../Common/Columns";
+import { submittedColumns } from "../Components/Columns";
 
 interface NominationDataTableProps {
   data?: NominationDataTableData[];

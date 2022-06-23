@@ -4,10 +4,10 @@ import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import DataTableTabPanel, {
   DataTableTabPanelProps,
-} from "../Common/DataTableTabPanel";
-import { StyledTab } from "../Common/StyledTab";
+} from "../Components/DataTableTabPanel";
+import { StyledTab } from "../Components/StyledTab";
 import { NominationFormStatus } from "@/enums";
-import { Column } from "../Common/Columns";
+import { Column, NominationDataTableKeys } from "../Components/Columns";
 import { useRouter } from "next/router";
 
 interface DataTableProps {
@@ -15,9 +15,10 @@ interface DataTableProps {
     DataTableTabPanelProps,
     "columns" | "viewText" | "displayCommitteeVote"
   >[];
-  columns: readonly Column[];
+  columns: readonly Column<NominationDataTableKeys>[];
   viewText?: string;
   displayCommitteeVote?: boolean;
+  hasYear?: boolean;
 }
 
 export default function DataTable({
@@ -25,6 +26,7 @@ export default function DataTable({
   columns,
   viewText,
   displayCommitteeVote,
+  hasYear,
 }: DataTableProps) {
   const [nominationValue, setNominationValue] = useState<NominationFormStatus>(
     NominationFormStatus.ALL
@@ -88,6 +90,7 @@ export default function DataTable({
           key={`panel ${i}`}
           columns={columns}
           displayCommitteeVote={displayCommitteeVote}
+          hasYear={hasYear}
         />
       ))}
     </TabContext>

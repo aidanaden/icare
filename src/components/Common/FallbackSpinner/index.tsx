@@ -1,7 +1,7 @@
-import { Box, CircularProgress } from "@mui/material";
+import { Box, BoxProps, CircularProgress } from "@mui/material";
 import React from "react";
 
-export default function ErrorFallback() {
+export default function ErrorFallback({ ...other }: BoxProps) {
   return (
     <Box
       sx={{
@@ -12,6 +12,7 @@ export default function ErrorFallback() {
         flexDirection: "column",
         height: "calc(100vh - 160px)",
       }}
+      {...other}
     >
       <CircularProgress />
     </Box>

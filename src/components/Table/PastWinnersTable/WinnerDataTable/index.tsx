@@ -2,20 +2,17 @@ import { Box } from "@mui/material";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
-import { NominationFormStatus } from "@/enums";
 import { useRouter } from "next/router";
-import { WinnerData } from "@/interfaces";
 import WinnerTableTabPanel, {
   WinnerTabPanelProps,
 } from "../WinnerTableTabPanel";
-import { PastWinnerTableKeys } from "../../Common/Columns";
-import { StyledTab } from "../../Common/StyledTab";
+import { StyledTab } from "../../Components/StyledTab";
 
 interface WinnerDataTableProps {
   tabPanelData: Omit<WinnerTabPanelProps, "year" | "years" | "setYear">[];
   year: string;
   years: string[];
-  setYear: Dispatch<SetStateAction<string | undefined>>;
+  setYear: Dispatch<SetStateAction<string>>;
 }
 
 export default function WinnerDataTable({
@@ -23,33 +20,30 @@ export default function WinnerDataTable({
   year,
   years,
   setYear,
-  ...other
 }: WinnerDataTableProps) {
-  const [nominationValue, setNominationValue] = useState<NominationFormStatus>(
-    NominationFormStatus.ALL
-  );
+  const [tabValue, setTabValue] = useState<"Champion" | "Awarded">("Awarded");
   const router = useRouter();
 
   const handleTabChange = (
     event: React.SyntheticEvent,
-    newValue: NominationFormStatus
+    newValue: "Champion" | "Awarded"
   ) => {
-    setNominationValue(newValue);
+    setTabValue(newValue);
     router.query.tab = newValue.toString();
   };
 
   useEffect(() => {
     if (router.query.tab) {
-      setNominationValue(router.query.tab as NominationFormStatus);
+      setTabValue(router.query.tab as "Champion" | "Awarded");
     }
   }, []);
 
   return (
-    <TabContext value={nominationValue}>
+    <TabContext value={tabValue}>
       <Box
         sx={{
-          borderBottom: 1,
-          borderColor: "divider",
+          // border: 1,
+          // borderColor: "darkgray",
           backgroundColor: "#F4F7F9",
           px: 2,
           borderTopLeftRadius: "20px",
@@ -80,6 +74,8 @@ export default function WinnerDataTable({
       </Box>
       {tabPanelData.map((panelData, i) => (
         <WinnerTableTabPanel
+          headerLabel={panelData.headerLabel}
+          status={panelData.status}
           year={year}
           years={years}
           setYear={setYear}

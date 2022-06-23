@@ -6,21 +6,13 @@ import Statistic from "@/components/Statistic";
 import SectionHeader from "@/components/Common/SectionHeader";
 import DashboardCarousel from "@/components/Common/Carousel/DashboardCarousel";
 import SimpleTable from "@/components/Table/SimpleTable/";
-import SimpleTableLink from "@/components/Table/Common/SimpleTableLink";
+import SimpleTableLink from "@/components/Table/Components/SimpleTableLink";
 import useAuth from "@/hooks/useAuth";
-import {
-  EndorsementStatus,
-  NominationFilter,
-  NominationFormStatus,
-  ServiceLevelWinner,
-  UserRole,
-} from "@/enums";
+import { NominationFilter, NominationFormStatus, UserRole } from "@/enums";
 import { useNominations } from "@/lib/nominations";
-import { getStatusFromData } from "@/utils";
 import { useState, useEffect } from "react";
 import { NominationDataTableData } from "@/interfaces";
-import { getCookie, getCookies } from "cookies-next";
-import useSWR from "swr";
+import PastWinnersTable from "@/components/Table/PastWinnersTable";
 
 // 1. user data (name, staff_id, department, designation, role)
 // 2. number of nominations created by staff
@@ -34,8 +26,10 @@ const Dashboard: NextPage = () => {
     user?.staff_id,
     user?.role.includes(UserRole.COMMITTEE)
       ? NominationFilter.ALL
-      : NominationFilter.USER
+      : NominationFilter.USER,
+    user?.year ?? new Date().getFullYear().toString()
   );
+
   const draftNominations = data?.filter(
     (nom: NominationDataTableData) => nom.draft_status
   );
@@ -72,8 +66,13 @@ const Dashboard: NextPage = () => {
           <Statistic
             title={
               user?.role.includes(UserRole.COMMITTEE)
-                ? "Service level winners (at least 2 votes)"
+                ? "Service level winners"
                 : "Nominations created"
+            }
+            subtitle={
+              user?.role.includes(UserRole.COMMITTEE)
+                ? "(at least 2 votes)"
+                : undefined
             }
             value={
               user?.role.includes(UserRole.COMMITTEE)
@@ -87,8 +86,13 @@ const Dashboard: NextPage = () => {
           <Statistic
             title={
               user?.role.includes(UserRole.COMMITTEE)
-                ? "Shortlisted champions (3 votes given)"
+                ? "Shortlisted champions"
                 : "Incomplete nominations"
+            }
+            subtitle={
+              user?.role.includes(UserRole.COMMITTEE)
+                ? "(3 votes given)"
+                : undefined
             }
             value={
               user?.role.includes(UserRole.COMMITTEE)
@@ -102,8 +106,13 @@ const Dashboard: NextPage = () => {
           <Statistic
             title={
               user?.role.includes(UserRole.COMMITTEE)
-                ? "Champions (3 votes given)"
+                ? "Champions"
                 : "Nominations endorsed"
+            }
+            subtitle={
+              user?.role.includes(UserRole.COMMITTEE)
+                ? "(3 votes given)"
+                : undefined
             }
             value={
               user?.role.includes(UserRole.COMMITTEE)
@@ -197,6 +206,30 @@ const Dashboard: NextPage = () => {
                   : completedNominations ?? []
               }
             />
+          </ShadowBox>
+        </Grid>
+        <Grid item xs={12}>
+          <ShadowBox borderRadius="20px" px={3} py={4}>
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              mb={4}
+            >
+              <Box>
+                <SectionHeader>Past winners</SectionHeader>
+                {/* <Typography
+                  variant="caption"
+                  display="block"
+                  gutterBottom
+                  color="#212b36"
+                  mt={1}
+                >
+                  last 10 nominations
+                </Typography> */}
+              </Box>
+            </Stack>
+            <PastWinnersTable />
           </ShadowBox>
         </Grid>
       </Grid>

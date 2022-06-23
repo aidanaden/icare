@@ -16,10 +16,12 @@ import { getStatusFromData } from "@/utils";
 import CommitteeTable from "@/components/Table/CommitteeTable";
 import useAuth from "@/hooks/useAuth";
 import { useNominations } from "@/lib/nominations";
-import Unauthorized from "@/components/UnauthorizedAccess";
+import Unauthorized from "@/components/Common/UnauthorizedAccess";
 import { useEffect, useState } from "react";
 import { NominationDataTableData } from "@/interfaces";
 import FallbackSpinner from "@/components/Common/FallbackSpinner";
+import { nominationYearState } from "@/atoms/nominationYearAtom";
+import { useRecoilState } from "recoil";
 
 // ALL nominations (endorsed, submitted/not endorsed,
 // service level award shortlisted, service level award winners,
@@ -27,9 +29,12 @@ import FallbackSpinner from "@/components/Common/FallbackSpinner";
 
 const Nominations: NextPage = () => {
   const { user } = useAuth();
+  const [getNominationYearState, setNominationYearState] =
+    useRecoilState(nominationYearState);
   const { data, error, loading } = useNominations(
     user?.staff_id,
-    NominationFilter.ALL
+    NominationFilter.ALL,
+    getNominationYearState
   );
 
   if (user?.role.includes(UserRole.COMMITTEE)) {

@@ -1,4 +1,4 @@
-import { INVALID_NOMINATABLE_STAFF } from "@/constants";
+import { INVALID_NOMINATABLE_STAFF, STARTING_YEAR } from "@/constants";
 import {
   DepartmentType,
   EndorsementStatus,
@@ -6,24 +6,11 @@ import {
   ServiceLevelWinner,
   ShortlistStatus,
 } from "@/enums";
-import {
-  DataTableData,
-  NominationDataTableData,
-  StaffData,
-} from "@/interfaces";
+import { NominationDataTableData, StaffData } from "@/interfaces";
 import saveAs from "file-saver";
 
 const formatDateToString = (value: Date) => {
   return value.toLocaleDateString("en-GB");
-};
-
-const createData = (
-  nominee: string,
-  department: DepartmentType,
-  status: NominationFormStatus,
-  date: Date
-): DataTableData => {
-  return { nominee, department, status, date };
 };
 
 const convertServiceLevelWinnerToBoolean = (slw?: ServiceLevelWinner) => {
@@ -138,9 +125,13 @@ const hashFromString = (str: string) => {
   return hash;
 };
 
-// const convertCookieValueToString = (cookieValue: str) => {
-
-// }
+const getYearsBetweenYearAndCurrent = (year: string) => {
+  const years = [];
+  for (let i = parseInt(STARTING_YEAR); i <= parseInt(year); i++) {
+    years.push(i.toString());
+  }
+  return years;
+};
 
 export {
   formatDateToString,
@@ -148,10 +139,10 @@ export {
   convertServiceLevelWinnerToBoolean,
   convertBooleanToServiceLevelWinner,
   convertBooleanToShortlist,
-  createData,
   convertFileToBase64,
   convertBase64ToFile,
   downloadBase64Data,
   filterInvalidStaffRanksForNomination,
   hashFromString,
+  getYearsBetweenYearAndCurrent,
 };

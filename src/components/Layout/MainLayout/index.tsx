@@ -1,6 +1,6 @@
 import RefreshDialog from "@/components/Common/Dialog/RefreshDialog";
-import Navbar from "@/components/Navbar";
-import Sidebar from "@/components/Sidebar";
+import Navbar from "@/components/Layout/Navbar";
+import Sidebar from "@/components/Layout/Sidebar";
 import useAuth from "@/hooks/useAuth";
 import { Box, BoxProps, Container, styled } from "@mui/material";
 import React, { useEffect, useState } from "react";

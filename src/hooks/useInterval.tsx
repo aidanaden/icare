@@ -1,18 +1,20 @@
 import { useRef, useEffect, useCallback } from "react";
 
 // Implementation
-const useInterval = (callback: () => void, delay?: number) => {
-  const savedCallbackRef = useRef(callback);
+const useInterval = (fn: () => void, delay?: number) => {
+  const savedFunctionbackRef = useRef(fn);
   const intervalIdRef = useRef<any>();
 
+  // store ref of function on every change
   useEffect(() => {
-    savedCallbackRef.current = callback;
-  }, [callback]);
+    savedFunctionbackRef.current = fn;
+  }, [fn]);
 
-  // handle tick
+  // if delay value changes while ref has already been set an interval fn,
+  // clear previous interval before setting new interval fn
   useEffect(() => {
     const tick = () => {
-      savedCallbackRef.current();
+      savedFunctionbackRef.current();
     };
 
     if (delay !== null) {
@@ -25,7 +27,7 @@ const useInterval = (callback: () => void, delay?: number) => {
     };
   }, [delay]);
 
-  // handle unmount
+  // clear interval fn stored in ref on unmount
   useEffect(() => {
     const id = intervalIdRef.current;
     return () => {
@@ -35,7 +37,7 @@ const useInterval = (callback: () => void, delay?: number) => {
 
   const resetInterval = useCallback(() => {
     clearInterval(intervalIdRef.current);
-    intervalIdRef.current = setInterval(savedCallbackRef.current, delay);
+    intervalIdRef.current = setInterval(savedFunctionbackRef.current, delay);
   }, [delay]);
 
   return resetInterval;

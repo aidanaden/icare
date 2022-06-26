@@ -10,12 +10,14 @@ import styled from "@emotion/styled";
 import {
   Avatar,
   AvatarGroup,
+  Badge,
   TableCell,
   tableCellClasses,
 } from "@mui/material";
 import { Column } from "../Columns";
 import { teal, lightBlue, lightGreen } from "@mui/material/colors";
 import AmberBadge from "@/components/Common/Badge/AmberBadge";
+import NotificationBadge from "@/components/Common/NotificationBadge";
 
 export const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -35,6 +37,7 @@ interface TextTableCellProps {
   column: Column<any>;
   value: string | ServiceLevel;
   hasRightBorder?: boolean;
+  hasBadge?: boolean;
 }
 
 export const BadgeTableCell = ({ value, column }: TextTableCellProps) => {
@@ -67,6 +70,7 @@ export const TextTableCell = ({
   value,
   column,
   hasRightBorder,
+  hasBadge,
 }: TextTableCellProps) => {
   return (
     <StyledTableCell
@@ -79,7 +83,13 @@ export const TextTableCell = ({
         borderColor: "rgba(0, 0, 0, 0.12)",
       }}
     >
-      {value?.toString()}
+      {hasBadge ? (
+        <NotificationBadge badgeContent={"New"} color="primary">
+          {value.toString()}
+        </NotificationBadge>
+      ) : (
+        value.toString()
+      )}
     </StyledTableCell>
   );
 };

@@ -12,7 +12,6 @@ import {
   TableHead,
   TableRow,
   TableBody,
-  TableCell,
   Divider,
   TablePagination,
   TableSortLabel,
@@ -148,7 +147,6 @@ export default function DataTableTabPanel({
   }, [serviceLevel, data]);
 
   useEffect(() => {
-    console.log("data changed to: ", data);
     setDisplayedData(data);
   }, [data]);
 
@@ -160,13 +158,6 @@ export default function DataTableTabPanel({
         p={3}
         // bgcolor="grey.100"
       >
-        {/* {hasTeamValues && (
-          <TeamSelect
-            teams={teamValues}
-            teamType={teamType}
-            setTeamType={setTeamType}
-          />
-        )} */}
         <YearSelect
           header="Year"
           values={years}
@@ -246,47 +237,43 @@ export default function DataTableTabPanel({
               <StyledTableCell />
             </TableRow>
           </TableHead>
-          <TableBody>
-            {displayedData ? (
-              displayedData
-                ?.sort(getComparator(order, orderBy))
-                ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                ?.map((row: WinnerData, i: number) => {
-                  return (
-                    <TableRow hover role="checkbox" tabIndex={-1} key={i}>
-                      {winnerColumns.map((column) => {
-                        const value = row[column.id];
-                        if (column.id === "committee_service_level") {
-                          return (
-                            <TextTableCell
-                              value={ServiceLevel[value as ServiceLevel]}
-                              column={column}
-                            />
-                          );
-                        } else if (column.id === "nominator_name") {
-                          return (
-                            <TextTableCell
-                              value={value as string}
-                              column={column}
-                              hasRightBorder={true}
-                            />
-                          );
-                        } else {
-                          return (
-                            <TextTableCell
-                              value={value as string}
-                              column={column}
-                            />
-                          );
-                        }
-                      })}
-                    </TableRow>
-                  );
-                })
-            ) : (
-              <FallbackSpinner height={"180px"} />
-            )}
-          </TableBody>
+          {displayedData
+            ?.sort(getComparator(order, orderBy))
+            ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            ?.map((row: WinnerData, i: number) => {
+              return (
+                <TableBody key={i}>
+                  <TableRow hover role="checkbox" tabIndex={-1}>
+                    {winnerColumns.map((column) => {
+                      const value = row[column.id];
+                      if (column.id === "committee_service_level") {
+                        return (
+                          <TextTableCell
+                            value={ServiceLevel[value as ServiceLevel]}
+                            column={column}
+                          />
+                        );
+                      } else if (column.id === "nominator_name") {
+                        return (
+                          <TextTableCell
+                            value={value as string}
+                            column={column}
+                            hasRightBorder={true}
+                          />
+                        );
+                      } else {
+                        return (
+                          <TextTableCell
+                            value={value as string}
+                            column={column}
+                          />
+                        );
+                      }
+                    })}
+                  </TableRow>
+                </TableBody>
+              );
+            })}
         </Table>
       </TableContainer>
       <Divider />

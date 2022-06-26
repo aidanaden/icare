@@ -10,8 +10,10 @@ export default function ErrorFallback({ ...other }: BoxProps) {
         alignItems: "center",
         flex: "1 1 auto",
         flexDirection: "column",
-        height: "calc(100vh - 160px)",
+        width: "100%",
       }}
+      height="calc(100vh - 160px)"
+      bgcolor="green"
       {...other}
     >
       <CircularProgress />

@@ -391,6 +391,17 @@ export default function DataTableTabPanel({
                               hasRightBorder={true}
                             />
                           );
+                        } else if (
+                          column.id === "nominee_name" &&
+                          row.committee_vote?.length === 0
+                        ) {
+                          return (
+                            <TextTableCell
+                              value={value as string}
+                              column={column}
+                              hasBadge={true}
+                            />
+                          );
                         } else {
                           return (
                             <TextTableCell

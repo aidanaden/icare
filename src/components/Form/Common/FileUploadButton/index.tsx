@@ -42,10 +42,8 @@ export default function FileUploadButton({
         case_id ?? getNominationFormState.case_id,
         file.file_name
       );
-      if (response.status_code === 200) {
-        console.log("successfully deleted file");
-      } else {
-        console.log("failed to delete file");
+      if (response.status_code !== 200) {
+        console.error("failed to delete file");
       }
     } catch (err) {
       console.error(err);
@@ -104,7 +102,6 @@ export default function FileUploadButton({
           );
           const newFormData = { ...getNominationFormState, files: base64s };
           setNominationFormState(newFormData);
-          console.log("Files:", newFormData);
           setOpen(false);
         }}
         fullWidth={true}

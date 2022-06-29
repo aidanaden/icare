@@ -17,13 +17,12 @@ export default function RefreshDialog() {
 
   const resetLogoutInterval = useInterval(async () => {
     try {
-      console.log("logging out now...");
       const response = await logout();
       if (response?.status_code === 200) {
         window.location.replace(BASE_URL);
       }
     } catch (err) {
-      console.log("error occurred while logging out: ", err);
+      console.error("error occurred while logging out: ", err);
     }
   }, 900000);
 
@@ -35,9 +34,6 @@ export default function RefreshDialog() {
     setRefreshLoading(true);
     try {
       const response = await refreshToken();
-      if (response?.status_code == 200) {
-        console.log("successfully refreshed token with resp: ", response);
-      }
     } catch (err) {
       console.error("Token failed to refresh with error: ", err);
     }
@@ -55,7 +51,7 @@ export default function RefreshDialog() {
         window.location.replace(BASE_URL);
       }
     } catch (err) {
-      console.log("error occurred while logging out: ", err);
+      console.error("error occurred while logging out: ", err);
     }
   };
 

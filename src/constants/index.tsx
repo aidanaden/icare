@@ -14,3 +14,4 @@ export const INVALID_NOMINATABLE_STAFF = [
   "associate director",
 ];
 export const STARTING_YEAR = "2021";
+export const RECAPTCHA_API_KEY = "6LfORqsgAAAAACQzPcYxzKWXxRoUJsLH6qzOEkkb";

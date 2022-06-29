@@ -141,7 +141,6 @@ export default function SecondStep({
   });
 
   useEffect(() => {
-    console.log("default quiz value has changed: ", defaultQuizValues);
     reset(defaultQuizValues);
   }, [defaultQuizValues, reset, getValues]);
 

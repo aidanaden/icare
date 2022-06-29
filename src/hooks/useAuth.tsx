@@ -44,7 +44,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const signIn = async (staff_id: string, password: string) => {
     const data = { staff_id: staff_id, password: password };
     const response = await postAPI<LoginQueryData>("AuthenticationToken", data);
-    console.log("log in response data: ", response);
 
     const cookieUserRoles = getCookie("User_Role")?.toString();
     const userRoles = cookieUserRoles?.split("-") as UserRole[];
@@ -62,13 +61,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     };
 
     setUser(userValue);
-    console.log("user roles: ", userRoles);
     return response;
   };
 
   const logout = async () => {
     const response = await postAPI("LogOut");
-    console.log("logged out with response: ", response);
     if (response.Status_Code === 200) {
       setUser(undefined);
     }

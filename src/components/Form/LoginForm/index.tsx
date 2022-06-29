@@ -1,7 +1,5 @@
-import { FormContainer } from "react-hook-form-mui";
 import { Box, Stack } from "@mui/material";
-import { useState } from "react";
-import StyledTextField from "@/components/Common/StyledTextField";
+import { createRef, useRef, useState } from "react";
 import PrimaryButton from "@/components/Common/PrimaryButton";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -11,6 +9,8 @@ import FormTextField from "../Common/FormTextField";
 import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/router";
 import FeedbackSnackbar from "../Common/FeedbackSnackbar";
+import ReCAPTCHA from "react-google-recaptcha";
+import { RECAPTCHA_API_KEY } from "@/constants";
 
 interface LoginProps {
   staff_id: string;
@@ -23,8 +23,13 @@ export default function LoginForm() {
   const [loginLoading, setLoginLoading] = useState<boolean>(false);
   const router = useRouter();
   const { signIn } = useAuth();
+  const recaptchaRef = createRef<ReCAPTCHA>();
 
   const onSubmit = async (data: LoginProps) => {
+    const captchaToken = await recaptchaRef.current?.executeAsync();
+    recaptchaRef.current?.reset();
+    console.log("captcha token: ", captchaToken);
+
     const { staff_id, password } = data;
     setLoginLoading(true);
     try {
@@ -38,7 +43,7 @@ export default function LoginForm() {
       }
     } catch (err) {
       setLoginLoading(false);
-      console.log("error occurred while logging in: ", err);
+      console.error("error occurred while logging in: ", err);
       setLoginErrorOpen(true);
     }
   };
@@ -62,18 +67,23 @@ export default function LoginForm() {
           control={control}
           label="Staff ID"
           name="staff_id"
-          error={errors.staff_id?.message}
+          error={errors.staff_id?.message?.replace("staff_id", "Staff ID")}
           placeholder="Staff ID"
         />
         <FormTextField
           control={control}
-          label="Timesheet Password"
+          label="Password"
           name="password"
           type="password"
-          error={errors.password?.message}
-          placeholder="Timesheet Password"
+          error={errors.password?.message?.replace("password", "Password")}
+          placeholder="Password"
         />
       </Stack>
+      <ReCAPTCHA
+        ref={recaptchaRef}
+        sitekey={RECAPTCHA_API_KEY}
+        size="invisible"
+      />
       <LoadingButton
         type={"submit"}
         size="large"

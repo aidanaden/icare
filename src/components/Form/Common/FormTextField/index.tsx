@@ -37,6 +37,7 @@ export default function FormTextField({
             id={name}
             label={label}
             helperText={error}
+            error={!!error}
             required
             {...field}
             inputRef={field.ref}

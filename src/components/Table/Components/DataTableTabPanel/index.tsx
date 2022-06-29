@@ -111,7 +111,6 @@ export default function DataTableTabPanel({
   const yearValues = getYearsBetweenYearAndCurrent(
     user?.year ?? new Date().getFullYear().toString()
   );
-  console.log("year data tab panel values: ", yearValues);
 
   // set up service level filter
   const [serviceLevel, setServiceLevel] = useState<string>("All");
@@ -125,7 +124,6 @@ export default function DataTableTabPanel({
         .reverse()
     )
   ).filter((v) => v !== undefined);
-  console.log("nomination data service level values: ", serviceLevelValues);
 
   // set up championship nominations
   const championNominations = data?.filter((d) => d.is_champion_result);
@@ -250,7 +248,7 @@ export default function DataTableTabPanel({
         )}
         {serviceLevelValues.length > 0 && (
           <Select
-            header="Service Level"
+            header="Quiz Service Level"
             values={serviceLevelValues}
             defaultValue={serviceLevel}
             setValueType={setServiceLevel}

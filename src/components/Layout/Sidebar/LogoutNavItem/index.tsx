@@ -14,7 +14,6 @@ export default function LogoutNavItem() {
   const [logoutLoading, setLogoutLoading] = useState<boolean>(false);
 
   const handleLogout = async () => {
-    console.log("log out!");
     setLogoutLoading(true);
     try {
       const response = await logout();
@@ -26,7 +25,7 @@ export default function LogoutNavItem() {
         }, 1500);
       }
     } catch (err) {
-      console.log("error occurred while logging out: ", err);
+      console.error("error occurred while logging out: ", err);
       setLogoutErrorOpen(true);
     }
   };

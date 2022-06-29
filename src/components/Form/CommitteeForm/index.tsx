@@ -68,7 +68,6 @@ export default function CommitteeForm({
   });
 
   const onSubmit = async (data: CommitteeForm) => {
-    console.log("committee submit button pressed with data: ", data);
     setCommitteeLoading(true);
     const transformedData = {
       case_id: case_id,

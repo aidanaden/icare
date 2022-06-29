@@ -53,7 +53,6 @@ export default function EndorsementForm({
   });
 
   useEffect(() => {
-    console.log("default value: ", defaultValues);
     reset(defaultValues);
   }, [defaultValues, reset]);
 

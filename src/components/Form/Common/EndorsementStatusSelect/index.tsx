@@ -17,7 +17,6 @@ export default function EndorsementStatusSelect({
       };
     })
     .filter(({ label, value }) => label.toLowerCase() !== "pending");
-  console.log("endorsement status values: ", endorsementStatusData);
   return (
     <>
       <FormSelect

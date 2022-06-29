@@ -75,7 +75,6 @@ const upsertNominationForm = async (
     file: formState.files,
     case_id: case_id ?? null,
   };
-  console.log("uploading nomination form data: ", data);
   return await postAPI<NominationFormQueryData>("UpsertNomination", data);
 };
 

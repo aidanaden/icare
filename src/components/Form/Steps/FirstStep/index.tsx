@@ -122,14 +122,12 @@ export default function FirstStep({
 
   useEffect(() => {
     if (draftUser) {
-      console.log("RESETTING with new default values:", defaultValues);
       reset(defaultValues);
     }
   }, [defaultValues, draftUser, reset]);
 
   useEffect(() => {
     const setFileData = async () => {
-      console.log("fetching file data for edit form...");
       if (data?.attachment_list && case_id) {
         // fetch file data
         const fileDatas: FileFetchData[] | undefined =
@@ -137,7 +135,6 @@ export default function FirstStep({
             return { case_id: case_id, file_name: fname };
           });
         const files = await fetchFileStrings(fileDatas);
-        console.log("files fetched for edit form: ", files);
         setNominationFormState({ ...getNominationFormState, files: files });
       }
     };

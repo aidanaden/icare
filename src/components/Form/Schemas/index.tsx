@@ -1,4 +1,3 @@
-import { User } from "@/interfaces";
 import * as yup from "yup";
 import YupPassword from "yup-password";
 YupPassword(yup); // extend yup
@@ -6,7 +5,7 @@ YupPassword(yup); // extend yup
 export const loginSchema = yup
   .object({
     staff_id: yup.string().required(),
-    password: yup.string().password().required(),
+    password: yup.string().required().min(8),
   })
   .required();
 

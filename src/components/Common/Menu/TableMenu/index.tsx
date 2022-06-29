@@ -74,7 +74,7 @@ export default function Menu({
       }
       handleClose();
     } catch (err) {
-      console.log("error occurred while deleting: ", err);
+      console.error("error occurred while deleting: ", err);
       setDeleteErrorOpen(true);
     }
   };

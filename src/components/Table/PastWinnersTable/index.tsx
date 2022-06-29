@@ -16,8 +16,6 @@ export default function PastWinnersTable() {
     user?.year ?? new Date().getFullYear().toString()
   );
 
-  console.log("years: ", years);
-
   const { data, error } = useSWR<WinnerHistoryQueryData>(
     [
       "RetrieveAwardWinnerHistory",
@@ -37,10 +35,6 @@ export default function PastWinnersTable() {
     () => data?.award_winner_list.filter((row) => row.is_champion_result),
     [data]
   );
-
-  console.log("data: ", data);
-  console.log("champion data: ", championData);
-  console.log("winner data: ", awardedData);
 
   const tabPanelData: Omit<
     WinnerTabPanelProps,

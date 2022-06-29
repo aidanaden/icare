@@ -21,14 +21,11 @@ const Nominations: NextPage = () => {
   const { user } = useAuth();
   const [getNominationYearState, setNominationYearState] =
     useRecoilState(nominationYearState);
-  console.log("nomination year state: ", getNominationYearState);
   const { data, error, loading } = useNominations(
     user?.staff_id,
     NominationFilter.USER,
     getNominationYearState
   );
-
-  console.log("nomination data: ", data);
 
   if (!user?.role.includes(UserRole.COMMITTEE)) {
     return (

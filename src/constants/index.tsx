@@ -1,4 +1,4 @@
-export const BASE_URL = "https://testicare.stoneforest.com.sg";
+export const BASE_URL = "https://icare.rsmsingapore.sg";
 export const API_URL = `${BASE_URL}/api/Api/icare/crm/`;
 export const BASE64_SPLIT_KEY = ";base64,";
 export const IMAGE_FILE_TYPE = "image/*";

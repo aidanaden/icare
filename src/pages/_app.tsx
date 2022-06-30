@@ -11,6 +11,7 @@ import MainLayout from "@/components/Layout/MainLayout";
 import { Box } from "@mui/material";
 import useAuth, { AuthProvider } from "@/hooks/useAuth";
 import { RecoilRoot } from "recoil";
+import FallbackSpinner from "@/components/Common/FallbackSpinner";
 
 interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;
@@ -25,6 +26,7 @@ const App = (props: MyAppProps) => {
   const { user } = useAuth();
 
   useEffect(() => {
+    console.log(router.pathname);
     if (!user) {
       router.push("/login");
     }

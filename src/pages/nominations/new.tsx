@@ -30,7 +30,7 @@ const Nomination: NextPage = () => {
     return () => window.removeEventListener("beforeunload", unloadCallback);
   }, []);
 
-  if (!user?.role.includes(UserRole.COMMITTEE)) {
+  if (user && !user?.role.includes(UserRole.COMMITTEE)) {
     return (
       <Box>
         <Box mb={4}>

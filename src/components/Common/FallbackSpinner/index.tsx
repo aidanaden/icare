@@ -1,7 +1,8 @@
 import { Box, BoxProps, CircularProgress } from "@mui/material";
 import React from "react";
 
-export default function ErrorFallback({ ...other }: BoxProps) {
+export default function FallbackSpinner({ ...other }: BoxProps) {
+  console.log("rendinger fallback spinner");
   return (
     <Box
       sx={{

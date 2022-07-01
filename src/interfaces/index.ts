@@ -197,8 +197,8 @@ export interface WinnerData {
   nominator_name: string;
   committee_service_level: ServiceLevel;
   is_champion_result: boolean;
-  nominee_prize: string;
-  nominator_prize: string;
+  nominee_prize?: string;
+  nominator_prize?: string;
 }
 
 export interface WinnerHistoryQueryData extends QueryData {

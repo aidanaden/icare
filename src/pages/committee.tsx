@@ -4,24 +4,17 @@ import type { NextPage } from "next";
 import Box from "@mui/material/Box";
 import SectionHeader from "@/components/Common/SectionHeader";
 import ShadowBox from "@/components/Common/ShadowBox";
-import { Breadcrumbs } from "@mui/material";
+import { Breadcrumbs, IconButton } from "@mui/material";
 import NextMuiLink from "@/components/Common/NextMuiLink";
-import {
-  DepartmentType,
-  NominationFilter,
-  NominationFormStatus,
-  UserRole,
-} from "@/enums";
-import { getStatusFromData } from "@/utils";
+import { NominationFilter, UserRole } from "@/enums";
 import CommitteeTable from "@/components/Table/CommitteeTable";
 import useAuth from "@/hooks/useAuth";
 import { useNominations } from "@/lib/nominations";
 import Unauthorized from "@/components/Common/UnauthorizedAccess";
-import { useEffect, useState } from "react";
-import { NominationDataTableData } from "@/interfaces";
 import FallbackSpinner from "@/components/Common/FallbackSpinner";
 import { nominationYearState } from "@/atoms/nominationYearAtom";
 import { useRecoilState } from "recoil";
+import { Refresh } from "@mui/icons-material";
 
 // ALL nominations (endorsed, submitted/not endorsed,
 // service level award shortlisted, service level award winners,
@@ -31,7 +24,7 @@ const Nominations: NextPage = () => {
   const { user } = useAuth();
   const [getNominationYearState, setNominationYearState] =
     useRecoilState(nominationYearState);
-  const { data, error, loading } = useNominations(
+  const { data, error, loading, mutate } = useNominations(
     user?.staff_id,
     NominationFilter.ALL,
     getNominationYearState
@@ -42,24 +35,33 @@ const Nominations: NextPage = () => {
       <Box>
         <Box mb={4}>
           <SectionHeader mb={2}>Nominations</SectionHeader>
-          <Breadcrumbs
-            separator="•"
-            aria-label="breadcrumb"
-            sx={{
-              "& .MuiBreadcrumbs-separator": {
-                color: "#637381",
-                opacity: 0.8,
-                px: 1,
-              },
-            }}
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
           >
-            <NextMuiLink color="#212B36" href="/dashboard" fontSize="14px">
-              Dashboard
-            </NextMuiLink>
-            <NextMuiLink color="#919EAB" href="/committee" fontSize="14px">
-              Committee
-            </NextMuiLink>
-          </Breadcrumbs>
+            <Breadcrumbs
+              separator="•"
+              aria-label="breadcrumb"
+              sx={{
+                "& .MuiBreadcrumbs-separator": {
+                  color: "#637381",
+                  opacity: 0.8,
+                  px: 1,
+                },
+              }}
+            >
+              <NextMuiLink color="#212B36" href="/dashboard" fontSize="14px">
+                Dashboard
+              </NextMuiLink>
+              <NextMuiLink color="#919EAB" href="/committee" fontSize="14px">
+                Committee
+              </NextMuiLink>
+            </Breadcrumbs>
+            <IconButton onClick={() => mutate()}>
+              <Refresh />
+            </IconButton>
+          </Box>
         </Box>
         <ShadowBox borderRadius="20px">
           {data ? <CommitteeTable data={data} /> : <FallbackSpinner />}

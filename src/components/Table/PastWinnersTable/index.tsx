@@ -6,14 +6,22 @@ import WinnerDataTable from "./WinnerDataTable";
 import { WinnerTabPanelProps } from "./WinnerTableTabPanel";
 import useSWR from "swr";
 import { getYearsBetweenYearAndCurrent } from "@/utils";
+import ErrorFallback from "@/components/Common/ErrorFallback";
+import { ErrorBoundary } from "react-error-boundary";
+
+function returnPreviousYear(year: string) {
+  const numYear = parseInt(year) - 1;
+  const strYear = numYear.toString();
+  return strYear;
+}
 
 export default function PastWinnersTable() {
   const { user } = useAuth();
   const [year, setYear] = useState<string>(
-    user?.year ?? new Date().getFullYear().toString()
+    returnPreviousYear(user?.year ?? new Date().getFullYear().toString())
   );
   const years = getYearsBetweenYearAndCurrent(
-    user?.year ?? new Date().getFullYear().toString()
+    user ? user?.year : new Date().getFullYear().toString()
   );
 
   const { data, error } = useSWR<WinnerHistoryQueryData>(
@@ -23,7 +31,12 @@ export default function PastWinnersTable() {
         financial_year: year,
       },
     ],
-    postAPI
+    postAPI,
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    }
   );
 
   const awardedData = useMemo(
@@ -53,11 +66,13 @@ export default function PastWinnersTable() {
   ];
 
   return (
-    <WinnerDataTable
-      tabPanelData={tabPanelData}
-      year={year}
-      years={years}
-      setYear={setYear}
-    />
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <WinnerDataTable
+        tabPanelData={tabPanelData}
+        year={year}
+        years={years}
+        setYear={setYear}
+      />
+    </ErrorBoundary>
   );
 }

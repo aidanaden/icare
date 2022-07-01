@@ -26,7 +26,6 @@ const App = (props: MyAppProps) => {
   const { user } = useAuth();
 
   useEffect(() => {
-    console.log(router.pathname);
     if (!user) {
       router.push("/login");
     }

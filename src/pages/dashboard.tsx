@@ -161,8 +161,8 @@ const Dashboard: NextPage = () => {
               <SimpleTable
                 rows={
                   user?.role.includes(UserRole.COMMITTEE)
-                    ? awardedNominations ?? []
-                    : draftNominations ?? []
+                    ? awardedNominations?.slice(0, 9) ?? []
+                    : draftNominations?.slice(0, 9) ?? []
                 }
               />
             </ShadowBox>
@@ -204,8 +204,8 @@ const Dashboard: NextPage = () => {
               <SimpleTable
                 rows={
                   user?.role.includes(UserRole.COMMITTEE)
-                    ? championNominations ?? []
-                    : completedNominations ?? []
+                    ? championNominations?.slice(0, 9) ?? []
+                    : completedNominations?.slice(0, 9) ?? []
                 }
               />
             </ShadowBox>

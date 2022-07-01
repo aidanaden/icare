@@ -14,10 +14,11 @@ import {
 } from "@mui/material";
 import LogoutNavItem from "./LogoutNavItem";
 import NavItem from "./NavItem";
-import NextImage from "next/image";
+import NextImage from "next-image-export-optimizer";
 import useAuth from "@/hooks/useAuth";
 import { UserRole } from "@/enums";
 import { useState } from "react";
+import { BASE_URL } from "@/constants";
 
 interface Item {
   href: string;
@@ -98,7 +99,12 @@ const Content = ({ role, onClose }: ContentProps) => {
           textAlign: "center",
         }}
       >
-        <NextImage src={"/logo.svg"} alt="icare logo" width={242} height={94} />
+        <img
+          src={`${BASE_URL}/logo.svg`}
+          alt="icare logo"
+          width={242}
+          height={94}
+        />
       </Box>
       <List>
         {Array.from(contentItems).map((item, i) => (

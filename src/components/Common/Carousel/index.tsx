@@ -1,3 +1,4 @@
+import { BASE_URL } from "@/constants";
 import Box from "@mui/material/Box";
 import Carousel from "react-material-ui-carousel";
 
@@ -23,11 +24,9 @@ export default function index({ images }: { images: string[] }) {
             width: "100%",
             objectFit: "cover",
             borderRadius: "12px",
-            // maxHeight: { xs: 233, md: 167 },
-            // maxWidth: { xs: 350, md: 250 },
           }}
           alt="The house from the offer."
-          src={image}
+          src={`${BASE_URL}/images/${image}`}
         />
       ))}
     </Carousel>

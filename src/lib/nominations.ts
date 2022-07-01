@@ -18,13 +18,6 @@ import {
 } from "@/interfaces";
 import axios from "axios";
 import useSWR from "swr";
-import quizData from "@/constants/RetrieveQuiz/retrievequiz_response_senior.json";
-import userNominationData from "@/constants/RetrieveNomination/retrievenomination_1_response.json";
-import submittedNominationData from "@/constants/RetrieveNomination/retrievenomination_2_response.json";
-import endorsedNominationData from "@/constants/RetrieveNomination/retrievenomination_3_response.json";
-import nominationDetailData from "@/constants/RetrieveNominationDetails/retrievenominationdetails_response.json";
-import fileData from "@/constants/RetrieveFile/retrieveFile_response.json";
-import staffData from "@/constants/RetrieveStaffList/retrievestafflist_response.json";
 import recursivelyLowercaseJSONKeys from "recursive-lowercase-json";
 import { API_URL } from "@/constants";
 import { getStatusFromData } from "@/utils";
@@ -89,11 +82,11 @@ const fetchNominationDetails = async (
 };
 
 const useNominationDetails = (case_id?: string) => {
-  const { data, error } = useSWR<NominationDetailQueryData>(
+  const { data, error, mutate } = useSWR<NominationDetailQueryData>(
     ["RetrieveNominationDetails", { case_id: case_id }],
     postAPI
   );
-  return { data: data, error: error, loading: !data && !error };
+  return { data: data, error: error, loading: !data && !error, mutate: mutate };
 };
 
 const upsertNominationFormHODComments = async (hodData: HODQueryData) => {
@@ -125,7 +118,7 @@ const useNominations = (
   filter?: NominationFilter,
   year?: string
 ) => {
-  const { data, error } = useSWR<NominationDataTableData[]>(
+  const { data, error, mutate } = useSWR<NominationDataTableData[]>(
     [
       "RetrieveNomination",
       {
@@ -137,7 +130,12 @@ const useNominations = (
     postAPI
   );
   const transformedData = data?.map((d) => getStatusFromData(d));
-  return { data: transformedData, error: error, loading: !data && !error };
+  return {
+    data: transformedData,
+    error: error,
+    loading: !data && !error,
+    mutate: mutate,
+  };
 };
 
 const useQuiz = (staff_id?: string) => {

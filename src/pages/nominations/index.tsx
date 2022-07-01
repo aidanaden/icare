@@ -4,7 +4,7 @@ import type { NextPage } from "next";
 import Box from "@mui/material/Box";
 import SectionHeader from "@/components/Common/SectionHeader";
 import ShadowBox from "@/components/Common/ShadowBox";
-import { Breadcrumbs, CircularProgress } from "@mui/material";
+import { Breadcrumbs, CircularProgress, IconButton } from "@mui/material";
 import NextMuiLink from "@/components/Common/NextMuiLink";
 import NominationTable from "@/components/Table/NominationTable";
 import { useNominations } from "@/lib/nominations";
@@ -14,6 +14,7 @@ import FallbackSpinner from "@/components/Common/FallbackSpinner";
 import Unauthorized from "@/components/Common/UnauthorizedAccess";
 import { useRecoilState } from "recoil";
 import { nominationYearState } from "@/atoms/nominationYearAtom";
+import { Refresh } from "@mui/icons-material";
 
 // ALL nominations made by staff (draft AND completed)
 
@@ -21,7 +22,7 @@ const Nominations: NextPage = () => {
   const { user } = useAuth();
   const [getNominationYearState, setNominationYearState] =
     useRecoilState(nominationYearState);
-  const { data, error, loading } = useNominations(
+  const { data, error, loading, mutate } = useNominations(
     user?.staff_id,
     NominationFilter.USER,
     getNominationYearState
@@ -32,24 +33,33 @@ const Nominations: NextPage = () => {
       <Box>
         <Box mb={4}>
           <SectionHeader mb={2}>Nominations</SectionHeader>
-          <Breadcrumbs
-            separator="•"
-            aria-label="breadcrumb"
-            sx={{
-              "& .MuiBreadcrumbs-separator": {
-                color: "#637381",
-                opacity: 0.8,
-                px: 1,
-              },
-            }}
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
           >
-            <NextMuiLink color="#212B36" href="/dashboard" fontSize="14px">
-              Dashboard
-            </NextMuiLink>
-            <NextMuiLink color="#919EAB" href="/nominations" fontSize="14px">
-              Nominations
-            </NextMuiLink>
-          </Breadcrumbs>
+            <Breadcrumbs
+              separator="•"
+              aria-label="breadcrumb"
+              sx={{
+                "& .MuiBreadcrumbs-separator": {
+                  color: "#637381",
+                  opacity: 0.8,
+                  px: 1,
+                },
+              }}
+            >
+              <NextMuiLink color="#212B36" href="/dashboard" fontSize="14px">
+                Dashboard
+              </NextMuiLink>
+              <NextMuiLink color="#919EAB" href="/nominations" fontSize="14px">
+                Nominations
+              </NextMuiLink>
+            </Breadcrumbs>
+            <IconButton onClick={() => mutate()}>
+              <Refresh />
+            </IconButton>
+          </Box>
         </Box>
         <ShadowBox borderRadius="20px">
           {data ? <NominationTable data={data} /> : <FallbackSpinner />}

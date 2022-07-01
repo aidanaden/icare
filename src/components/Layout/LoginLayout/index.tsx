@@ -10,6 +10,7 @@ export default function index({ children, ...other }: ContainerProps) {
         flexDirection: "column",
         width: "100%",
         height: "100vh",
+        paddingX: 4,
       }}
       {...other}
     >

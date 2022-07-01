@@ -245,7 +245,7 @@ export default function DataTableTabPanel({
                 <TableBody key={i}>
                   <TableRow hover role="checkbox" tabIndex={-1}>
                     {winnerColumns.map((column) => {
-                      const value = row[column.id];
+                      const value = row[column.id] ?? "";
                       if (column.id === "committee_service_level") {
                         return (
                           <TextTableCell

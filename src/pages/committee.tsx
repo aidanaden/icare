@@ -14,7 +14,7 @@ import Unauthorized from "@/components/Common/UnauthorizedAccess";
 import FallbackSpinner from "@/components/Common/FallbackSpinner";
 import { nominationYearState } from "@/atoms/nominationYearAtom";
 import { useRecoilState } from "recoil";
-import { Refresh } from "@mui/icons-material";
+import Refresh from "@mui/icons-material/Refresh";
 
 // ALL nominations (endorsed, submitted/not endorsed,
 // service level award shortlisted, service level award winners,

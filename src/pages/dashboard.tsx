@@ -1,4 +1,7 @@
-import { Box, Grid, Stack, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import type { NextPage } from "next";
 
 import ShadowBox from "@/components/Common/ShadowBox";
@@ -10,7 +13,6 @@ import SimpleTableLink from "@/components/Table/Components/SimpleTableLink";
 import useAuth from "@/hooks/useAuth";
 import { NominationFilter, NominationFormStatus, UserRole } from "@/enums";
 import { useNominations } from "@/lib/nominations";
-import { useState, useEffect } from "react";
 import { NominationDataTableData } from "@/interfaces";
 import PastWinnersTable from "@/components/Table/PastWinnersTable";
 import FallbackSpinner from "@/components/Common/FallbackSpinner";

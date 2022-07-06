@@ -1,6 +1,5 @@
-import { Box, Stack } from "@mui/material";
-import { createRef, useRef, useState } from "react";
-import PrimaryButton from "@/components/Common/PrimaryButton";
+import { Button, Stack } from "@mui/material";
+import { createRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema } from "../Schemas";
@@ -11,6 +10,8 @@ import { useRouter } from "next/router";
 import FeedbackSnackbar from "../Common/FeedbackSnackbar";
 import ReCAPTCHA from "react-google-recaptcha";
 import { RECAPTCHA_API_KEY } from "@/constants";
+import PrimaryButton from "@/components/Common/PrimaryButton";
+import ForgetPasswordDialog from "@/components/Common/Dialog/ForgetPasswordDialog";
 
 interface LoginProps {
   staff_id: string;
@@ -37,9 +38,10 @@ export default function LoginForm() {
       if (response?.status_code === 200) {
         setLoginSuccessOpen(true);
         setLoginLoading(false);
-        setTimeout(() => {
-          router.push("/dashboard");
-        }, 2500);
+        // setTimeout(() => {
+        //   router.push("/dashboard");
+        // }, 2500);
+        router.push("/dashboard");
       }
     } catch (err) {
       setLoginLoading(false);
@@ -79,23 +81,23 @@ export default function LoginForm() {
           placeholder="Password"
         />
       </Stack>
-      <ReCAPTCHA
+      {/* <ReCAPTCHA
         ref={recaptchaRef}
         sitekey={RECAPTCHA_API_KEY}
         size="invisible"
-      />
-      <LoadingButton
-        type={"submit"}
-        size="large"
-        fullWidth
-        sx={{ borderRadius: "8px", py: "12px" }}
-        variant={"contained"}
-        color={"secondary"}
-        disableElevation
-        loading={loginLoading}
-      >
-        Submit
-      </LoadingButton>
+      /> */}
+      <Stack direction="column" spacing={1}>
+        <PrimaryButton
+          type={"submit"}
+          size="large"
+          fullWidth
+          sx={{ borderRadius: "8px", py: "12px" }}
+          loading={loginLoading}
+        >
+          Submit
+        </PrimaryButton>
+        <ForgetPasswordDialog />
+      </Stack>
       <FeedbackSnackbar
         successOpen={loginSuccessOpen}
         setSuccessOpen={setLoginSuccessOpen}

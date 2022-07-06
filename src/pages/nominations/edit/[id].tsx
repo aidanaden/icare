@@ -4,7 +4,7 @@ import type { NextPage } from "next";
 import Box from "@mui/material/Box";
 import SectionHeader from "@/components/Common/SectionHeader";
 import ShadowBox from "@/components/Common/ShadowBox";
-import { Breadcrumbs } from "@mui/material";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
 import NextMuiLink from "@/components/Common/NextMuiLink";
 import StepForm from "@/components/Form/StepForm";
 import useAuth from "@/hooks/useAuth";

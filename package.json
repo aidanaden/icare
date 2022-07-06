@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "build:staging": "env-cmd -f .env.staging yarn build",
+    "build:production": "env-cmd -f .env.production yarn build",
     "build": "next build && next export && next-image-export-optimizer",
     "start": "next start",
     "lint": "next lint",
@@ -25,6 +27,7 @@
     "axios": "^0.27.2",
     "cookies-next": "^2.0.4",
     "date-fns": "^2.28.0",
+    "env-cmd": "^10.1.0",
     "file-saver": "^2.0.5",
     "next": "12.1.5",
     "next-image-export-optimizer": "^0.10.1",
@@ -60,5 +63,6 @@
   "resolutions": {
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
-  }
+  },
+  "sideEffects": false
 }

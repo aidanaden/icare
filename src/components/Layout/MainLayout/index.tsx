@@ -3,6 +3,7 @@ import Navbar from "@/components/Layout/Navbar";
 import Sidebar from "@/components/Layout/Sidebar";
 import useAuth from "@/hooks/useAuth";
 import { Box, BoxProps, Container, styled } from "@mui/material";
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import LoginLayout from "../LoginLayout/";
 
@@ -21,9 +22,10 @@ const MainLayoutRoot = styled("div")(({ theme }) => ({
 export default function MainLayout({ children, ...other }: BoxProps) {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const { user } = useAuth();
+  const router = useRouter();
   return (
     <>
-      {user ? (
+      {user && !router.pathname.includes("login") ? (
         <Box {...other}>
           <MainLayoutRoot>
             <Container

@@ -3,7 +3,6 @@ import { NominationDataTableData } from "@/interfaces";
 import {
   Box,
   BoxProps,
-  Checkbox,
   styled,
   Table,
   TableBody,

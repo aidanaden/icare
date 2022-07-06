@@ -1,13 +1,11 @@
 import PrimaryButton from "@/components/Common/PrimaryButton";
-import { EndorsementStatus, ServiceLevel, ShortlistStatus } from "@/enums";
+import { ServiceLevel } from "@/enums";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Stack } from "@mui/material";
-import { useForm, Controller, SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { committeeSchema } from "../Schemas";
-import EndorsementStatusSelect from "../Common/EndorsementStatusSelect";
 import FormTextField from "../Common/FormTextField";
 import CommitteeServiceLevelSelect from "../Common/CommitteeServiceLevelSelect";
-import CommitteeShortlistSelect from "../Common/CommitteeShortlistSelect";
 import FormSwitch from "../FormSwitch";
 import { upsertNominationFormCommitteeComments } from "@/lib/nominations";
 import { convertBooleanToServiceLevelWinner } from "@/utils";
@@ -99,7 +97,7 @@ export default function CommitteeForm({
     setCommitteeLoading(false);
 
     setTimeout(() => {
-      router.push("/committee?tab=champion");
+      router.push("/committee?tab=all");
     }, 2500);
   };
 

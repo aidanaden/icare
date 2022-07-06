@@ -14,14 +14,17 @@ import {
   User,
 } from "@/interfaces";
 import { postAPI } from "@/lib/nominations";
-import { createContext, useContext, useEffect, useState } from "react";
-import { getCookie, getCookies } from "cookies-next";
+import { createContext, useContext, useState } from "react";
+import { getCookie } from "cookies-next";
+import axios from "axios";
+import { FORGET_API_URL } from "@/constants";
 
 interface IAuth {
   user: User | undefined;
   signIn: (staff_id: string, password: string) => Promise<QueryData | void>;
   logout: () => Promise<QueryData | void>;
   refreshToken: () => Promise<LoginQueryData | void>;
+  forgetPassword: (staff_id: string) => Promise<number | void>;
 }
 
 const AuthContext = createContext<IAuth>({
@@ -32,6 +35,8 @@ const AuthContext = createContext<IAuth>({
   logout: async () => {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   refreshToken: async () => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  forgetPassword: async () => {},
 });
 
 interface AuthProviderProps {
@@ -76,8 +81,23 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return await postAPI<LoginQueryData>("RefreshToken");
   };
 
+  const forgetPassword = async (staff_id: string) => {
+    const body = { staff_id: staff_id };
+    const response = await axios({
+      url: `${FORGET_API_URL}`,
+      method: "post",
+      headers: {
+        "content-type": "application/json",
+      },
+      data: JSON.stringify(body),
+    });
+    return response.status;
+  };
+
   return (
-    <AuthContext.Provider value={{ user, signIn, logout, refreshToken }}>
+    <AuthContext.Provider
+      value={{ user, signIn, logout, refreshToken, forgetPassword }}
+    >
       {children}
     </AuthContext.Provider>
   );

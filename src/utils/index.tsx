@@ -30,34 +30,30 @@ const getStatusFromData = (
 ): NominationDataTableData => {
   let status = NominationFormStatus.INCOMPLETE;
 
-  if (data.is_champion_result) {
+  if (data.draft_status) {
+    // if still in draft
+    status = NominationFormStatus.INCOMPLETE;
+  } else if (data.is_champion_result) {
+    // if champion
     status = NominationFormStatus.CHAMPION;
   } else if (data.is_champion_shortlist_result) {
+    // if shortlisted
     status = NominationFormStatus.SHORTLISTED;
   } else if (data.is_service_level_winner === ServiceLevelWinner.TRUE) {
+    // if selected as service level winner
     status = NominationFormStatus.AWARDED;
   } else if (data.is_service_level_winner === ServiceLevelWinner.FALSE) {
+    // if rejected as service level winner
     status = NominationFormStatus.REJECTED;
-  } else if (
-    data.endorsement_status === EndorsementStatus.COMMENDABLE &&
-    !data.draft_status &&
-    data.is_service_level_winner === ServiceLevelWinner.PENDING
-  ) {
+  } else if (data.endorsement_status === EndorsementStatus.COMMENDABLE) {
+    // if endorsed
     status = NominationFormStatus.ENDORSED;
-  } else if (
-    data.endorsement_status === EndorsementStatus.NEUTRAL &&
-    !data.draft_status &&
-    data.is_service_level_winner === ServiceLevelWinner.PENDING
-  ) {
+  } else if (data.endorsement_status === EndorsementStatus.NEUTRAL) {
+    // if not endorsed
     status = NominationFormStatus.SUBMITTED;
-  } else if (
-    data.endorsement_status === EndorsementStatus.PENDING &&
-    !data.draft_status &&
-    data.is_service_level_winner === ServiceLevelWinner.PENDING
-  ) {
+  } else if (data.endorsement_status === EndorsementStatus.PENDING) {
+    // if pending endorsement
     status = NominationFormStatus.PENDING;
-  } else if (data.draft_status) {
-    status = NominationFormStatus.INCOMPLETE;
   }
 
   return { ...data, nomination_status: status };

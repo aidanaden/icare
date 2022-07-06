@@ -10,7 +10,6 @@ import {
   NominationFormSubmissionData,
   NominationQuestionsQueryData,
   StaffData,
-  FileNameString,
   QueryData,
   DraftQuizResponseQueryData,
   NominationFormQueryData,

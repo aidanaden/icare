@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { ThemeProvider } from "@mui/material/styles";
@@ -8,10 +8,9 @@ import { CacheProvider, EmotionCache } from "@emotion/react";
 import theme from "../styles/theme";
 import createEmotionCache from "../../src/lib/createEmotionCache";
 import MainLayout from "@/components/Layout/MainLayout";
-import { Box } from "@mui/material";
+import Box from "@mui/material/Box";
 import useAuth, { AuthProvider } from "@/hooks/useAuth";
 import { RecoilRoot } from "recoil";
-import FallbackSpinner from "@/components/Common/FallbackSpinner";
 
 interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;

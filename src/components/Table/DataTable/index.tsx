@@ -19,6 +19,8 @@ interface DataTableProps {
   viewText?: string;
   displayCommitteeVote?: boolean;
   hasYear?: boolean;
+  hideNominator?: boolean;
+  hasBadge?: boolean;
 }
 
 export default function DataTable({
@@ -27,6 +29,8 @@ export default function DataTable({
   viewText,
   displayCommitteeVote,
   hasYear,
+  hideNominator = false,
+  hasBadge = false,
 }: DataTableProps) {
   const [nominationValue, setNominationValue] = useState<NominationFormStatus>(
     NominationFormStatus.ALL
@@ -91,6 +95,8 @@ export default function DataTable({
           columns={columns}
           displayCommitteeVote={displayCommitteeVote}
           hasYear={hasYear}
+          hideNominator={hideNominator}
+          hasBadge={hasBadge}
         />
       ))}
     </TabContext>

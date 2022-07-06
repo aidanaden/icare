@@ -10,6 +10,7 @@ interface FormTextFieldProps {
   placeholder: string;
   type?: React.InputHTMLAttributes<unknown>["type"];
   multiLine?: boolean;
+  fullWidth?: boolean;
 }
 
 export default function FormTextField({
@@ -20,6 +21,7 @@ export default function FormTextField({
   placeholder,
   type,
   multiLine = false,
+  fullWidth,
 }: FormTextFieldProps) {
   return (
     <>
@@ -43,6 +45,7 @@ export default function FormTextField({
             inputRef={field.ref}
             placeholder={placeholder}
             type={type}
+            fullWidth={fullWidth}
           />
         )}
       />

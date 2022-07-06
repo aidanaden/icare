@@ -37,6 +37,11 @@ export default function NominationTable({ data }: TableProps) {
     },
   ];
   return (
-    <DataTable tabPanelData={tabPanelData} columns={columns} hasYear={true} />
+    <DataTable
+      tabPanelData={tabPanelData}
+      columns={columns}
+      hasYear={true}
+      hideNominator={true}
+    />
   );
 }

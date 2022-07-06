@@ -1,6 +1,11 @@
 import TableMenu from "@/components/Common/Menu/TableMenu";
 import FeedbackSnackbar from "@/components/Form/Common/FeedbackSnackbar";
-import { NominationFormStatus, DepartmentType, ServiceLevel } from "@/enums";
+import {
+  NominationFormStatus,
+  DepartmentType,
+  ServiceLevel,
+  UserRole,
+} from "@/enums";
 import { CommitteeMemberVote, NominationDataTableData } from "@/interfaces";
 import { Search } from "@mui/icons-material";
 import { TabPanel } from "@mui/lab";
@@ -37,10 +42,21 @@ import { getYearsBetweenYearAndCurrent } from "@/utils";
 import FallbackSpinner from "@/components/Common/FallbackSpinner";
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-  if (b[orderBy] < a[orderBy]) {
+  let first;
+  let second;
+
+  if (orderBy.toString().includes("date")) {
+    first = new Date(a[orderBy] as unknown as string);
+    second = new Date(b[orderBy] as unknown as string);
+  } else {
+    first = a[orderBy];
+    second = b[orderBy];
+  }
+
+  if (second < first) {
     return -1;
   }
-  if (b[orderBy] > a[orderBy]) {
+  if (second > first) {
     return 1;
   }
   return 0;
@@ -65,6 +81,8 @@ export interface DataTableTabPanelProps {
   columns: readonly Column<NominationDataTableKeys>[];
   displayCommitteeVote?: boolean;
   hasYear?: boolean;
+  hideNominator?: boolean;
+  hasBadge?: boolean;
 }
 
 export default function DataTableTabPanel({
@@ -74,6 +92,8 @@ export default function DataTableTabPanel({
   columns,
   displayCommitteeVote,
   hasYear,
+  hideNominator,
+  hasBadge,
 }: DataTableTabPanelProps) {
   const { user } = useAuth();
   const [displayedData, setDisplayedData] = useState<
@@ -337,7 +357,7 @@ export default function DataTableTabPanel({
                   return (
                     <TableRow hover role="checkbox" tabIndex={-1} key={i}>
                       {columns.map((column) => {
-                        const value = row[column.id];
+                        const value = row[column.id] ?? "";
                         if (column.id === "nomination_status") {
                           return (
                             <BadgeTableCell
@@ -351,13 +371,18 @@ export default function DataTableTabPanel({
                         ) {
                           return (
                             <CommitteeVoteTableCell
-                              value={value as CommitteeMemberVote[]}
+                              value={
+                                value !== ""
+                                  ? (value as CommitteeMemberVote[])
+                                  : []
+                              }
                               column={column}
                             />
                           );
                         } else if (
                           column.id === "nominee_team" ||
-                          (column.id === "nominator_name" && !hasChampions)
+                          (column.id === "nominator_name" &&
+                            (!hasChampions || hideNominator))
                         ) {
                           return <></>;
                         } else if (column.id === "quiz_service_level") {
@@ -389,15 +414,18 @@ export default function DataTableTabPanel({
                               hasRightBorder={true}
                             />
                           );
-                        } else if (
-                          column.id === "nominee_name" &&
-                          row.committee_vote?.length === 0
-                        ) {
+                        } else if (column.id === "nominee_name") {
+                          const hasNotVoted = user?.staff_id
+                            ? user.role.includes(UserRole.COMMITTEE) &&
+                              !row.committee_vote
+                                ?.map((c) => c.committee_id)
+                                .includes(user?.staff_id)
+                            : false;
                           return (
                             <TextTableCell
                               value={value as string}
                               column={column}
-                              hasBadge={true}
+                              hasBadge={hasNotVoted && hasBadge}
                             />
                           );
                         } else {

@@ -330,16 +330,20 @@ export default function DataTableTabPanel({
                       style={{ minWidth: column.minWidth }}
                       sortDirection={orderBy === column.id ? order : false}
                     >
-                      <TableSortLabel
-                        active={orderBy === column.id}
-                        direction={orderBy === column.id ? order : "desc"}
-                        onClick={createSortHandler(column.id)}
-                        sx={{
-                          textAlign: `${column.align}`,
-                        }}
-                      >
-                        {column.label}
-                      </TableSortLabel>
+                      {column.id !== "quiz_service_level" ? (
+                        <TableSortLabel
+                          active={orderBy === column.id}
+                          direction={orderBy === column.id ? order : "desc"}
+                          onClick={createSortHandler(column.id)}
+                          sx={{
+                            textAlign: `${column.align}`,
+                          }}
+                        >
+                          {column.label}
+                        </TableSortLabel>
+                      ) : (
+                        <>{column.label}</>
+                      )}
                     </StyledTableCell>
                   )}
                 </>

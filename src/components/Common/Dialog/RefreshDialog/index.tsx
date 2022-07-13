@@ -7,7 +7,7 @@ import {
   DialogContentText,
   DialogActions,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PrimaryButton from "../../PrimaryButton";
 
 export default function RefreshDialog() {
@@ -54,6 +54,17 @@ export default function RefreshDialog() {
       console.error("error occurred while logging out: ", err);
     }
   };
+
+  const resetRefreshLogoutIntervals = () => {
+    console.log("resetting refresh dialog and logout intervals");
+    resetRefreshDialogInterval();
+    resetLogoutInterval();
+  };
+
+  window.addEventListener("mousemove", resetRefreshLogoutIntervals);
+  // useEffect(() => {
+  //   return window.removeEventListener("mousemove", resetRefreshLogoutIntervals);
+  // }, []);
 
   return (
     <Dialog open={refreshDialogOpen} onClose={handleClose}>

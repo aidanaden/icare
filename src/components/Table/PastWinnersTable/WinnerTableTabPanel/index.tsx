@@ -22,28 +22,7 @@ import { winnerColumns } from "../../Components/Columns";
 import { PastWinnerTableKeys } from "../../Components/Columns";
 import YearSelect from "../../Components/YearSelect";
 import Select from "@/components/Common/Select";
-import FallbackSpinner from "@/components/Common/FallbackSpinner";
-
-function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-type Order = "asc" | "desc";
-
-function getComparator<Key extends keyof PastWinnerTableKeys>(
-  order: Order,
-  orderBy: Key
-): (a: WinnerData, b: WinnerData) => number {
-  return order === "desc"
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
+import { getPastWinnerComparator, Order } from "../../utils";
 
 export interface WinnerTabPanelProps {
   headerLabel: string;
@@ -222,23 +201,14 @@ export default function DataTableTabPanel({
                   style={{ minWidth: column.minWidth }}
                   sortDirection={orderBy === column.id ? order : false}
                 >
-                  <TableSortLabel
-                    active={orderBy === column.id}
-                    direction={orderBy === column.id ? order : "desc"}
-                    onClick={createSortHandler(column.id)}
-                    sx={{
-                      textAlign: `${column.align}`,
-                    }}
-                  >
-                    {column.label}
-                  </TableSortLabel>
+                  {column.label}
                 </StyledTableCell>
               ))}
               <StyledTableCell />
             </TableRow>
           </TableHead>
           {displayedData
-            ?.sort(getComparator(order, orderBy))
+            ?.sort(getPastWinnerComparator(order, orderBy))
             ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             ?.map((row: WinnerData, i: number) => {
               return (

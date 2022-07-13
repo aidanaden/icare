@@ -15,7 +15,7 @@ import FirstStep from "../Steps/FirstStep";
 import SecondStep from "../Steps/SecondStep";
 
 // Step titles
-const labels = ["Nomination Details", "Nomination Form", "Submit"];
+const labels = ["Nomination Details", "Nomination Form"];
 const handleSteps = (
   recoilFormState: RecoilState<NominationFormSubmissionData>,
   step: number,
@@ -42,14 +42,6 @@ const handleSteps = (
           handleBack={handleBack}
           case_id={case_id}
           isEdit={isEdit}
-        />
-      );
-    case 2:
-      return (
-        <FinalStep
-          recoilFormState={recoilFormState}
-          handleBack={handleBack}
-          case_id={case_id}
         />
       );
     default:

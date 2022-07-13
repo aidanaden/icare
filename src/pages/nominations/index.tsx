@@ -16,6 +16,7 @@ import Unauthorized from "@/components/Common/UnauthorizedAccess";
 import { useRecoilState } from "recoil";
 import { nominationYearState } from "@/atoms/nominationYearAtom";
 import { Refresh } from "@mui/icons-material";
+import { Stack, Typography } from "@mui/material";
 
 // ALL nominations made by staff (draft AND completed)
 
@@ -50,16 +51,28 @@ const Nominations: NextPage = () => {
                 },
               }}
             >
-              <NextMuiLink color="#212B36" href="/dashboard" fontSize="14px">
+              <NextMuiLink color="#919EAB" href="/dashboard" fontSize="14px">
                 Dashboard
               </NextMuiLink>
-              <NextMuiLink color="#919EAB" href="/nominations" fontSize="14px">
+              <NextMuiLink color="#212B36" href="/nominations" fontSize="14px">
                 Nominations
               </NextMuiLink>
             </Breadcrumbs>
-            <IconButton onClick={() => mutate()}>
-              <Refresh />
-            </IconButton>
+            <Stack
+              direction="row"
+              sx={{
+                alignItems: "center",
+              }}
+            >
+              <Typography
+                sx={{ fontSize: "14px", display: { xs: "none", sm: "block" } }}
+              >
+                Refresh
+              </Typography>
+              <IconButton onClick={() => mutate()}>
+                <Refresh />
+              </IconButton>
+            </Stack>
           </Box>
         </Box>
         <ShadowBox borderRadius="20px">

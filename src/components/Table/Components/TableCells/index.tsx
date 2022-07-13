@@ -84,9 +84,7 @@ export const TextTableCell = ({
       }}
     >
       {hasBadge ? (
-        <NotificationBadge badgeContent={"New"} color="primary">
-          {value.toString()}
-        </NotificationBadge>
+        <NotificationBadge>{value.toString()}</NotificationBadge>
       ) : (
         value.toString()
       )}
@@ -99,10 +97,10 @@ interface CommitteeVoteTableCellProps {
   column: Column<any>;
 }
 
-const getAvatarColor = (i: number) => {
-  if (i === 0) {
+const getAvatarColor = (name: string) => {
+  if (name.toLowerCase().includes("doreen")) {
     return teal[300];
-  } else if (i === 1) {
+  } else if (name.toLowerCase().includes("eileen")) {
     return lightBlue[300];
   } else {
     return lightGreen[300];
@@ -131,7 +129,9 @@ export const CommitteeVoteTableCell = ({
             <Avatar
               key={`avatar icon ${i}`}
               sx={{
-                bgcolor: `${getAvatarColor(i)}`,
+                bgcolor: `${getAvatarColor(
+                  committeeMemberVote.committee_name
+                )}`,
                 opacity: committeeMemberVote.champion_status ? 1 : 0.3,
                 width: 32,
                 height: 32,

@@ -1,11 +1,13 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Divider, Stack, Typography } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/router";
+
 import PrimaryButton from "@/components/Common/PrimaryButton";
 import SectionHeader from "@/components/Common/SectionHeader";
 import SectionSubtitle from "@/components/Common/SectionSubtitle";
 import NominationQuestion from "../../Common/NominationQuestion";
-import { RecoilState, useRecoilState } from "recoil";
+import { RecoilState, useRecoilState, useResetRecoilState } from "recoil";
 import {
   upsertNominationForm,
   useDraftQuizResponse,
@@ -39,12 +41,13 @@ export default function SecondStep({
   isEdit,
 }: SecondStepProp) {
   const { user } = useAuth();
+  const router = useRouter();
+
   const [getNominationFormState, setNominationFormState] = useRecoilState(
     isEdit ? editNominationFormState : newNominationFormState
   );
 
-  const [hasDraftReset, setHasDraftReset] = useState<number>(0);
-  const [hasReadDraft, setHasReadDraft] = useState<boolean>(false);
+  const resetFormState = useResetRecoilState(recoilFormState);
 
   const [resetSnackbarOpen, setResetSnackbarOpen] = useState<boolean>(false);
   const [resetErrorSnackbarOpen, setResetErrorSnackbarOpen] =
@@ -54,6 +57,12 @@ export default function SecondStep({
   const [saveSnackbarOpen, setSaveSnackbarOpen] = useState<boolean>(false);
   const [errorSnackbarOpen, setErrorSnackbarOpen] = useState<boolean>(false);
   const [saveButtonLoading, setSaveButtonLoading] = useState<boolean>(false);
+
+  const [submitSuccessSnackbarOpen, setSubmitSuccessSnackbarOpen] =
+    useState<boolean>(false);
+  const [submitErrorSnackbarOpen, setSubmitErrorSnackbarOpen] =
+    useState<boolean>(false);
+  const [submitLoading, setSubmitLoading] = useState<boolean>(false);
 
   const { data, error, loading } = useQuiz(
     getNominationFormState.user?.staff_id
@@ -177,14 +186,41 @@ export default function SecondStep({
     }
   };
 
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: any) => {
+    console.log("on submit clicked!");
     const mapData = new Map(Array.from(Object.entries(data)));
     const newFormData = {
       ...getNominationFormState,
       answers: mapData as Map<string, string>,
     };
     setNominationFormState(newFormData);
-    handleNext();
+
+    if (!user) {
+      console.error("user not logged in!");
+      return;
+    }
+
+    setSubmitLoading(true);
+    try {
+      const response = await upsertNominationForm(
+        user?.staff_id,
+        newFormData,
+        false,
+        case_id ?? getNominationFormState.case_id
+      );
+      if (response.status_code === 200) {
+        setSubmitSuccessSnackbarOpen(true);
+        resetFormState();
+        setTimeout(() => {
+          router.push("/nominations");
+        }, 2500);
+      } else {
+        setErrorSnackbarOpen(true);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+    setSubmitLoading(false);
   };
 
   const handleSave = async () => {
@@ -228,17 +264,6 @@ export default function SecondStep({
           <SectionHeader mb={2} fontSize={{ xs: "24px", md: "32px" }}>
             Service-level Quiz
           </SectionHeader>
-          <Typography
-            variant="caption"
-            display="block"
-            gutterBottom
-            color="#212b36"
-            sx={{
-              alignItems: "baseline",
-            }}
-          >
-            Auto-save enabled
-          </Typography>
         </Box>
         <SectionSubtitle mb={4} color="#212b36">
           Complete the quiz and answer the questions as accurately as possible.
@@ -257,6 +282,9 @@ export default function SecondStep({
                 isEdit={isEdit}
               />
             ))}
+            {data.rating_questions && data.rating_questions.length > 0 && (
+              <Divider />
+            )}
             {data?.rating_questions?.map(
               ({ quiz_question_name, rating_child_quiz_questions }) => (
                 <>
@@ -342,6 +370,7 @@ export default function SecondStep({
                   display: "flex",
                   justifyContent: { xs: "center", sm: "flex-end" },
                 }}
+                loading={submitLoading}
               >
                 Next
               </PrimaryButton>
@@ -366,6 +395,14 @@ export default function SecondStep({
         errorOpen={resetErrorSnackbarOpen}
         setErrorOpen={setResetErrorSnackbarOpen}
         errorMsg="Error occurred while trying to reset your nomination quiz answers! Please try again."
+      />
+      <FeedbackSnackbar
+        successOpen={submitSuccessSnackbarOpen}
+        setSuccessOpen={setSubmitSuccessSnackbarOpen}
+        successMsg="Successfully submitted your nomination!"
+        errorOpen={submitErrorSnackbarOpen}
+        setErrorOpen={setSubmitErrorSnackbarOpen}
+        errorMsg="Error occurred while trying to submit your nomination! Please try again."
       />
     </Box>
   );

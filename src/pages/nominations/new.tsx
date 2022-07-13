@@ -44,10 +44,10 @@ const Nomination: NextPage = () => {
               },
             }}
           >
-            <NextMuiLink color="#212B36" href="/dashboard" fontSize="14px">
+            <NextMuiLink color="#919EAB" href="/dashboard" fontSize="14px">
               Dashboard
             </NextMuiLink>
-            <NextMuiLink color="#919EAB" href="/nomination" fontSize="14px">
+            <NextMuiLink color="#212B36" href="/nomination" fontSize="14px">
               Nomination
             </NextMuiLink>
           </Breadcrumbs>

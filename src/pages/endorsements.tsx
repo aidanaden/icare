@@ -14,6 +14,7 @@ import { useNominations } from "@/lib/nominations";
 import Unauthorized from "@/components/Common/UnauthorizedAccess";
 import FallbackSpinner from "@/components/Common/FallbackSpinner";
 import { Refresh } from "@mui/icons-material";
+import { Stack, Typography } from "@mui/material";
 
 // ALL nominations made by staff of department of HOD
 // (pending, submitted/not endorsed, endorsed)
@@ -47,16 +48,29 @@ const Endorsements: NextPage = () => {
                 },
               }}
             >
-              <NextMuiLink color="#212B36" href="/dashboard" fontSize="14px">
+              <NextMuiLink color="#919EAB" href="/dashboard" fontSize="14px">
                 Dashboard
               </NextMuiLink>
-              <NextMuiLink color="#919EAB" href="/endorsements" fontSize="14px">
+              <NextMuiLink color="#212B36" href="/endorsements" fontSize="14px">
                 Endorsements
               </NextMuiLink>
             </Breadcrumbs>
-            <IconButton onClick={() => mutate()}>
-              <Refresh />
-            </IconButton>
+            <Stack
+              direction="row"
+              spacing={1}
+              sx={{
+                alignItems: "center",
+              }}
+            >
+              <Typography
+                sx={{ fontSize: "14px", display: { xs: "none", sm: "block" } }}
+              >
+                Refresh
+              </Typography>
+              <IconButton onClick={() => mutate()}>
+                <Refresh />
+              </IconButton>
+            </Stack>
           </Box>
         </Box>
         <ShadowBox borderRadius="20px">

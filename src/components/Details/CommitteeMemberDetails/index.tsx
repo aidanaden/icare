@@ -82,27 +82,38 @@ export default function index(props: CommitteeMemberDetailProps) {
                 </DetailText>
               </Box>
 
-              <Box>
-                <DetailSubHeader mb={1.5}>Service level award</DetailSubHeader>
-                {service_level_award === ServiceLevelWinner.TRUE ? (
-                  <GreenBadge>Awarded</GreenBadge>
-                ) : service_level_award === ServiceLevelWinner.FALSE ? (
-                  <RedBadge>Not awarded</RedBadge>
-                ) : (
-                  <GrayBadge>Pending</GrayBadge>
-                )}
-              </Box>
-              <Box>
-                <DetailSubHeader mb={1.5}>
-                  Nominated for ICare Championship
-                </DetailSubHeader>
-                {champion_status ? (
-                  <GreenBadge>Nominated</GreenBadge>
-                ) : (
-                  <RedBadge>Not nominated</RedBadge>
-                )}
-              </Box>
-              {/* <Stack direction={{ xs: "column", md: "row" }} spacing={3}></Stack> */}
+              <Stack
+                direction={{
+                  xs: "column",
+                  sm: "column",
+                  md: "column",
+                  lg: "row",
+                }}
+                spacing={3}
+              >
+                <Box>
+                  <DetailSubHeader mb={1.5}>
+                    Service level award
+                  </DetailSubHeader>
+                  {service_level_award === ServiceLevelWinner.TRUE ? (
+                    <GreenBadge>Awarded</GreenBadge>
+                  ) : service_level_award === ServiceLevelWinner.FALSE ? (
+                    <RedBadge>Not awarded</RedBadge>
+                  ) : (
+                    <GrayBadge>Pending</GrayBadge>
+                  )}
+                </Box>
+                <Box>
+                  <DetailSubHeader mb={1.5}>
+                    Nominated for ICare Championship
+                  </DetailSubHeader>
+                  {champion_status ? (
+                    <GreenBadge>Nominated</GreenBadge>
+                  ) : (
+                    <RedBadge>Not nominated</RedBadge>
+                  )}
+                </Box>
+              </Stack>
 
               {comments && comments.length > 0 && (
                 <Box>

@@ -17,6 +17,7 @@ import {
   simpleColumns,
   SimpleDataTableKeys,
 } from "../Components/Columns";
+import { getSimpleComparator } from "../utils";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -35,9 +36,12 @@ interface SimpleTableProps extends BoxProps {
 }
 
 export default function SimpleTable({ rows, ...other }: SimpleTableProps) {
+  const order = "desc";
+  const createdDateOrderBy = "nomination_created_date";
+  const submittedDateOrderBy = "nomination_submitted_date";
   return (
     <Box {...other}>
-      <TableContainer sx={{ maxHeight: 440 }}>
+      <TableContainer sx={{ maxHeight: 440, height: "min-content" }}>
         <Table
           stickyHeader
           aria-label="sticky table"
@@ -77,43 +81,45 @@ export default function SimpleTable({ rows, ...other }: SimpleTableProps) {
           </TableHead>
           <TableBody>
             {rows ? (
-              rows.map((row, i) => {
-                return (
-                  <TableRow
-                    hover
-                    role="checkbox"
-                    tabIndex={-1}
-                    key={i}
-                    sx={{
-                      "&.MuiTableRow-hover:hover": {
-                        cursor: "pointer",
-                        backgroundColor: "#F5F6F9",
-                      },
-                    }}
-                  >
-                    {simpleColumns.map(
-                      (column: Column<SimpleDataTableKeys>) => {
-                        let value = row[column.id];
-                        if (column.id === "nomination_created_date") {
-                          value =
-                            column.id === "nomination_created_date" && !value
-                              ? row.nomination_submitted_date
-                              : row.nomination_created_date;
+              rows
+                .sort(getSimpleComparator(order, createdDateOrderBy))
+                .sort(getSimpleComparator(order, submittedDateOrderBy))
+                .map((row, i) => {
+                  return (
+                    <TableRow
+                      hover
+                      role="checkbox"
+                      tabIndex={-1}
+                      key={i}
+                      sx={{
+                        "&.MuiTableRow-hover:hover": {
+                          cursor: "pointer",
+                          backgroundColor: "#F5F6F9",
+                        },
+                      }}
+                    >
+                      {simpleColumns.map(
+                        (column: Column<SimpleDataTableKeys>) => {
+                          let value = row[column.id];
+                          if (column.id === "nomination_created_date") {
+                            value =
+                              row.nomination_created_date ??
+                              row.nomination_submitted_date;
+                          }
+                          return (
+                            <StyledTableCell
+                              key={column.id}
+                              align={column.align}
+                              sx={{ px: 4 }}
+                            >
+                              {value?.toString()}
+                            </StyledTableCell>
+                          );
                         }
-                        return (
-                          <StyledTableCell
-                            key={column.id}
-                            align={column.align}
-                            sx={{ px: 4 }}
-                          >
-                            {value?.toString()}
-                          </StyledTableCell>
-                        );
-                      }
-                    )}
-                  </TableRow>
-                );
-              })
+                      )}
+                    </TableRow>
+                  );
+                })
             ) : (
               <FallbackSpinner />
             )}

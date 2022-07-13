@@ -53,10 +53,10 @@ const View: NextPage = () => {
               },
             }}
           >
-            <NextMuiLink color="#212B36" href="/dashboard" fontSize="14px">
+            <NextMuiLink color="#919EAB" href="/dashboard" fontSize="14px">
               Dashboard
             </NextMuiLink>
-            <NextMuiLink color="#919EAB" href="#" fontSize="14px">
+            <NextMuiLink color="#212B36" href="#" fontSize="14px">
               View
             </NextMuiLink>
           </Breadcrumbs>

@@ -53,6 +53,7 @@ export default function EndorsementTable({
       tabPanelData={tabPanelData}
       columns={submittedColumns}
       viewText="Endorse"
+      hideNominator={false}
       {...other}
     />
   );

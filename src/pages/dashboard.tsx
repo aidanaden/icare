@@ -126,91 +126,108 @@ const Dashboard: NextPage = () => {
               loading={loading}
             />
           </Grid>
-          <Grid item xs={12} md={6}>
-            <ShadowBox px={3} py={4}>
-              <Stack
-                direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-                mb={4}
+          <Grid item xs={12}>
+            <Stack
+              direction={{ xs: "column", md: "row" }}
+              spacing={3}
+              height="max-content"
+              width="100%"
+            >
+              <ShadowBox
+                px={3}
+                py={4}
+                minHeight="100%"
+                flexGrow={1}
+                width="100%"
               >
-                <Box>
-                  <SectionHeader>
-                    {user?.role.includes(UserRole.COMMITTEE)
-                      ? "Awarded nominations"
-                      : "Incomplete nominations"}
-                  </SectionHeader>
-                  <Typography
-                    variant="caption"
-                    display="block"
-                    gutterBottom
-                    color="#212b36"
-                    mt={1}
-                  >
-                    last 10 nominations
-                  </Typography>
-                </Box>
-                <SimpleTableLink
-                  href={
-                    user?.role.includes(UserRole.COMMITTEE)
-                      ? "/committee?tab=awarded"
-                      : "/nominations?tab=incomplete"
-                  }
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  mb={4}
                 >
-                  View all
-                </SimpleTableLink>
-              </Stack>
-              <SimpleTable
-                rows={
-                  user?.role.includes(UserRole.COMMITTEE)
-                    ? awardedNominations?.slice(0, 9) ?? []
-                    : draftNominations?.slice(0, 9) ?? []
-                }
-              />
-            </ShadowBox>
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <ShadowBox px={3} py={4}>
-              <Stack
-                direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-                mb={4}
+                  <Box>
+                    <SectionHeader>
+                      {user?.role.includes(UserRole.COMMITTEE)
+                        ? "Awarded nominations"
+                        : "Incomplete nominations"}
+                    </SectionHeader>
+                    <Typography
+                      variant="caption"
+                      display="block"
+                      gutterBottom
+                      color="#212b36"
+                      mt={1}
+                    >
+                      last 10 nominations
+                    </Typography>
+                  </Box>
+                  <SimpleTableLink
+                    href={
+                      user?.role.includes(UserRole.COMMITTEE)
+                        ? "/committee?tab=awarded"
+                        : "/nominations?tab=incomplete"
+                    }
+                  >
+                    View all
+                  </SimpleTableLink>
+                </Stack>
+                <SimpleTable
+                  rows={
+                    user?.role.includes(UserRole.COMMITTEE)
+                      ? awardedNominations?.slice(0, 9) ?? []
+                      : draftNominations?.slice(0, 9) ?? []
+                  }
+                />
+              </ShadowBox>
+              <ShadowBox
+                px={3}
+                py={4}
+                minHeight="100%"
+                flexGrow={1}
+                width="100%"
               >
-                <Box>
-                  <SectionHeader>
-                    {user?.role.includes(UserRole.COMMITTEE)
-                      ? "Champion nominations"
-                      : "Completed nominations"}
-                  </SectionHeader>
-                  <Typography
-                    variant="caption"
-                    display="block"
-                    gutterBottom
-                    color="#212b36"
-                    mt={1}
-                  >
-                    last 10 nominations
-                  </Typography>
-                </Box>
-                <SimpleTableLink
-                  href={
-                    user?.role.includes(UserRole.COMMITTEE)
-                      ? "/committee?tab=champion"
-                      : "/nominations?tab=incomplete"
-                  }
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  mb={4}
                 >
-                  View all
-                </SimpleTableLink>
-              </Stack>
-              <SimpleTable
-                rows={
-                  user?.role.includes(UserRole.COMMITTEE)
-                    ? championNominations?.slice(0, 9) ?? []
-                    : completedNominations?.slice(0, 9) ?? []
-                }
-              />
-            </ShadowBox>
+                  <Box>
+                    <SectionHeader>
+                      {user?.role.includes(UserRole.COMMITTEE)
+                        ? "Champion nominations"
+                        : "Completed nominations"}
+                    </SectionHeader>
+                    <Typography
+                      variant="caption"
+                      display="block"
+                      gutterBottom
+                      color="#212b36"
+                      mt={1}
+                    >
+                      last 10 nominations
+                    </Typography>
+                  </Box>
+                  <SimpleTableLink
+                    href={
+                      user?.role.includes(UserRole.COMMITTEE)
+                        ? "/committee?tab=champion"
+                        : "/nominations?tab=incomplete"
+                    }
+                  >
+                    View all
+                  </SimpleTableLink>
+                </Stack>
+                <SimpleTable
+                  rows={
+                    user?.role.includes(UserRole.COMMITTEE)
+                      ? championNominations?.slice(0, 9) ?? []
+                      : completedNominations?.slice(0, 9) ?? []
+                  }
+                />
+              </ShadowBox>
+            </Stack>
           </Grid>
           <Grid item xs={12}>
             <ShadowBox borderRadius="20px" px={3} py={4}>

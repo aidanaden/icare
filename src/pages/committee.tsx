@@ -4,7 +4,7 @@ import type { NextPage } from "next";
 import Box from "@mui/material/Box";
 import SectionHeader from "@/components/Common/SectionHeader";
 import ShadowBox from "@/components/Common/ShadowBox";
-import { Breadcrumbs, IconButton } from "@mui/material";
+import { Breadcrumbs, IconButton, Stack, Typography } from "@mui/material";
 import NextMuiLink from "@/components/Common/NextMuiLink";
 import { NominationFilter, UserRole } from "@/enums";
 import CommitteeTable from "@/components/Table/CommitteeTable";
@@ -51,16 +51,32 @@ const Nominations: NextPage = () => {
                 },
               }}
             >
-              <NextMuiLink color="#212B36" href="/dashboard" fontSize="14px">
+              <NextMuiLink color="#919EAB" href="/dashboard" fontSize="14px">
                 Dashboard
               </NextMuiLink>
-              <NextMuiLink color="#919EAB" href="/committee" fontSize="14px">
+              <NextMuiLink color="#212B36" href="/committee" fontSize="14px">
                 Committee
               </NextMuiLink>
             </Breadcrumbs>
-            <IconButton onClick={() => mutate()}>
-              <Refresh />
-            </IconButton>
+            <Stack
+              direction="row"
+              spacing={1}
+              sx={{
+                alignItems: "center",
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: "14px",
+                  display: { xs: "none", sm: "block" },
+                }}
+              >
+                Refresh
+              </Typography>
+              <IconButton onClick={() => mutate()}>
+                <Refresh />
+              </IconButton>
+            </Stack>
           </Box>
         </Box>
         <ShadowBox borderRadius="20px">

@@ -40,38 +40,7 @@ import { useRecoilState } from "recoil";
 import useAuth from "@/hooks/useAuth";
 import { getYearsBetweenYearAndCurrent } from "@/utils";
 import FallbackSpinner from "@/components/Common/FallbackSpinner";
-
-function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-  let first;
-  let second;
-
-  if (orderBy.toString().includes("date")) {
-    first = new Date(a[orderBy] as unknown as string);
-    second = new Date(b[orderBy] as unknown as string);
-  } else {
-    first = a[orderBy];
-    second = b[orderBy];
-  }
-
-  if (second < first) {
-    return -1;
-  }
-  if (second > first) {
-    return 1;
-  }
-  return 0;
-}
-
-type Order = "asc" | "desc";
-
-function getComparator<Key extends keyof NominationDataTableData>(
-  order: Order,
-  orderBy: Key
-): (a: NominationDataTableData, b: NominationDataTableData) => number {
-  return order === "desc"
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
+import { getComparator, Order } from "../../utils";
 
 export interface DataTableTabPanelProps {
   headerLabel: string;
@@ -101,16 +70,15 @@ export default function DataTableTabPanel({
   >(data);
 
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(20);
 
   // set up order-by filter
   const [order, setOrder] = useState<Order>("desc");
   const [orderBy, setOrderBy] = useState<keyof NominationDataTableData>(
     "nomination_created_date"
   );
-  const [secondOrderBy, setSecondOrderBy] = useState<
-    keyof NominationDataTableData
-  >("nomination_submitted_date");
+  const createdDateOrderBy = "nomination_created_date";
+  const submittedDateOrderBy = "nomination_submitted_date";
 
   // set up department filter
   const [departmentType, setDepartmentType] = useState<DepartmentType>(
@@ -330,7 +298,7 @@ export default function DataTableTabPanel({
                       style={{ minWidth: column.minWidth }}
                       sortDirection={orderBy === column.id ? order : false}
                     >
-                      {column.id !== "quiz_service_level" ? (
+                      {column.id.includes("date") ? (
                         <TableSortLabel
                           active={orderBy === column.id}
                           direction={orderBy === column.id ? order : "desc"}
@@ -355,7 +323,8 @@ export default function DataTableTabPanel({
             {displayedData ? (
               displayedData
                 ?.sort(getComparator(order, orderBy))
-                ?.sort(getComparator(order, secondOrderBy))
+                ?.sort(getComparator(order, createdDateOrderBy))
+                ?.sort(getComparator(order, submittedDateOrderBy))
                 ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 ?.map((row: NominationDataTableData, i: number) => {
                   return (
@@ -409,7 +378,7 @@ export default function DataTableTabPanel({
                           );
                         } else if (
                           column.id === "nominator_name" &&
-                          hasChampions
+                          (hasChampions || !hideNominator)
                         ) {
                           return (
                             <TextTableCell
@@ -470,7 +439,7 @@ export default function DataTableTabPanel({
       </TableContainer>
       <Divider />
       <TablePagination
-        rowsPerPageOptions={[5, 10, 20]}
+        rowsPerPageOptions={[20]}
         component="div"
         count={displayedData?.length ?? 0}
         rowsPerPage={rowsPerPage}

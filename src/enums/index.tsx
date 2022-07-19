@@ -16,15 +16,6 @@ export enum NominationFormStatus {
   CHAMPION = "champion",
 }
 
-export enum DepartmentType {
-  ALL = "All",
-  AUDIT = "Audit",
-  IT = "IT",
-  SALES = "Sales",
-  SFIT = "SFIT",
-  MIS = "MIS",
-}
-
 export enum ShortlistStatus {
   TRUE = 170740000,
   FALSE = 170740001,

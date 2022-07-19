@@ -1,6 +1,5 @@
 import { INVALID_NOMINATABLE_STAFF, STARTING_YEAR } from "@/constants";
 import {
-  DepartmentType,
   EndorsementStatus,
   NominationFormStatus,
   ServiceLevelWinner,

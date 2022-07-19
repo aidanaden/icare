@@ -20,10 +20,8 @@ import {
   fetchFileStrings,
   upsertNominationForm,
   useNominationDetails,
-  useStaff,
+  useStaffDepartments,
 } from "@/lib/nominations";
-import { DepartmentType } from "@/enums";
-import { filterInvalidStaffRanksForNomination } from "@/utils";
 import useAuth from "@/hooks/useAuth";
 import { useEffect, useMemo, useState } from "react";
 import FallbackSpinner from "@/components/Common/FallbackSpinner";
@@ -75,38 +73,23 @@ export default function FirstStep({
   //   }
   // }, [case_id, data?.attachment_list]);
 
-  const { staffData, error, loading } = useStaff("", "");
-  const staffDepts = Array.from(
-    new Set(staffData?.map((staff) => staff.staff_department as DepartmentType))
-  );
-  const filteredStaff = filterInvalidStaffRanksForNomination(
-    staffData,
-    user?.staff_id
-  );
-
-  const draftUsers = staffData?.filter(
-    (staff) => staff.staff_id === data?.nominee_id
-  );
-  const draftUser =
-    draftUsers && draftUsers.length > 0 ? draftUsers[0] : undefined;
+  const { departmentData } = useStaffDepartments();
 
   const defaultValues = useMemo(() => {
     return {
-      user: draftUser ??
-        getNominationFormState.user ?? {
-          staff_corporate_rank: "",
-          staff_department: "",
-          staff_id: "",
-          staff_name: "",
-        },
+      // user: draftUser ??
+      user: getNominationFormState.user ?? {
+        staff_corporate_rank: "",
+        staff_department: "",
+        staff_id: "",
+        staff_name: "",
+      },
       department:
-        (data?.nominee_department as DepartmentType) ??
-        getNominationFormState.department ??
-        DepartmentType.ALL,
+        data?.nominee_department ?? getNominationFormState.department ?? "All",
       description:
         data?.nomination_reason ?? getNominationFormState.description ?? "",
     };
-  }, [getNominationFormState, draftUser, data]);
+  }, [getNominationFormState, data]);
 
   // set up form states
   const {
@@ -121,10 +104,8 @@ export default function FirstStep({
   });
 
   useEffect(() => {
-    if (draftUser) {
-      reset(defaultValues);
-    }
-  }, [defaultValues, draftUser, reset]);
+    reset(defaultValues);
+  }, [defaultValues, reset]);
 
   useEffect(() => {
     const setFileData = async () => {
@@ -232,7 +213,7 @@ export default function FirstStep({
         </SectionSubtitle>
       </Box>
       <Box minHeight={{ sm: "380px" }}>
-        {staffData && (!case_id || data) ? (
+        {!case_id || data ? (
           <form onSubmit={handleSubmit(onSubmit)}>
             <Box
               display="flex"
@@ -247,14 +228,10 @@ export default function FirstStep({
                 mb={{ xs: 4 }}
               >
                 <Stack direction={{ xs: "column", sm: "row" }} spacing={3}>
-                  <AutocompleteTextField
-                    control={control}
-                    staffData={filteredStaff ?? []}
-                    disabled={isEdit}
-                  />
+                  <AutocompleteTextField control={control} disabled={isEdit} />
                   <FormDepartmentSelect
                     control={control}
-                    depts={staffDepts}
+                    depts={departmentData?.department_list}
                     disabled={isEdit}
                   />
                 </Stack>

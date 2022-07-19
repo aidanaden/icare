@@ -14,6 +14,7 @@ import {
   DraftQuizResponseQueryData,
   NominationFormQueryData,
   WinnerHistoryQueryData,
+  DepartmentQueryData,
 } from "@/interfaces";
 import axios from "axios";
 import useSWR from "swr";
@@ -176,6 +177,26 @@ const useStaff = (keyword?: string, department?: string) => {
   return { staffData: data, error: error, loading: !data && !error };
 };
 
+const fetchStaff = async (keyword?: string, department?: string) => {
+  const response = await postAPI<StaffData[]>("RetrieveStaffList", {
+    keyword: keyword,
+    department: department,
+  });
+  return response;
+};
+
+const useStaffDepartments = () => {
+  const { data, error } = useSWR<DepartmentQueryData>(
+    "RetrieveDepartmentList",
+    postAPI
+  );
+  return {
+    departmentData: data,
+    departmentError: error,
+    departmentLoading: !data && !error,
+  };
+};
+
 const fetchFile = async (
   case_id?: string,
   file_name?: string
@@ -258,6 +279,8 @@ export {
   useQuiz,
   useDraftQuizResponse,
   useStaff,
+  fetchStaff,
+  useStaffDepartments,
   fetchFile,
   fetchFileStrings,
   deleteFile,

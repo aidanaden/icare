@@ -1,9 +1,13 @@
 import StyledTextField from "@/components/Common/StyledTextField";
+import useAuth from "@/hooks/useAuth";
 import { NominationFormSubmissionDetails, StaffData } from "@/interfaces";
+import { fetchStaff } from "@/lib/nominations";
+import { filterInvalidStaffRanksForNomination } from "@/utils";
 import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useEffect, useState } from "react";
 import { Control, Controller, useWatch } from "react-hook-form";
+import { useDebouncedCallback } from "use-debounce";
 
 function sleep(delay = 0) {
   return new Promise((resolve) => {
@@ -13,47 +17,69 @@ function sleep(delay = 0) {
 
 interface AutoCompleteFieldProps {
   control: Control<Omit<NominationFormSubmissionDetails, "files">>;
-  staffData: StaffData[] | [];
   disabled?: boolean;
 }
 
 export default function Asynchronous({
   control,
-  staffData,
   disabled,
 }: AutoCompleteFieldProps) {
-  const [open, setOpen] = useState(false);
+  const { user } = useAuth();
+
+  const [inputValue, setInputValue] = useState("");
+  const [inputSearch, setInputSearch] = useState("");
   const [options, setOptions] = useState<StaffData[] | []>([]);
-  const loading = open && options?.length === 0;
   const dept = useWatch({ control, name: "department" });
 
+  const debounceOnChange = useDebouncedCallback((value) => {
+    setInputSearch(value);
+  }, 150);
+
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  function handleChange(value: string) {
+    setInputValue(value);
+    debounceOnChange(value);
+  }
+
   useEffect(() => {
-    let active = true;
+    const fetchStaffData = async () => {
+      setLoading(true);
+      const response = await fetchStaff(inputSearch, "");
+      const filteredStaff = filterInvalidStaffRanksForNomination(
+        response,
+        user?.staff_id
+      );
+      setLoading(false);
 
-    if (!loading) {
-      return undefined;
-    }
-
-    if (active) {
-      if (dept?.toLowerCase() === "all") {
-        setOptions(staffData);
-      } else {
-        const filteredStaffNames =
-          staffData?.filter((staff) => staff.staff_department === dept) ?? [];
-        setOptions(filteredStaffNames);
+      if (filteredStaff) {
+        console.log(filteredStaff);
+        setOptions(filteredStaff);
       }
-    }
-
-    return () => {
-      active = false;
     };
-  }, [loading, dept, staffData]);
+    if (open) {
+      fetchStaffData();
+    }
+  }, [inputSearch, open, user?.staff_id]);
 
   useEffect(() => {
-    if (!open) {
-      setOptions([]);
-    }
-  }, [open]);
+    const fetchStaffData = async () => {
+      setLoading(true);
+      const response = await fetchStaff("", dept === "All" ? "" : dept);
+      const filteredStaff = filterInvalidStaffRanksForNomination(
+        response,
+        user?.staff_id
+      );
+      setLoading(false);
+
+      if (filteredStaff) {
+        console.log(filteredStaff);
+        setOptions(filteredStaff);
+      }
+    };
+    fetchStaffData();
+  }, [dept, user?.staff_id]);
 
   return (
     <Controller
@@ -72,6 +98,8 @@ export default function Asynchronous({
           getOptionLabel={(option) => option.staff_name}
           options={options}
           loading={loading}
+          inputValue={inputValue}
+          includeInputInList
           fullWidth
           disabled={disabled}
           renderInput={(params) => (
@@ -89,14 +117,15 @@ export default function Asynchronous({
                   </>
                 ),
               }}
+              onChange={(event: any) => handleChange(event.target.value)}
               required
             />
           )}
           {...field}
           ref={field.ref}
-          onChange={(e, data) => {
-            field.onChange(data);
-          }}
+          onChange={(e: any, value) =>
+            value && setInputValue(value?.staff_name)
+          }
         />
       )}
       name="user"

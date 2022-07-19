@@ -1,11 +1,6 @@
 import TableMenu from "@/components/Common/Menu/TableMenu";
 import FeedbackSnackbar from "@/components/Form/Common/FeedbackSnackbar";
-import {
-  NominationFormStatus,
-  DepartmentType,
-  ServiceLevel,
-  UserRole,
-} from "@/enums";
+import { NominationFormStatus, ServiceLevel, UserRole } from "@/enums";
 import { CommitteeMemberVote, NominationDataTableData } from "@/interfaces";
 import { Search } from "@mui/icons-material";
 import { TabPanel } from "@mui/lab";
@@ -81,14 +76,12 @@ export default function DataTableTabPanel({
   const submittedDateOrderBy = "nomination_submitted_date";
 
   // set up department filter
-  const [departmentType, setDepartmentType] = useState<DepartmentType>(
-    DepartmentType.ALL
-  );
+  const [departmentType, setDepartmentType] = useState<string>("All");
   const departmentValues = Array.from(
     new Set(
       data
-        ?.flatMap((data) => [data.nominee_department as DepartmentType])
-        .concat(DepartmentType.ALL)
+        ?.flatMap((data) => [data.nominee_department])
+        .concat("All")
         .reverse()
     )
   );
@@ -162,7 +155,7 @@ export default function DataTableTabPanel({
 
   // department filter effect
   useEffect(() => {
-    if (departmentType !== DepartmentType.ALL) {
+    if (departmentType !== "All") {
       setDisplayedData(
         data?.filter((row) => row.nominee_department === departmentType)
       );

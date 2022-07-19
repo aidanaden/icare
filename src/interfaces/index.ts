@@ -1,5 +1,4 @@
 import {
-  DepartmentType,
   EndorsementStatus,
   NominationFormStatus,
   ServiceLevel,
@@ -141,7 +140,7 @@ export interface NominationQuestionsQueryData {
 
 export interface NominationFormSubmissionDetails {
   user: StaffData | undefined;
-  department: DepartmentType | undefined;
+  department: string | undefined;
   description: string | undefined;
   files: FileNameString[] | undefined;
 }
@@ -157,6 +156,10 @@ export interface StaffData {
   staff_name: string;
   staff_department: string;
   staff_corporate_rank: string;
+}
+
+export interface DepartmentQueryData extends QueryData {
+  department_list: string[];
 }
 
 export interface FileNameString {

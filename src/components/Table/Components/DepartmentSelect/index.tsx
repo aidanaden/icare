@@ -1,5 +1,4 @@
 import StyledMenuItem from "@/components/Common/Menu/StyledMenuItem";
-import { DepartmentType } from "@/enums";
 import theme from "@/styles/theme";
 import {
   FormControl,
@@ -12,9 +11,9 @@ import {
 import React, { Dispatch, SetStateAction } from "react";
 
 interface DepartmentSelectProps {
-  departments: DepartmentType[];
-  departmentType: DepartmentType;
-  setDepartmentType: Dispatch<SetStateAction<DepartmentType>>;
+  departments: string[];
+  departmentType: string;
+  setDepartmentType: Dispatch<SetStateAction<string>>;
 }
 
 export default function DepartmentSelect({
@@ -23,7 +22,7 @@ export default function DepartmentSelect({
   setDepartmentType,
 }: DepartmentSelectProps) {
   const handleSelectChange = (event: SelectChangeEvent) => {
-    setDepartmentType(event.target.value as DepartmentType);
+    setDepartmentType(event.target.value);
   };
 
   return (

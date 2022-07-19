@@ -1,8 +1,6 @@
 import StyledMenuItem from "@/components/Common/Menu/StyledMenuItem";
-import { DepartmentType } from "@/enums";
-import { NominationFormSubmissionDetails } from "@/interfaces";
 import { FormControl, InputLabel, Select, OutlinedInput } from "@mui/material";
-import { Controller, Control, FieldValues } from "react-hook-form";
+import { Controller } from "react-hook-form";
 
 export interface SelectValue {
   label: string;

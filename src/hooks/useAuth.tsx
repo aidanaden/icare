@@ -1,11 +1,4 @@
-// import {
-//   createUserWithEmailAndPassword,
-//   onAuthStateChanged,
-//   signInWithEmailAndPassword,
-//   signOut,
-//   User,
-// } from "firebase/auth";
-
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { UserRole } from "@/enums";
 import {
   CommitteeMemberListQueryData,
@@ -24,18 +17,16 @@ interface IAuth {
   signIn: (staff_id: string, password: string) => Promise<QueryData | void>;
   logout: () => Promise<QueryData | void>;
   refreshToken: () => Promise<LoginQueryData | void>;
+  validateToken: () => Promise<QueryData | void>;
   forgetPassword: (staff_id: string) => Promise<number | void>;
 }
 
 const AuthContext = createContext<IAuth>({
   user: undefined,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   signIn: async () => {},
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   logout: async () => {},
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   refreshToken: async () => {},
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  validateToken: async () => {},
   forgetPassword: async () => {},
 });
 
@@ -81,6 +72,27 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return await postAPI<LoginQueryData>("RefreshToken");
   };
 
+  const validateToken = async () => {
+    const response = await postAPI<QueryData>("ValidateToken");
+    const cookieUserRoles = getCookie("User_Role")?.toString();
+    const userRoles = cookieUserRoles?.split("-") as UserRole[];
+
+    const committeeMembersData = await postAPI<CommitteeMemberListQueryData>(
+      "RetrieveCommitteeMembers"
+    );
+
+    // const userValue: User = {
+    //   staff_id: staff_id,
+    //   name: response.name,
+    //   role: userRoles,
+    //   year: response.current_financial_year,
+    //   committeeMembers: committeeMembersData.committee_member_list,
+    // };
+
+    // setUser(userValue);
+    return response;
+  };
+
   const forgetPassword = async (staff_id: string) => {
     const body = { staff_id: staff_id };
     const response = await axios({
@@ -96,7 +108,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, signIn, logout, refreshToken, forgetPassword }}
+      value={{
+        user,
+        signIn,
+        logout,
+        refreshToken,
+        validateToken,
+        forgetPassword,
+      }}
     >
       {children}
     </AuthContext.Provider>

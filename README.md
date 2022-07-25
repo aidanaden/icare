@@ -152,35 +152,35 @@ The code structure will be explained via:
 
 `/pages`
 
-The pages directory stores all of the entry files for each page. E.g. To find the code for the `/nominations` page, simply look for the file `/src/pages/nominations/index.tsx`, To find the code for the `/dashboard` page, simply look for the file `/src/pages/dashboard.tsx`.
+- The pages directory stores all of the entry files for each page. E.g. To find the code for the `/nominations` page, simply look for the file `/src/pages/nominations/index.tsx`, To find the code for the `/dashboard` page, simply look for the file `/src/pages/dashboard.tsx`.
 
 `/lib`
 
-The lib directory stores all of the functions used to fetch data from the backend via api requests (functions are stored in `/lib/nominations.ts`)
+- The lib directory stores all of the functions used to fetch data from the backend via api requests (functions are stored in `/lib/nominations.ts`)
 
 `/hooks`
 
-The hooks directory stores the `useAuth` context that handles all authentication requests as well as the `useInterval` hook that ensures that inactive users are logged out within a 15min interval
+- The hooks directory stores the `useAuth` context that handles all authentication requests as well as the `useInterval` hook that ensures that inactive users are logged out within a 15min interval
 
 `/enums` and `/interfaces`
 
-The enums and interfaces directories store the different data types used within the app
+- The enums and interfaces directories store the different data types used within the app
 
 `/constants`
 
-The constants directory stores all constants (including the dev/prod api urls) used within the app
+- The constants directory stores all constants (including the dev/prod api urls) used within the app
 
 `/components`
 
-The components directory stores all the components used within the app (sorted in different folders according to the component type)
+- The components directory stores all the components used within the app (sorted in different folders according to the component type)
 
 `/styles`
 
-The styles directory stores all theme stylings used within the app (e.g. colors, fonts, etc)
+- The styles directory stores all theme stylings used within the app (e.g. colors, fonts, etc)
 
 `/atoms`
 
-The atoms directory is used by the Recoil library to store shared state across the app (used mainly by the create/edit nomination step form component)
+- The atoms directory is used by the Recoil library to store shared state across the app (used mainly by the create/edit nomination step form component)
 
 ### Code structure via web pages
 

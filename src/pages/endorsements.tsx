@@ -29,7 +29,9 @@ const Endorsements: NextPage = () => {
 
   if (!user) {
     return <FallbackSpinner />;
-  } else if (user && user?.role.includes(UserRole.HOD)) {
+  }
+
+  if (user && user?.role.includes(UserRole.HOD)) {
     return (
       <Box>
         <Box mb={4}>
@@ -80,9 +82,9 @@ const Endorsements: NextPage = () => {
         </ShadowBox>
       </Box>
     );
-  } else {
-    return <Unauthorized />;
   }
+
+  return <Unauthorized />;
 };
 
 export default Endorsements;

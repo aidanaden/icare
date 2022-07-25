@@ -98,24 +98,28 @@ It's highly recommended to use macos or linux for easier installation.
 
 The ICare web app uses yarn as its package manager. To install, run the command below (AFTER installing nodejs).
 
-- yarn
-  ```sh
-  npm install --global yarn
-  ```
+yarn
+
+```sh
+npm install --global yarn
+```
 
 ### Installation
 
 To install all of the packages required by the ICare web application, run the commands below.
 
-1. Clone the repo
-   ```sh
-   git clone https://github.com/aidanaden/icare.git
-   ```
-2. Install NPM packages
-   ```sh
-   cd icare
-   yarn
-   ```
+Clone the repo
+
+```sh
+git clone https://github.com/aidanaden/icare.git
+```
+
+Install NPM packages
+
+```sh
+cd icare
+yarn
+```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 

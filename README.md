@@ -20,7 +20,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/aidanaden/icare">
-    <img src="/public/images/logo.png" alt="Logo" width="80" height="80">
+    <img src="/public/images/logo.png" alt="Logo" width='484' height='188'>
   </a>
 
   <h3 align="center">ICare Web Application</h3>

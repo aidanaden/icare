@@ -56,7 +56,6 @@ export default function RefreshDialog() {
   };
 
   const resetRefreshLogoutIntervals = () => {
-    console.log("resetting refresh dialog and logout intervals");
     resetRefreshDialogInterval();
     resetLogoutInterval();
   };

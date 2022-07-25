@@ -17,7 +17,7 @@ interface IAuth {
   signIn: (staff_id: string, password: string) => Promise<QueryData | void>;
   logout: () => Promise<QueryData | void>;
   refreshToken: () => Promise<LoginQueryData | void>;
-  validateToken: () => Promise<QueryData | void>;
+  validateToken: () => Promise<boolean>;
   forgetPassword: (staff_id: string) => Promise<number | void>;
 }
 
@@ -26,7 +26,9 @@ const AuthContext = createContext<IAuth>({
   signIn: async () => {},
   logout: async () => {},
   refreshToken: async () => {},
-  validateToken: async () => {},
+  validateToken: async () => {
+    return false;
+  },
   forgetPassword: async () => {},
 });
 
@@ -48,6 +50,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       "RetrieveCommitteeMembers"
     );
 
+    localStorage.setItem("staff_id", staff_id);
+    localStorage.setItem(
+      "current_financial_year",
+      response.current_financial_year
+    );
+
     const userValue: User = {
       staff_id: staff_id,
       name: response.name,
@@ -63,6 +71,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const logout = async () => {
     const response = await postAPI("LogOut");
     if (response.Status_Code === 200) {
+      localStorage.setItem("staff_id", "");
+      localStorage.setItem("current_financial_year", "");
       setUser(undefined);
     }
     return response;
@@ -73,24 +83,40 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const validateToken = async () => {
-    const response = await postAPI<QueryData>("ValidateToken");
-    const cookieUserRoles = getCookie("User_Role")?.toString();
-    const userRoles = cookieUserRoles?.split("-") as UserRole[];
+    try {
+      const response = await postAPI<QueryData>("ValidateToken");
+      console.log("response data: ", response);
 
-    const committeeMembersData = await postAPI<CommitteeMemberListQueryData>(
-      "RetrieveCommitteeMembers"
-    );
+      if (response.status_code !== 200) {
+        console.error("failed to validate user");
+        return false;
+      }
 
-    // const userValue: User = {
-    //   staff_id: staff_id,
-    //   name: response.name,
-    //   role: userRoles,
-    //   year: response.current_financial_year,
-    //   committeeMembers: committeeMembersData.committee_member_list,
-    // };
+      const cookieName = getCookie("Name")?.toString().replaceAll("+", " ");
+      console.log("cookie name: ", cookieName);
+      const cookieUserRoles = getCookie("User_Role")?.toString();
+      const userRoles = cookieUserRoles?.split("-") as UserRole[];
 
-    // setUser(userValue);
-    return response;
+      const committeeMembersData = await postAPI<CommitteeMemberListQueryData>(
+        "RetrieveCommitteeMembers"
+      );
+
+      const userValue: User = {
+        staff_id: localStorage.getItem("staff_id") as string,
+        name: cookieName as string,
+        role: userRoles,
+        year: localStorage.getItem("current_financial_year") as string,
+        committeeMembers: committeeMembersData.committee_member_list,
+      };
+
+      console.log("user value from validateToken: ", userValue);
+
+      setUser(userValue);
+      return true;
+    } catch (err) {
+      console.error(err);
+      return false;
+    }
   };
 
   const forgetPassword = async (staff_id: string) => {

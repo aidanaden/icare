@@ -25,7 +25,7 @@ const convertBooleanToShortlist = (bool?: boolean) => {
 };
 
 const getStatusFromData = (
-  data: Omit<NominationDataTableData, "status">
+  data: Omit<NominationDataTableData, "status" | "nomination_date">
 ): NominationDataTableData => {
   let status = NominationFormStatus.INCOMPLETE;
 
@@ -55,7 +55,12 @@ const getStatusFromData = (
     status = NominationFormStatus.PENDING;
   }
 
-  return { ...data, nomination_status: status };
+  return {
+    ...data,
+    nomination_status: status,
+    nomination_date:
+      data.nomination_submitted_date ?? data.nomination_created_date,
+  };
 };
 
 const convertFileToBase64 = (file: File) => {

@@ -20,6 +20,7 @@ import { NominationFormSubmissionData } from "@/interfaces";
 import FeedbackSnackbar from "../../Common/FeedbackSnackbar";
 import { newNominationFormState } from "@/atoms/newNominationFormAtom";
 import { editNominationFormState } from "@/atoms/editNominationFormAtom";
+import SubmitDialog from "./SubmitDialog";
 
 interface QuizKeyAnswer {
   [quizKey: string]: string;
@@ -58,6 +59,7 @@ export default function SecondStep({
   const [errorSnackbarOpen, setErrorSnackbarOpen] = useState<boolean>(false);
   const [saveButtonLoading, setSaveButtonLoading] = useState<boolean>(false);
 
+  const [submitDialogOpen, setSubmitDialogOpen] = useState<boolean>(false);
   const [submitSuccessSnackbarOpen, setSubmitSuccessSnackbarOpen] =
     useState<boolean>(false);
   const [submitErrorSnackbarOpen, setSubmitErrorSnackbarOpen] =
@@ -159,35 +161,17 @@ export default function SecondStep({
         ...getNominationFormState,
         answers: quizKeysMap,
       };
-      reset(quizKeysObject);
+      console.log("resetting form answers to: ", quizKeysObject);
+      console.log(
+        "resetting form state answers to: ",
+        clearedNominationFormState
+      );
       setNominationFormState(clearedNominationFormState);
-
-      //   try {
-      //     const response = await upsertNominationForm(
-      //       user?.staff_id,
-      //       clearedNominationFormState,
-      //       true,
-      //       case_id ?? getNominationFormState.case_id
-      //     );
-      //     setResetButtonLoading(false);
-      //     if (response.status_code === 200) {
-      //       setNominationFormState({
-      //         ...clearedNominationFormState,
-      //         case_id: response.case_id,
-      //       });
-      //       setResetSnackbarOpen(true);
-      //     } else {
-      //       setResetErrorSnackbarOpen(true);
-      //     }
-      //   } catch (err) {
-      //     console.error(err);
-      //   }
-      // }
+      reset(quizKeysObject);
     }
   };
 
   const onSubmit = async (data: any) => {
-    console.log("on submit clicked!");
     const mapData = new Map(Array.from(Object.entries(data)));
     const newFormData = {
       ...getNominationFormState,
@@ -200,27 +184,7 @@ export default function SecondStep({
       return;
     }
 
-    setSubmitLoading(true);
-    try {
-      const response = await upsertNominationForm(
-        user?.staff_id,
-        newFormData,
-        false,
-        case_id ?? getNominationFormState.case_id
-      );
-      if (response.status_code === 200) {
-        setSubmitSuccessSnackbarOpen(true);
-        resetFormState();
-        setTimeout(() => {
-          router.push("/nominations");
-        }, 2500);
-      } else {
-        setErrorSnackbarOpen(true);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-    setSubmitLoading(false);
+    setSubmitDialogOpen(true);
   };
 
   const handleSave = async () => {
@@ -372,7 +336,7 @@ export default function SecondStep({
                 }}
                 loading={submitLoading}
               >
-                Next
+                Submit
               </PrimaryButton>
             </Box>
           </Stack>
@@ -380,6 +344,15 @@ export default function SecondStep({
       ) : (
         <FallbackSpinner />
       )}
+      <SubmitDialog
+        case_id={case_id}
+        open={submitDialogOpen}
+        setOpen={setSubmitDialogOpen}
+        getNominationFormState={getNominationFormState}
+        setSubmitSuccessSnackbarOpen={setSubmitSuccessSnackbarOpen}
+        setSubmitErrorSnackbarOpen={setSubmitErrorSnackbarOpen}
+        resetFormState={resetFormState}
+      />
       <FeedbackSnackbar
         successOpen={saveSnackbarOpen}
         setSuccessOpen={setSaveSnackbarOpen}

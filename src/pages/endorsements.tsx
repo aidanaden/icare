@@ -27,7 +27,9 @@ const Endorsements: NextPage = () => {
     user?.year ?? new Date().getFullYear().toString()
   );
 
-  if (user?.role.includes(UserRole.HOD)) {
+  if (!user) {
+    return <FallbackSpinner />;
+  } else if (user && user?.role.includes(UserRole.HOD)) {
     return (
       <Box>
         <Box mb={4}>

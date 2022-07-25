@@ -20,6 +20,7 @@ import {
   fetchFileStrings,
   upsertNominationForm,
   useNominationDetails,
+  fetchNominationDetails,
   useStaffDepartments,
 } from "@/lib/nominations";
 import useAuth from "@/hooks/useAuth";
@@ -56,6 +57,10 @@ export default function FirstStep({
     useState<boolean>(false);
   const [resetButtonLoading, setResetButtonLoading] = useState<boolean>(false);
 
+  const resetFormState = useResetRecoilState(recoilFormState);
+
+  // TODO: update nomination form state with data fetched
+  // (to be used in autocomplete)
   const { data } = useNominationDetails(case_id);
 
   // const fileData = useMemo(async () => {
@@ -77,19 +82,21 @@ export default function FirstStep({
 
   const defaultValues = useMemo(() => {
     return {
-      // user: draftUser ??
-      user: getNominationFormState.user ?? {
+      user: {
+        staff_corporate_rank: "",
+        staff_department: data?.nominee_department,
+        staff_id: data?.nominee_id,
+        staff_name: data?.nominee_name,
+      } ?? {
         staff_corporate_rank: "",
         staff_department: "",
         staff_id: "",
         staff_name: "",
       },
-      department:
-        data?.nominee_department ?? getNominationFormState.department ?? "All",
-      description:
-        data?.nomination_reason ?? getNominationFormState.description ?? "",
+      department: data?.nominee_department ?? "All",
+      description: data?.nomination_reason ?? "",
     };
-  }, [getNominationFormState, data]);
+  }, [data]);
 
   // set up form states
   const {
@@ -103,13 +110,58 @@ export default function FirstStep({
     resolver: yupResolver(nominationDetailSchema),
   });
 
+  // always clear nomination form state on mount
   useEffect(() => {
-    reset(defaultValues);
-  }, [defaultValues, reset]);
+    const clearedData = {
+      user:
+        isEdit && data
+          ? {
+              staff_corporate_rank: "",
+              staff_department: data?.nominee_department,
+              staff_id: data?.nominee_id,
+              staff_name: data?.nominee_name,
+            }
+          : {
+              staff_corporate_rank: "",
+              staff_department: "",
+              staff_id: "",
+              staff_name: "",
+            },
+      department: isEdit && data ? data?.nominee_department : "All",
+      description: isEdit && data ? data?.nomination_reason : "",
+    };
+
+    console.log("setting nomination form state to: ", clearedData);
+
+    setNominationFormState({
+      case_id: undefined,
+      answers: new Map<string, string>(null),
+      files: undefined,
+      ...clearedData,
+    });
+
+    console.log("clearing form data on mount to: ", clearedData);
+    reset(clearedData);
+  }, [data]);
+
+  useEffect(() => {
+    console.log(
+      "nomination form state changed, resetting form to: ",
+      getNominationFormState
+    );
+    reset({
+      user: getNominationFormState.user,
+      department: getNominationFormState.department,
+      description: getNominationFormState.description,
+    });
+  }, [getNominationFormState]);
 
   useEffect(() => {
     const setFileData = async () => {
-      if (data?.attachment_list && case_id) {
+      if (data?.attachment_list && data.attachment_list.length > 0 && case_id) {
+        console.log(
+          "setting nomination form state from data.attachment_list effect"
+        );
         // fetch file data
         const fileDatas: FileFetchData[] | undefined =
           data?.attachment_list?.map((fname) => {
@@ -120,7 +172,7 @@ export default function FirstStep({
       }
     };
     setFileData();
-  }, [data?.attachment_list, case_id]);
+  }, [data?.attachment_list]);
 
   const onSubmit = async (
     data: Omit<NominationFormSubmissionDetails, "files">
@@ -139,33 +191,32 @@ export default function FirstStep({
 
       const clearedNominationFormState = {
         ...getNominationFormState,
+        user: {
+          staff_corporate_rank: "",
+          staff_department: "",
+          staff_id: "",
+          staff_name: "",
+        },
         description: "",
         files: undefined,
+        department: "All",
       };
 
-      reset({ ...defaultValues, description: "" });
+      const resetValues = {
+        ...defaultValues,
+        description: "",
+        user: {
+          staff_corporate_rank: "",
+          staff_department: "",
+          staff_id: "",
+          staff_name: "",
+        },
+        department: "All",
+      };
+
+      console.log("resetting form to: ", resetValues);
+      reset(resetValues);
       setNominationFormState(clearedNominationFormState);
-      // try {
-      //   console.log("saving cleared form form!");
-      //   const response = await upsertNominationForm(
-      //     user?.staff_id,
-      //     clearedNominationFormState,
-      //     true,
-      //     case_id ?? getNominationFormState.case_id
-      //   );
-      //   setResetButtonLoading(false);
-      //   if (response.status_code === 200) {
-      //     setNominationFormState({
-      //       ...clearedNominationFormState,
-      //       case_id: response.case_id,
-      //     });
-      //     setResetSnackbarOpen(true);
-      //   } else {
-      //     setResetErrorSnackbarOpen(true);
-      //   }
-      // } catch (err) {
-      //   console.error(err);
-      // }
     }
   };
 

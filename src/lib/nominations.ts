@@ -188,7 +188,8 @@ const fetchStaff = async (keyword?: string, department?: string) => {
 const useStaffDepartments = () => {
   const { data, error } = useSWR<DepartmentQueryData>(
     "RetrieveDepartmentList",
-    postAPI
+    postAPI,
+    { revalidateIfStale: false }
   );
   return {
     departmentData: data,

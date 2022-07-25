@@ -69,11 +69,9 @@ export default function DataTableTabPanel({
 
   // set up order-by filter
   const [order, setOrder] = useState<Order>("desc");
-  const [orderBy, setOrderBy] = useState<keyof NominationDataTableData>(
-    "nomination_created_date"
-  );
-  const createdDateOrderBy = "nomination_created_date";
-  const submittedDateOrderBy = "nomination_submitted_date";
+  const nominationDate = "nomination_date";
+  const [orderBy, setOrderBy] =
+    useState<keyof NominationDataTableData>(nominationDate);
 
   // set up department filter
   const [departmentType, setDepartmentType] = useState<string>("All");
@@ -281,7 +279,9 @@ export default function DataTableTabPanel({
               {columns.map((column) => (
                 <>
                   {column.id === "nominee_team" ||
-                  (column.id === "nominator_name" && !hasChampions) ||
+                  (column.id === "nominator_name" &&
+                    !hasChampions &&
+                    hideNominator) ||
                   (column.id === "committee_vote" && !displayCommitteeVote) ? (
                     <></>
                   ) : (
@@ -316,8 +316,7 @@ export default function DataTableTabPanel({
             {displayedData ? (
               displayedData
                 ?.sort(getComparator(order, orderBy))
-                ?.sort(getComparator(order, createdDateOrderBy))
-                ?.sort(getComparator(order, submittedDateOrderBy))
+                ?.sort(getComparator(order, nominationDate))
                 ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 ?.map((row: NominationDataTableData, i: number) => {
                   return (
@@ -348,7 +347,8 @@ export default function DataTableTabPanel({
                         } else if (
                           column.id === "nominee_team" ||
                           (column.id === "nominator_name" &&
-                            (!hasChampions || hideNominator))
+                            !hasChampions &&
+                            hideNominator)
                         ) {
                           return <></>;
                         } else if (column.id === "quiz_service_level") {
@@ -362,16 +362,9 @@ export default function DataTableTabPanel({
                               column={column}
                             />
                           );
-                        } else if (column.id === "nomination_created_date") {
-                          const dateValue = row.draft_status
-                            ? row.nomination_created_date
-                            : row.nomination_submitted_date;
-                          return (
-                            <TextTableCell value={dateValue} column={column} />
-                          );
                         } else if (
-                          column.id === "nominator_name" &&
-                          (hasChampions || !hideNominator)
+                          (column.id === "nominator_name" && hasChampions) ||
+                          (column.id === "nominator_name" && !hideNominator)
                         ) {
                           return (
                             <TextTableCell
@@ -381,11 +374,16 @@ export default function DataTableTabPanel({
                             />
                           );
                         } else if (column.id === "nominee_name") {
+                          // not voted if user is committee and not hod
+                          // and committee vote attribute dont exist OR
+                          // does not contain current committee member id
                           const hasNotVoted = user?.staff_id
                             ? user.role.includes(UserRole.COMMITTEE) &&
-                              !row.committee_vote
-                                ?.map((c) => c.committee_id)
-                                .includes(user?.staff_id)
+                              user.staff_id !== row.hod_id &&
+                              (!row.committee_vote ||
+                                row.committee_vote.filter(
+                                  (com) => com.committee_id === user.staff_id
+                                ).length === 0)
                             : false;
                           return (
                             <TextTableCell
@@ -432,7 +430,7 @@ export default function DataTableTabPanel({
       </TableContainer>
       <Divider />
       <TablePagination
-        rowsPerPageOptions={[20]}
+        rowsPerPageOptions={[20, 50, 100]}
         component="div"
         count={displayedData?.length ?? 0}
         rowsPerPage={rowsPerPage}

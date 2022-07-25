@@ -124,23 +124,25 @@ export const CommitteeVoteTableCell = ({
           justifyContent: "left",
         }}
       >
-        {value.map((committeeMemberVote, i) => {
-          return (
-            <Avatar
-              key={`avatar icon ${i}`}
-              sx={{
-                bgcolor: `${getAvatarColor(
-                  committeeMemberVote.committee_name
-                )}`,
-                opacity: committeeMemberVote.champion_status ? 1 : 0.3,
-                width: 32,
-                height: 32,
-              }}
-            >
-              {committeeMemberVote.committee_name.slice(0, 1)}
-            </Avatar>
-          );
-        })}
+        {value
+          .sort((a, b) => a.committee_name.length - b.committee_name.length)
+          .map((committeeMemberVote, i) => {
+            return (
+              <Avatar
+                key={`avatar icon ${i}`}
+                sx={{
+                  bgcolor: `${getAvatarColor(
+                    committeeMemberVote.committee_name
+                  )}`,
+                  opacity: committeeMemberVote.champion_status ? 1 : 0.3,
+                  width: 32,
+                  height: 32,
+                }}
+              >
+                {committeeMemberVote.committee_name.slice(0, 1)}
+              </Avatar>
+            );
+          })}
       </AvatarGroup>
     </StyledTableCell>
   );

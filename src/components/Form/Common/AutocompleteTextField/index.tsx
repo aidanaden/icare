@@ -1,13 +1,17 @@
+import { useEffect, useState } from "react";
+import { Control, Controller, useWatch } from "react-hook-form";
+import { useRecoilState } from "recoil";
+import { useDebouncedCallback } from "use-debounce";
+
 import StyledTextField from "@/components/Common/StyledTextField";
 import useAuth from "@/hooks/useAuth";
 import { NominationFormSubmissionDetails, StaffData } from "@/interfaces";
-import { fetchStaff } from "@/lib/nominations";
+import { fetchStaff, useStaff } from "@/lib/nominations";
 import { filterInvalidStaffRanksForNomination } from "@/utils";
 import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
-import { useEffect, useState } from "react";
-import { Control, Controller, useWatch } from "react-hook-form";
-import { useDebouncedCallback } from "use-debounce";
+import { editNominationFormState } from "@/atoms/editNominationFormAtom";
+import { newNominationFormState } from "@/atoms/newNominationFormAtom";
 
 function sleep(delay = 0) {
   return new Promise((resolve) => {
@@ -25,11 +29,17 @@ export default function Asynchronous({
   disabled,
 }: AutoCompleteFieldProps) {
   const { user } = useAuth();
+  const selectedUser = useWatch({ control, name: "user" });
+  const selectedDept = useWatch({ control, name: "department" });
 
-  const [inputValue, setInputValue] = useState("");
+  const [getNominationFormState, setNominationFormState] = useRecoilState(
+    disabled ? editNominationFormState : newNominationFormState
+  );
+  const [inputValue, setInputValue] = useState<string | undefined>(
+    selectedUser?.staff_name
+  );
   const [inputSearch, setInputSearch] = useState("");
   const [options, setOptions] = useState<StaffData[] | []>([]);
-  const dept = useWatch({ control, name: "department" });
 
   const debounceOnChange = useDebouncedCallback((value) => {
     setInputSearch(value);
@@ -38,11 +48,20 @@ export default function Asynchronous({
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const { staffData } = useStaff(inputSearch, selectedDept);
+  const filteredStaffData = filterInvalidStaffRanksForNomination(
+    staffData,
+    user?.staff_id
+  );
+  // console.log("filtered staff data from hook: ", filteredStaffData);
+
   function handleChange(value: string) {
+    console.log("calling handle change for textField");
     setInputValue(value);
     debounceOnChange(value);
   }
 
+  // fetch staff data on search input change
   useEffect(() => {
     const fetchStaffData = async () => {
       setLoading(true);
@@ -54,19 +73,22 @@ export default function Asynchronous({
       setLoading(false);
 
       if (filteredStaff) {
-        console.log(filteredStaff);
         setOptions(filteredStaff);
       }
     };
-    if (open) {
+    if (open && inputSearch.length > 0) {
       fetchStaffData();
     }
   }, [inputSearch, open, user?.staff_id]);
 
+  // fetch staff data when dept change
   useEffect(() => {
     const fetchStaffData = async () => {
       setLoading(true);
-      const response = await fetchStaff("", dept === "All" ? "" : dept);
+      const response = await fetchStaff(
+        "",
+        selectedDept === "All" ? "" : selectedDept
+      );
       const filteredStaff = filterInvalidStaffRanksForNomination(
         response,
         user?.staff_id
@@ -74,12 +96,44 @@ export default function Asynchronous({
       setLoading(false);
 
       if (filteredStaff) {
-        console.log(filteredStaff);
         setOptions(filteredStaff);
       }
     };
+    // setInputValue("");
     fetchStaffData();
-  }, [dept, user?.staff_id]);
+  }, [selectedDept, user?.staff_id]);
+
+  // update nomination form state with selected staff data
+  const handleOnChange = (e: any, value: StaffData | null) => {
+    console.log("calling handle change for autocomplete");
+    if (!value) {
+      console.log("resetting input value!");
+      setInputValue("");
+      return;
+    }
+    setInputValue(value?.staff_name);
+    const selectedUser = options.find(
+      (user) => user.staff_name === value.staff_name
+    );
+    const newFormData = {
+      ...getNominationFormState,
+      user: selectedUser,
+      department: selectedDept,
+    };
+    setNominationFormState(newFormData);
+  };
+
+  useEffect(() => {
+    setInputValue(selectedUser?.staff_name);
+  }, [selectedUser]);
+
+  useEffect(() => {
+    console.log("input value: ", inputValue);
+  }, [inputValue]);
+
+  useEffect(() => {
+    console.log("dept value: ", selectedDept);
+  }, [selectedDept]);
 
   return (
     <Controller
@@ -96,7 +150,7 @@ export default function Asynchronous({
             option.staff_id === value.staff_id
           }
           getOptionLabel={(option) => option.staff_name}
-          options={options}
+          options={!loading ? options : []}
           loading={loading}
           inputValue={inputValue}
           includeInputInList
@@ -110,7 +164,7 @@ export default function Asynchronous({
                 ...params.InputProps,
                 endAdornment: (
                   <>
-                    {loading ? (
+                    {loading && open ? (
                       <CircularProgress color="inherit" size={20} />
                     ) : null}
                     {params.InputProps.endAdornment}
@@ -123,9 +177,7 @@ export default function Asynchronous({
           )}
           {...field}
           ref={field.ref}
-          onChange={(e: any, value) =>
-            value && setInputValue(value?.staff_name)
-          }
+          onChange={handleOnChange}
         />
       )}
       name="user"

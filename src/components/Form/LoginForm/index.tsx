@@ -29,7 +29,6 @@ export default function LoginForm() {
   const onSubmit = async (data: LoginProps) => {
     const captchaToken = await recaptchaRef.current?.executeAsync();
     recaptchaRef.current?.reset();
-    console.log("captcha token: ", captchaToken);
 
     const { staff_id, password } = data;
     setLoginLoading(true);

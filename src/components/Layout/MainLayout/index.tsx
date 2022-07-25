@@ -21,8 +21,24 @@ const MainLayoutRoot = styled("div")(({ theme }) => ({
 
 export default function MainLayout({ children, ...other }: BoxProps) {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
-  const { user } = useAuth();
+  const { user, validateToken } = useAuth();
   const router = useRouter();
+
+  useEffect(() => {
+    async function validateUser() {
+      const validated = await validateToken();
+      if (!validated) {
+        router.push("/login");
+        return;
+      }
+      if (router.pathname === "/") {
+        router.push("/dashboard");
+        return;
+      }
+    }
+    validateUser();
+  }, []);
+
   return (
     <>
       {user && !router.pathname.includes("login") ? (

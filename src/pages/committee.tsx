@@ -30,7 +30,9 @@ const Nominations: NextPage = () => {
     getNominationYearState
   );
 
-  if (user?.role.includes(UserRole.COMMITTEE)) {
+  if (!user) {
+    return <FallbackSpinner />;
+  } else if (user && user?.role.includes(UserRole.COMMITTEE)) {
     return (
       <Box>
         <Box mb={4}>

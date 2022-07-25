@@ -5,10 +5,7 @@ export function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   let first;
   let second;
 
-  if (
-    orderBy.toString() === "nomination_created_date" ||
-    orderBy.toString() === "nomination_submitted_date"
-  ) {
+  if (orderBy.toString().includes("date")) {
     first = new Date(a[orderBy] as unknown as string);
     second = new Date(b[orderBy] as unknown as string);
   } else {

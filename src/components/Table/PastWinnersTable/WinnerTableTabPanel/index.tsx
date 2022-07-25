@@ -14,7 +14,6 @@ import {
   TableBody,
   Divider,
   TablePagination,
-  TableSortLabel,
 } from "@mui/material";
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { StyledTableCell, TextTableCell } from "../../Components/TableCells";
@@ -46,17 +45,13 @@ export default function DataTableTabPanel({
   );
 
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(20);
 
   // set up order-by filter
   const [order, setOrder] = useState<Order>("desc");
   const [orderBy, setOrderBy] = useState<keyof PastWinnerTableKeys>(
     "committee_service_level"
   );
-
-  // set up championship nominations
-  const championNominations = data?.filter((d) => d.is_champion_result);
-  const hasChampions = championNominations && championNominations?.length > 0;
 
   // set up service level filter
   const [serviceLevel, setServiceLevel] = useState<string>("All");
@@ -70,22 +65,6 @@ export default function DataTableTabPanel({
         .reverse()
     )
   );
-
-  // sort filter effect
-  const handleRequestSort = (
-    event: React.MouseEvent<unknown>,
-    property: keyof PastWinnerTableKeys
-  ) => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
-  };
-
-  const createSortHandler =
-    (property: keyof PastWinnerTableKeys) =>
-    (event: React.MouseEvent<unknown>) => {
-      handleRequestSort(event, property);
-    };
 
   // change of page / change no. of rows per page filter effect
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -248,7 +227,7 @@ export default function DataTableTabPanel({
       </TableContainer>
       <Divider />
       <TablePagination
-        rowsPerPageOptions={[5, 10, 20]}
+        rowsPerPageOptions={[20, 50, 100]}
         component="div"
         count={displayedData?.length ?? 0}
         rowsPerPage={rowsPerPage}

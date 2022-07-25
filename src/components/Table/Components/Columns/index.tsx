@@ -27,8 +27,7 @@ export type NominationDataTableKeys = Pick<
   | "nominee_department"
   | "nominee_team"
   | "nomination_status"
-  | "nomination_created_date"
-  | "nomination_submitted_date"
+  | "nomination_date"
   | "quiz_service_level"
   | "committee_vote"
 >;
@@ -57,7 +56,7 @@ export const columns: readonly Column<NominationDataTableKeys>[] = [
   { id: "nominee_team", label: "Team", minWidth: 100 },
   { id: "nomination_status", label: "Status", align: "center", minWidth: 100 },
   {
-    id: "nomination_created_date",
+    id: "nomination_date",
     label: "Created",
     minWidth: 100,
     align: "right",
@@ -76,7 +75,7 @@ export const submittedColumns: readonly Column<NominationDataTableKeys>[] = [
   { id: "nominee_team", label: "Team", minWidth: 100 },
   { id: "nomination_status", label: "Status", align: "center", minWidth: 100 },
   {
-    id: "nomination_submitted_date",
+    id: "nomination_date",
     label: "Submitted",
     minWidth: 100,
     align: "right",
@@ -101,7 +100,7 @@ export const committeeColumns: readonly Column<NominationDataTableKeys>[] = [
     minWidth: 200,
   },
   {
-    id: "nomination_submitted_date",
+    id: "nomination_date",
     label: "Submitted",
     minWidth: 100,
     align: "right",

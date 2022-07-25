@@ -24,10 +24,13 @@ export interface NominationDataTableData {
   nominee_designation: string;
   nominee_department: string;
   nominee_team: string;
+  nomination_date: string;
   nomination_created_date: string;
   nomination_submitted_date: string;
   nominator_name: string;
   nomination_status: NominationFormStatus;
+  hod_name?: string;
+  hod_id?: string;
   endorsement_status: EndorsementStatus;
   committee_service_level_result?: ServiceLevel;
   committee_total_score?: number;

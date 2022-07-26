@@ -78,8 +78,8 @@ The ICare web application project was set up to digitalise the existing ICare in
 
 The ICare web application was built with the following frameworks/libraries.
 
-- [![Next][next.js]][next-url]
-- [![React][react.js]][react-url]
+- NextJS
+- ReactJS
 - Material UI
 - Recoil
 - React hook form

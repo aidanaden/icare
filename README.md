@@ -219,17 +219,17 @@ Nomination details page
 
 ### Issues
 
+- Staff ID is stored in local storage which is accessible by malicious javascript code (either via website or chrome extension)
+
 ### Improvements
 
-- [x] Add Changelog
-- [x] Add back to top links
-- [ ] Add Additional Templates w/ Examples
-- [ ] Add "components" document to easily copy & paste sections of the readme
-- [ ] Multi-language Support
-  - [ ] Chinese
-  - [ ] Spanish
+- Add user profile pictures
+- Re-design nomination details page for better UI/UX
+- Add captcha to login authentication
+- Refactor the nomination step form component used in create/edit nomination form page
+- Refactor the table component used in nominations/endorsements/committee pages
 
-See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
+<!-- See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues). -->
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 

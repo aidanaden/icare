@@ -68,7 +68,7 @@
 
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+<!-- [![Product Name Screen Shot][product-screenshot]](https://example.com) -->
 
 The ICare web application project was set up to digitalise the existing ICare internal program by RSM Stone Forest, so as to encourage employees and clients to vote for employees as well as award employees that have shown to display good service towards clients, while reducing the man-hours required for the ICare committee members and HOD staff to vet the nominations.
 

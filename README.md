@@ -31,7 +31,7 @@
     <a href="https://github.com/aidanaden/icare"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/aidanaden/icare">View Demo</a>
+    <a href="https://testicare.stoneforest.com.sg/">View Demo</a>
     ·
     <a href="https://github.com/aidanaden/icare/issues">Report Bug</a>
   </p>

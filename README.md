@@ -55,8 +55,8 @@
         <li><a href="#deployment">Deployment</a></li>
       </ul>
     </li>
-    <li><a href="#roadmap">Code structure</a></li>
-    <li><a href="#roadmap">Potential issues and improvements</a></li>
+    <li><a href="#code-structure">Code structure</a></li>
+    <li><a href="#potential-issues-and-improvements">Potential issues and improvements</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>

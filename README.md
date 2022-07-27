@@ -226,6 +226,7 @@ Nomination details page
 - Add user profile pictures
 - Re-design nomination details page for better UI/UX
 - Add captcha to login authentication
+- Optimizing number of fetch requests made in the nomination quiz form
 - Refactor the nomination step form component used in create/edit nomination form page
 - Refactor the table component used in nominations/endorsements/committee pages
 

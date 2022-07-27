@@ -12,6 +12,7 @@ import useAuth from "@/hooks/useAuth";
 import { useEffect } from "react";
 import { newNominationFormState } from "@/atoms/newNominationFormAtom";
 import Unauthorized from "@/components/Common/UnauthorizedAccess";
+import FallbackSpinner from "@/components/Common/FallbackSpinner";
 
 const Nomination: NextPage = () => {
   const { user } = useAuth();
@@ -59,8 +60,10 @@ const Nomination: NextPage = () => {
         )}
       </Box>
     );
-  } else {
+  } else if (user) {
     return <Unauthorized />;
+  } else {
+    return <FallbackSpinner />;
   }
 };
 

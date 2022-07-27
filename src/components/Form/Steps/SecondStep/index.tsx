@@ -66,6 +66,8 @@ export default function SecondStep({
     useState<boolean>(false);
   const [submitLoading, setSubmitLoading] = useState<boolean>(false);
 
+  const [reRenderOnMount, setReRenderOnMount] = useState(false);
+
   const { data, error, loading } = useQuiz(
     getNominationFormState.user?.staff_id
   );
@@ -152,8 +154,9 @@ export default function SecondStep({
   });
 
   useEffect(() => {
+    console.log("resetting values to default quiz values: ", defaultQuizValues);
     reset(defaultQuizValues);
-  }, [defaultQuizValues, reset, getValues]);
+  }, [defaultQuizValues]);
 
   const handleReset = () => {
     if (user) {

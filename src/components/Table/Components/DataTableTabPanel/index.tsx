@@ -108,6 +108,10 @@ export default function DataTableTabPanel({
   const championNominations = data?.filter((d) => d.is_champion_result);
   const hasChampions = championNominations && championNominations?.length > 0;
 
+  const hasDepartmentColumn = columns.some(
+    (c) => c.id === "nominee_department"
+  );
+
   // set up delete snackbar states
   const [deleteSuccessOpen, setDeleteSuccessOpen] = useState<boolean>(false);
   const [deleteErrorOpen, setDeleteErrorOpen] = useState<boolean>(false);
@@ -140,23 +144,57 @@ export default function DataTableTabPanel({
     setPage(0);
   };
 
+  // apply filters to display data
+  const applyFiltersToData = ({
+    departmentValue,
+    yearValue,
+    serviceLevelValue,
+    searchValue,
+  }: {
+    departmentValue?: string;
+    yearValue?: string;
+    serviceLevelValue?: string;
+    searchValue?: string;
+  }) => {
+    const filteredData = data?.filter((row) => {
+      const isDepartment = departmentValue
+        ? row.nominee_department === departmentValue
+        : departmentType !== "All"
+        ? row.nominee_department === departmentType
+        : true;
+      const isYear = yearValue
+        ? row.nomination_date.slice(-2) === yearValue.slice(-2)
+        : true;
+      const isServiceLevel = serviceLevelValue
+        ? ServiceLevel[row.quiz_service_level as ServiceLevel] ===
+          serviceLevelValue
+        : serviceLevel !== "All"
+        ? ServiceLevel[row.quiz_service_level as ServiceLevel] === serviceLevel
+        : true;
+      const isSearch =
+        searchValue && searchValue !== ""
+          ? row.nominee_name.toLowerCase().includes(searchValue.toLowerCase())
+          : true;
+      return isDepartment && isYear && isServiceLevel && isSearch;
+    });
+    console.log("filtered data: ", filteredData);
+    return filteredData;
+  };
+
   // search filter
   const handleSearchTextChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const filteredData = data?.filter((row) =>
-      row.nominee_name.toLowerCase().includes(event.target.value.toLowerCase())
+    setDisplayedData(
+      applyFiltersToData({ searchValue: event.target.value.toLowerCase() })
     );
-    setDisplayedData(filteredData);
     setPage(0);
   };
 
   // department filter effect
   useEffect(() => {
     if (departmentType !== "All") {
-      setDisplayedData(
-        data?.filter((row) => row.nominee_department === departmentType)
-      );
+      setDisplayedData(applyFiltersToData({ departmentValue: departmentType }));
     } else {
       setDisplayedData(data);
     }
@@ -190,13 +228,7 @@ export default function DataTableTabPanel({
   // service level filter effect
   useEffect(() => {
     if (serviceLevel !== "All") {
-      setDisplayedData(
-        data?.filter(
-          (row) =>
-            ServiceLevel[row.quiz_service_level as ServiceLevel] ===
-            serviceLevel
-        )
-      );
+      setDisplayedData(applyFiltersToData({ serviceLevelValue: serviceLevel }));
     } else {
       setDisplayedData(data);
     }
@@ -205,11 +237,13 @@ export default function DataTableTabPanel({
   return (
     <TabPanel value={status} sx={{ p: 0 }}>
       <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5} p={3}>
-        <DepartmentSelect
-          departments={departmentValues}
-          departmentType={departmentType}
-          setDepartmentType={setDepartmentType}
-        />
+        {hasDepartmentColumn && (
+          <DepartmentSelect
+            departments={departmentValues}
+            departmentType={departmentType}
+            setDepartmentType={setDepartmentType}
+          />
+        )}
         {/* {hasTeamValues && (
           <TeamSelect
             teams={teamValues}

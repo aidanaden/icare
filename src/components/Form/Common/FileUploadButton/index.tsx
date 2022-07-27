@@ -16,21 +16,28 @@ import DetailSubHeader from "@/components/Common/DetailBox/DetailSubHeader";
 import { newNominationFormState } from "@/atoms/newNominationFormAtom";
 import { editNominationFormState } from "@/atoms/editNominationFormAtom";
 import { deleteFile } from "@/lib/nominations";
+import { useWatch } from "react-hook-form";
 
 interface FileUploadSectionProps {
   case_id?: string;
   isEdit?: boolean;
+  control: any;
 }
 
 export default function FileUploadButton({
   case_id,
   isEdit,
+  control,
 }: FileUploadSectionProps) {
   const [open, setOpen] = useState(false);
   const [files, setFiles] = useState<FileNameString[]>([]);
   const [getNominationFormState, setNominationFormState] = useRecoilState(
     isEdit ? editNominationFormState : newNominationFormState
   );
+
+  const selectedDept = useWatch({ control, name: "department" });
+  const selectedDescription = useWatch({ control, name: "description" });
+
   const handleFileDelete = async (file: FileNameString) => {
     setNominationFormState({
       ...getNominationFormState,
@@ -100,7 +107,13 @@ export default function FileUploadButton({
               };
             })
           );
-          const newFormData = { ...getNominationFormState, files: base64s };
+          const newFormData = {
+            ...getNominationFormState,
+            department: selectedDept,
+            description: selectedDescription,
+            files: base64s,
+          };
+          console.log("new form data on file save: ", newFormData);
           setNominationFormState(newFormData);
           setOpen(false);
         }}

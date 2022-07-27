@@ -14,7 +14,7 @@ import FileUploadButton from "@/components/Form/Common/FileUploadButton";
 import FormDepartmentSelect from "@/components/Form/Common/FormDepartmentSelect";
 import AutocompleteTextField from "../../Common/AutocompleteTextField";
 
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import FormTextField from "../../Common/FormTextField";
 import {
   fetchFileStrings,
@@ -82,17 +82,19 @@ export default function FirstStep({
 
   const defaultValues = useMemo(() => {
     return {
-      user: {
-        staff_corporate_rank: "",
-        staff_department: data?.nominee_department,
-        staff_id: data?.nominee_id,
-        staff_name: data?.nominee_name,
-      } ?? {
-        staff_corporate_rank: "",
-        staff_department: "",
-        staff_id: "",
-        staff_name: "",
-      },
+      user: data
+        ? {
+            staff_corporate_rank: "",
+            staff_department: data?.nominee_department,
+            staff_id: data?.nominee_id,
+            staff_name: data?.nominee_name,
+          }
+        : {
+            staff_corporate_rank: "",
+            staff_department: "",
+            staff_id: "",
+            staff_name: "",
+          },
       department: data?.nominee_department ?? "All",
       description: data?.nomination_reason ?? "",
     };
@@ -109,6 +111,10 @@ export default function FirstStep({
     defaultValues: defaultValues,
     resolver: yupResolver(nominationDetailSchema),
   });
+
+  const selectedUser = useWatch({ control, name: "user" });
+  const selectedDepartment = useWatch({ control, name: "department" });
+  const selectedDescription = useWatch({ control, name: "description" });
 
   // always clear nomination form state on mount
   useEffect(() => {
@@ -145,15 +151,12 @@ export default function FirstStep({
   }, [data]);
 
   useEffect(() => {
-    console.log(
-      "nomination form state changed, resetting form to: ",
-      getNominationFormState
-    );
-    reset({
+    const newState = {
       user: getNominationFormState.user,
       department: getNominationFormState.department,
       description: getNominationFormState.description,
-    });
+    };
+    reset(newState);
   }, [getNominationFormState]);
 
   useEffect(() => {
@@ -173,6 +176,34 @@ export default function FirstStep({
     };
     setFileData();
   }, [data?.attachment_list]);
+
+  useEffect(() => {
+    if (
+      !selectedUser ||
+      !selectedUser.staff_department ||
+      !selectedDepartment
+    ) {
+      return;
+    }
+
+    if (
+      selectedUser?.staff_department.toLowerCase() !==
+      selectedDepartment?.toLowerCase()
+    ) {
+      console.log(
+        "selected department is NOT the same as selected user department"
+      );
+      reset({
+        user: {
+          staff_corporate_rank: "",
+          staff_department: "",
+          staff_id: "",
+          staff_name: "",
+        },
+        department: selectedDepartment,
+      });
+    }
+  }, [selectedDepartment]);
 
   const onSubmit = async (
     data: Omit<NominationFormSubmissionDetails, "files">
@@ -298,7 +329,11 @@ export default function FirstStep({
                   multiLine={true}
                   placeholder="Enter description here..."
                 />
-                <FileUploadButton case_id={case_id} isEdit={isEdit} />
+                <FileUploadButton
+                  case_id={case_id}
+                  isEdit={isEdit}
+                  control={control}
+                />
               </Stack>
               <Box
                 display="flex"

@@ -109,6 +109,16 @@ export default function Asynchronous({
     if (!value) {
       console.log("resetting input value!");
       setInputValue("");
+      const newFormData = {
+        ...getNominationFormState,
+        user: {
+          staff_corporate_rank: "",
+          staff_department: "",
+          staff_id: "",
+          staff_name: "",
+        },
+      };
+      setNominationFormState(newFormData);
       return;
     }
     setInputValue(value?.staff_name);

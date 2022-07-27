@@ -80,8 +80,10 @@ const Nominations: NextPage = () => {
         </ShadowBox>
       </Box>
     );
-  } else {
+  } else if (user) {
     return <Unauthorized />;
+  } else {
+    return <FallbackSpinner />;
   }
 };
 

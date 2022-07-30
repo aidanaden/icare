@@ -177,7 +177,6 @@ export default function DataTableTabPanel({
           : true;
       return isDepartment && isYear && isServiceLevel && isSearch;
     });
-    console.log("filtered data: ", filteredData);
     return filteredData;
   };
 

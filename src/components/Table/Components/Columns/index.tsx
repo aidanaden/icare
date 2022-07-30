@@ -47,7 +47,7 @@ export type PastWinnerTableKeys = Omit<WinnerData, "is_champion_result">;
 export const columns: readonly Column<NominationDataTableKeys>[] = [
   { id: "nominator_name", label: "Nominator", minWidth: 100 },
   { id: "nominee_name", label: "Nominee", minWidth: 100 },
-  // { id: "nominee_department", label: "Department", minWidth: 100 },
+  { id: "nominee_department", label: "Department", minWidth: 100 },
   {
     id: "quiz_service_level",
     label: "Service Level",

@@ -33,28 +33,53 @@ const Dashboard: NextPage = () => {
     user?.year ?? new Date().getFullYear().toString()
   );
 
-  const draftNominations = data?.filter(
-    (nom: NominationDataTableData) => nom.draft_status
-  );
-  const completedNominations = data?.filter(
-    (nom: NominationDataTableData) => !nom.draft_status
-  );
-  const endorsedNominations = data?.filter(
-    (nom: NominationDataTableData) =>
-      nom.nomination_status === NominationFormStatus.ENDORSED
-  );
-  const awardedNominations = data?.filter(
-    (nom: NominationDataTableData) =>
-      nom.nomination_status === NominationFormStatus.AWARDED
-  );
-  const shortlistedNominations = data?.filter(
-    (nom: NominationDataTableData) =>
-      nom.nomination_status === NominationFormStatus.SHORTLISTED
-  );
-  const championNominations = data?.filter(
-    (nom: NominationDataTableData) =>
-      nom.nomination_status === NominationFormStatus.CHAMPION
-  );
+  const draftNominations = data
+    ?.filter((nom: NominationDataTableData) => nom.draft_status)
+    .sort((a, b) =>
+      new Date(a.nomination_date) > new Date(b.nomination_date) ? -1 : 1
+    );
+
+  const completedNominations = data
+    ?.filter((nom: NominationDataTableData) => nom.draft_status === false)
+    .sort((a, b) =>
+      new Date(a.nomination_date) > new Date(b.nomination_date) ? -1 : 1
+    );
+
+  const endorsedNominations = data
+    ?.filter(
+      (nom: NominationDataTableData) =>
+        nom.nomination_status === NominationFormStatus.ENDORSED
+    )
+    .sort((a, b) =>
+      new Date(a.nomination_date) > new Date(b.nomination_date) ? -1 : 1
+    );
+
+  const awardedNominations = data
+    ?.filter(
+      (nom: NominationDataTableData) =>
+        nom.nomination_status === NominationFormStatus.AWARDED
+    )
+    .sort((a, b) =>
+      new Date(a.nomination_date) > new Date(b.nomination_date) ? -1 : 1
+    );
+
+  const shortlistedNominations = data
+    ?.filter(
+      (nom: NominationDataTableData) =>
+        nom.nomination_status === NominationFormStatus.SHORTLISTED
+    )
+    .sort((a, b) =>
+      new Date(a.nomination_date) > new Date(b.nomination_date) ? -1 : 1
+    );
+
+  const championNominations = data
+    ?.filter(
+      (nom: NominationDataTableData) =>
+        nom.nomination_status === NominationFormStatus.CHAMPION
+    )
+    .sort((a, b) =>
+      new Date(a.nomination_date) > new Date(b.nomination_date) ? -1 : 1
+    );
 
   if (user) {
     return (
@@ -213,7 +238,7 @@ const Dashboard: NextPage = () => {
                     href={
                       user?.role.includes(UserRole.COMMITTEE)
                         ? "/committee?tab=champion"
-                        : "/nominations?tab=incomplete"
+                        : "/nominations?tab=completed"
                     }
                   >
                     View all

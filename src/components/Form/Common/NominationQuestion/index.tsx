@@ -18,6 +18,7 @@ interface NominationQuestion {
   questionName: string;
   answers: NominationQuestionAnswerData[];
   isEdit?: boolean;
+  getValues?: () => any;
 }
 
 export default function NominationQuestion({
@@ -26,6 +27,7 @@ export default function NominationQuestion({
   questionName,
   answers,
   isEdit,
+  getValues,
 }: NominationQuestion) {
   const [getNominationFormState, setNominationFormState] = useRecoilState(
     isEdit ? editNominationFormState : newNominationFormState
@@ -51,24 +53,30 @@ export default function NominationQuestion({
         rules={{ required: true }}
         control={control}
         name={questionName}
-        render={({ field }) => (
-          <RadioGroup
-            {...field}
-            onChange={(e: any, value: any) => {
-              onChange(e, value);
-              field.onChange(value);
-            }}
-          >
-            {answers.map((ans) => (
-              <FormControlLabel
-                key={ans.answer_id}
-                value={ans.answer_id.toString()}
-                control={<Radio />}
-                label={ans.answer_name}
-              />
-            ))}
-          </RadioGroup>
-        )}
+        render={({ field }) => {
+          const radioGroupValue = field.value === undefined ? "" : field.value;
+          return (
+            <RadioGroup
+              name={field.name}
+              onBlur={field.onBlur}
+              ref={field.ref}
+              value={radioGroupValue}
+              onChange={(e: any, value: any) => {
+                onChange(e, value);
+                field.onChange(value);
+              }}
+            >
+              {answers.map((ans) => (
+                <FormControlLabel
+                  key={`answer ${ans.answer_id}`}
+                  value={ans.answer_id}
+                  control={<Radio />}
+                  label={ans.answer_name}
+                />
+              ))}
+            </RadioGroup>
+          );
+        }}
       />
       {errors[questionName] && (
         <FormHelperText error={errors[questionName] !== null}>

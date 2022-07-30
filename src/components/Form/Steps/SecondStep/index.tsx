@@ -2,6 +2,7 @@ import { Box, Divider, Stack, Typography } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
+import MD5 from "crypto-js/md5";
 
 import PrimaryButton from "@/components/Common/PrimaryButton";
 import SectionHeader from "@/components/Common/SectionHeader";
@@ -76,7 +77,7 @@ export default function SecondStep({
     const quizAnsToKeyMapTemp = new Map<string, string>();
     const quizQnaKeys = data?.qna_questions.map(
       ({ quiz_question_name, answers }) => {
-        const hash = hashFromString(quiz_question_name);
+        const hash = MD5(quiz_question_name).toString();
         answers.map((ans) =>
           quizAnsToKeyMapTemp.set(`${ans.answer_id}`, `${hash}`)
         );
@@ -87,7 +88,7 @@ export default function SecondStep({
       ({ quiz_question_name, rating_child_quiz_questions }) => {
         const quizRatingChildrenKeys = rating_child_quiz_questions.map(
           ({ child_quiz_question_name, answers }) => {
-            const hash = hashFromString(child_quiz_question_name);
+            const hash = MD5(child_quiz_question_name).toString();
             answers.map((ans) =>
               quizAnsToKeyMapTemp.set(`${ans.answer_id}`, `${hash}`)
             );
@@ -154,7 +155,13 @@ export default function SecondStep({
   });
 
   useEffect(() => {
-    console.log("resetting values to default quiz values: ", defaultQuizValues);
+    const defaultQuizValuesArr = Object.values(defaultQuizValues);
+    if (defaultQuizValuesArr.length === 0) {
+      return;
+    }
+    if (defaultQuizValuesArr.some((v) => v === undefined)) {
+      return;
+    }
     reset(defaultQuizValues);
   }, [defaultQuizValues]);
 
@@ -164,11 +171,6 @@ export default function SecondStep({
         ...getNominationFormState,
         answers: quizKeysMap,
       };
-      console.log("resetting form answers to: ", quizKeysObject);
-      console.log(
-        "resetting form state answers to: ",
-        clearedNominationFormState
-      );
       setNominationFormState(clearedNominationFormState);
       reset(quizKeysObject);
     }
@@ -244,9 +246,10 @@ export default function SecondStep({
                 control={control}
                 key={`qn ${quiz_question_name}`}
                 question={quiz_question_name}
-                questionName={`${hashFromString(quiz_question_name)}`}
+                questionName={`${MD5(quiz_question_name).toString()}`}
                 answers={answers}
                 isEdit={isEdit}
+                getValues={getValues}
               />
             ))}
             {data.rating_questions && data.rating_questions.length > 0 && (
@@ -264,9 +267,9 @@ export default function SecondStep({
                         control={control}
                         key={`qn ${child_quiz_question_name}`}
                         question={child_quiz_question_name}
-                        questionName={`${hashFromString(
+                        questionName={`${MD5(
                           child_quiz_question_name
-                        )}`}
+                        ).toString()}`}
                         answers={answers}
                         isEdit={isEdit}
                       />

@@ -190,9 +190,6 @@ export default function FirstStep({
       selectedUser?.staff_department.toLowerCase() !==
       selectedDepartment?.toLowerCase()
     ) {
-      console.log(
-        "selected department is NOT the same as selected user department"
-      );
       reset({
         user: {
           staff_corporate_rank: "",

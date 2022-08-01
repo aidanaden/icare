@@ -137,8 +137,6 @@ export default function FirstStep({
       description: isEdit && data ? data?.nomination_reason : "",
     };
 
-    console.log("setting nomination form state to: ", clearedData);
-
     setNominationFormState({
       case_id: undefined,
       answers: new Map<string, string>(null),
@@ -146,7 +144,6 @@ export default function FirstStep({
       ...clearedData,
     });
 
-    console.log("clearing form data on mount to: ", clearedData);
     reset(clearedData);
   }, [data]);
 
@@ -162,16 +159,24 @@ export default function FirstStep({
   useEffect(() => {
     const setFileData = async () => {
       if (data?.attachment_list && data.attachment_list.length > 0 && case_id) {
-        console.log(
-          "setting nomination form state from data.attachment_list effect"
-        );
         // fetch file data
         const fileDatas: FileFetchData[] | undefined =
           data?.attachment_list?.map((fname) => {
             return { case_id: case_id, file_name: fname };
           });
         const files = await fetchFileStrings(fileDatas);
-        setNominationFormState({ ...getNominationFormState, files: files });
+        // const newNominationState = { ...getNominationFormState, files: files };
+        // console.log(
+        //   "old nomination state before file data: ",
+        //   getNominationFormState
+        // );
+        // console.log(
+        //   "new nomination state from file data: ",
+        //   newNominationState
+        // );
+        setNominationFormState((currentState) => {
+          return { ...currentState, files: files };
+        });
       }
     };
     setFileData();
@@ -205,11 +210,12 @@ export default function FirstStep({
   const onSubmit = async (
     data: Omit<NominationFormSubmissionDetails, "files">
   ) => {
-    const newFormData = {
-      ...getNominationFormState,
-      ...data,
-    };
-    setNominationFormState(newFormData);
+    setNominationFormState((currentState) => {
+      return {
+        ...currentState,
+        ...data,
+      };
+    });
     handleNext();
   };
 
@@ -217,32 +223,32 @@ export default function FirstStep({
     if (user) {
       // setResetButtonLoading(true);
 
+      const emptiedValues = isEdit
+        ? {
+            description: "",
+          }
+        : {
+            user: {
+              staff_corporate_rank: "",
+              staff_department: "",
+              staff_id: "",
+              staff_name: "",
+            },
+            description: "",
+            department: "All",
+          };
+
       const clearedNominationFormState = {
         ...getNominationFormState,
-        user: {
-          staff_corporate_rank: "",
-          staff_department: "",
-          staff_id: "",
-          staff_name: "",
-        },
-        description: "",
+        ...emptiedValues,
         files: undefined,
-        department: "All",
       };
 
       const resetValues = {
         ...defaultValues,
-        description: "",
-        user: {
-          staff_corporate_rank: "",
-          staff_department: "",
-          staff_id: "",
-          staff_name: "",
-        },
-        department: "All",
+        ...emptiedValues,
       };
 
-      console.log("resetting form to: ", resetValues);
       reset(resetValues);
       setNominationFormState(clearedNominationFormState);
     }
@@ -254,7 +260,6 @@ export default function FirstStep({
       ...getNominationFormState,
       ...data,
     };
-    setNominationFormState(newFormData);
 
     if (user) {
       try {
@@ -267,10 +272,11 @@ export default function FirstStep({
         );
         setSaveButtonLoading(false);
         if (response.status_code === 200) {
-          setNominationFormState({
+          const newFormState = {
             ...newFormData,
             case_id: response.case_id,
-          });
+          };
+          setNominationFormState(newFormState);
           setSaveSnackbarOpen(true);
         } else {
           setErrorSnackbarOpen(true);

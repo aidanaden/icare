@@ -24,17 +24,28 @@ import useAuth from "@/hooks/useAuth";
 import CenterBox from "@/components/Common/CenterBox";
 import ShadowBox from "@/components/Common/ShadowBox";
 import FallbackSpinner from "@/components/Common/FallbackSpinner";
+import { useMemo } from "react";
 
 const View: NextPage = () => {
   const { user } = useAuth();
   const router = useRouter();
   const { id } = router.query;
   const { data, error, loading } = useNominationDetails(id?.toString());
-  const otherData = data?.committee_comment.filter(
-    (comm) => comm.committee_id !== user?.staff_id
+
+  const otherData = useMemo(
+    () =>
+      data?.committee_comment.filter(
+        (comm) => comm.committee_id !== user?.staff_id
+      ),
+    [data]
   );
-  const selfData = data?.committee_comment.filter(
-    (comm) => comm.committee_id === user?.staff_id
+
+  const selfData = useMemo(
+    () =>
+      data?.committee_comment.filter(
+        (comm) => comm.committee_id === user?.staff_id
+      ),
+    [data]
   );
 
   if (user) {

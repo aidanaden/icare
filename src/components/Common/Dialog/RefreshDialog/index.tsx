@@ -11,7 +11,8 @@ import React, { useEffect, useState } from "react";
 import PrimaryButton from "../../PrimaryButton";
 
 export default function RefreshDialog() {
-  const { refreshToken, logout } = useAuth();
+  const { sessionTokenStart, refreshToken, logout } = useAuth();
+  const [mouseLastMoved, setMouseLastMoved] = useState<Date>(() => new Date());
   const [refreshDialogOpen, setRefreshDialogOpen] = useState<boolean>(false);
   const [refreshLoading, setRefreshLoading] = useState<boolean>(false);
 
@@ -24,24 +25,41 @@ export default function RefreshDialog() {
     } catch (err) {
       console.error("error occurred while logging out: ", err);
     }
-  }, 900000);
+  }, 15 * 60 * 1000);
 
   const resetRefreshDialogInterval = useInterval(() => {
     setRefreshDialogOpen(true);
-  }, 720000);
+  }, 12 * 60 * 1000);
 
   const handleRefresh = async () => {
     setRefreshLoading(true);
     try {
       const response = await refreshToken();
+      resetRefreshDialogInterval();
+      resetLogoutInterval();
     } catch (err) {
       console.error("Token failed to refresh with error: ", err);
     }
     setRefreshLoading(false);
     setRefreshDialogOpen(false);
-    resetRefreshDialogInterval();
-    resetLogoutInterval();
   };
+
+  const resetRefreshInterval = useInterval(async () => {
+    if (mouseLastMoved < new Date(Date.now() - 30 * 1000)) {
+      // mouse last moved more than 30s ago
+      // console.log("no activity detected in past 30s, skipping refresh...");
+      return;
+    }
+
+    try {
+      // console.log("refreshing token due to activity detected");
+      const response = await refreshToken();
+      resetRefreshDialogInterval();
+      resetLogoutInterval();
+    } catch (err) {
+      console.error("Token failed to refresh with error: ", err);
+    }
+  }, 5 * 60 * 1000);
 
   const handleClose = async () => {
     setRefreshDialogOpen(false);
@@ -56,8 +74,10 @@ export default function RefreshDialog() {
   };
 
   const resetRefreshLogoutIntervals = () => {
-    resetRefreshDialogInterval();
-    resetLogoutInterval();
+    // if mouse last moved 5 mins ago, refresh token automatically
+    // every 15 mins + reset refresh dialog interval
+    setMouseLastMoved(new Date());
+    // if mouse not moved for 5 mins or more, DO NOT reset refresh dialog interval
   };
 
   window.addEventListener("mousemove", resetRefreshLogoutIntervals);

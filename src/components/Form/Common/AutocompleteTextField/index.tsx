@@ -56,7 +56,6 @@ export default function Asynchronous({
   // console.log("filtered staff data from hook: ", filteredStaffData);
 
   function handleChange(value: string) {
-    console.log("calling handle change for textField");
     setInputValue(value);
     debounceOnChange(value);
   }
@@ -105,9 +104,7 @@ export default function Asynchronous({
 
   // update nomination form state with selected staff data
   const handleOnChange = (e: any, value: StaffData | null) => {
-    console.log("calling handle change for autocomplete");
     if (!value) {
-      console.log("resetting input value!");
       setInputValue("");
       const newFormData = {
         ...getNominationFormState,
@@ -136,14 +133,6 @@ export default function Asynchronous({
   useEffect(() => {
     setInputValue(selectedUser?.staff_name);
   }, [selectedUser]);
-
-  useEffect(() => {
-    console.log("input value: ", inputValue);
-  }, [inputValue]);
-
-  useEffect(() => {
-    console.log("dept value: ", selectedDept);
-  }, [selectedDept]);
 
   return (
     <Controller

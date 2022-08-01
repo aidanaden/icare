@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+
 import { NominationDataTableData } from "@/interfaces";
 import { NominationFormStatus } from "@/enums";
 import { DataTableTabPanelProps } from "../Components/DataTableTabPanel";
@@ -12,24 +14,44 @@ export default function CommitteeTable({
   data,
   ...other
 }: NominationDataTableProps) {
-  const completedData = data?.filter(
-    (row) => row.nomination_status === NominationFormStatus.SUBMITTED
+  const completedData = useMemo(
+    () =>
+      data?.filter(
+        (row) => row.nomination_status === NominationFormStatus.SUBMITTED
+      ),
+    [data]
   );
 
-  const endorsedData = data?.filter(
-    (row) => row.nomination_status === NominationFormStatus.ENDORSED
+  const endorsedData = useMemo(
+    () =>
+      data?.filter(
+        (row) => row.nomination_status === NominationFormStatus.ENDORSED
+      ),
+    [data]
   );
 
-  const shortlistedData = data?.filter(
-    (row) => row.nomination_status === NominationFormStatus.SHORTLISTED
+  const shortlistedData = useMemo(
+    () =>
+      data?.filter(
+        (row) => row.nomination_status === NominationFormStatus.SHORTLISTED
+      ),
+    [data]
   );
 
-  const awardedData = data?.filter(
-    (row) => row.nomination_status === NominationFormStatus.AWARDED
+  const awardedData = useMemo(
+    () =>
+      data?.filter(
+        (row) => row.nomination_status === NominationFormStatus.AWARDED
+      ),
+    [data]
   );
 
-  const championData = data?.filter(
-    (row) => row.nomination_status === NominationFormStatus.CHAMPION
+  const championData = useMemo(
+    () =>
+      data?.filter(
+        (row) => row.nomination_status === NominationFormStatus.CHAMPION
+      ),
+    [data]
   );
 
   const tabPanelData: Omit<DataTableTabPanelProps, "columns">[] = [

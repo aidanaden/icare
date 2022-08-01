@@ -158,23 +158,35 @@ export default function DataTableTabPanel({
   }) => {
     const filteredData = data?.filter((row) => {
       const isDepartment = departmentValue
-        ? row.nominee_department === departmentValue
-        : departmentType !== "All"
+        ? // if department present, filter using provided department
+          departmentValue === "All"
+          ? true
+          : row.nominee_department === departmentValue
+        : // if department value not present, filter using previous department
+        departmentType !== "All"
         ? row.nominee_department === departmentType
         : true;
+
       const isYear = yearValue
         ? row.nomination_date.slice(-2) === yearValue.slice(-2)
         : true;
+
       const isServiceLevel = serviceLevelValue
-        ? ServiceLevel[row.quiz_service_level as ServiceLevel] ===
-          serviceLevelValue
-        : serviceLevel !== "All"
+        ? // if service level value present, filter using provided service level
+          serviceLevelValue === "All"
+          ? true
+          : ServiceLevel[row.quiz_service_level as ServiceLevel] ===
+            serviceLevelValue
+        : // if service level value present, filter using previous service level
+        serviceLevel !== "All"
         ? ServiceLevel[row.quiz_service_level as ServiceLevel] === serviceLevel
         : true;
+
       const isSearch =
         searchValue && searchValue !== ""
           ? row.nominee_name.toLowerCase().includes(searchValue.toLowerCase())
           : true;
+
       return isDepartment && isYear && isServiceLevel && isSearch;
     });
     return filteredData;
@@ -192,12 +204,8 @@ export default function DataTableTabPanel({
 
   // department filter effect
   useEffect(() => {
-    if (departmentType !== "All") {
-      setDisplayedData(applyFiltersToData({ departmentValue: departmentType }));
-    } else {
-      setDisplayedData(data);
-    }
-  }, [departmentType, data]);
+    setDisplayedData(applyFiltersToData({ departmentValue: departmentType }));
+  }, [departmentType]);
 
   // year filter effect
   // useEffect(() => {
@@ -226,12 +234,13 @@ export default function DataTableTabPanel({
 
   // service level filter effect
   useEffect(() => {
-    if (serviceLevel !== "All") {
-      setDisplayedData(applyFiltersToData({ serviceLevelValue: serviceLevel }));
-    } else {
-      setDisplayedData(data);
-    }
-  }, [serviceLevel, data]);
+    setDisplayedData(applyFiltersToData({ serviceLevelValue: serviceLevel }));
+  }, [serviceLevel]);
+
+  // update displayed data if data changes
+  useEffect(() => {
+    setDisplayedData(applyFiltersToData({}));
+  }, [data]);
 
   return (
     <TabPanel value={status} sx={{ p: 0 }}>

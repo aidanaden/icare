@@ -14,6 +14,7 @@ import { FORGET_API_URL } from "@/constants";
 
 interface IAuth {
   user: User | undefined;
+  sessionTokenStart: Date | undefined;
   signIn: (staff_id: string, password: string) => Promise<QueryData | void>;
   logout: () => Promise<QueryData | void>;
   refreshToken: () => Promise<LoginQueryData | void>;
@@ -23,6 +24,7 @@ interface IAuth {
 
 const AuthContext = createContext<IAuth>({
   user: undefined,
+  sessionTokenStart: undefined,
   signIn: async () => {},
   logout: async () => {},
   refreshToken: async () => {},
@@ -38,6 +40,9 @@ interface AuthProviderProps {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | undefined>(undefined);
+  const [sessionTokenStart, setSessionTokenStart] = useState<Date | undefined>(
+    undefined
+  );
 
   const signIn = async (staff_id: string, password: string) => {
     const data = { staff_id: staff_id, password: password };
@@ -65,6 +70,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     };
 
     setUser(userValue);
+    setSessionTokenStart(new Date());
     return response;
   };
 
@@ -74,6 +80,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       localStorage.setItem("staff_id", "");
       localStorage.setItem("current_financial_year", "");
       setUser(undefined);
+      setSessionTokenStart(undefined);
     }
     return response;
   };
@@ -93,7 +100,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       }
 
       const cookieName = getCookie("Name")?.toString().replaceAll("+", " ");
-      console.log("cookie name: ", cookieName);
       const cookieUserRoles = getCookie("User_Role")?.toString();
       const userRoles = cookieUserRoles?.split("-") as UserRole[];
 
@@ -109,9 +115,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         committeeMembers: committeeMembersData.committee_member_list,
       };
 
-      console.log("user value from validateToken: ", userValue);
-
       setUser(userValue);
+      setSessionTokenStart(new Date());
       return true;
     } catch (err) {
       console.error(err);
@@ -136,6 +141,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     <AuthContext.Provider
       value={{
         user,
+        sessionTokenStart,
         signIn,
         logout,
         refreshToken,

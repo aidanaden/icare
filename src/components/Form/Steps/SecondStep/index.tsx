@@ -167,11 +167,9 @@ export default function SecondStep({
 
   const handleReset = () => {
     if (user) {
-      const clearedNominationFormState = {
-        ...getNominationFormState,
-        answers: quizKeysMap,
-      };
-      setNominationFormState(clearedNominationFormState);
+      setNominationFormState((currentState) => {
+        return { ...currentState, answers: quizKeysMap };
+      });
       reset(quizKeysObject);
     }
   };
@@ -212,10 +210,11 @@ export default function SecondStep({
         );
         setSaveButtonLoading(false);
         if (response.status_code === 200) {
-          setNominationFormState({
+          const newNominationForm = {
             ...newFormData,
             case_id: response.case_id,
-          });
+          };
+          setNominationFormState(newNominationForm);
           setSaveSnackbarOpen(true);
         } else {
           setErrorSnackbarOpen(true);

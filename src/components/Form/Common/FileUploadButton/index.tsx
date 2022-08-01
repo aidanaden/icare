@@ -113,7 +113,6 @@ export default function FileUploadButton({
             description: selectedDescription,
             files: base64s,
           };
-          console.log("new form data on file save: ", newFormData);
           setNominationFormState(newFormData);
           setOpen(false);
         }}

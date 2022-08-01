@@ -3,6 +3,7 @@ import { NominationFormStatus } from "@/enums";
 import { DataTableTabPanelProps } from "../Components/DataTableTabPanel";
 import DataTable from "../DataTable";
 import { submittedColumns } from "../Components/Columns";
+import { useMemo } from "react";
 
 interface NominationDataTableProps {
   data?: NominationDataTableData[];
@@ -12,14 +13,24 @@ export default function EndorsementTable({
   data,
   ...other
 }: NominationDataTableProps) {
-  const endorsedData = data?.filter(
-    (row) => row.nomination_status === NominationFormStatus.ENDORSED
-  );
-  const pendingData = data?.filter(
-    (row) => row.nomination_status === NominationFormStatus.PENDING
-  );
-  const submittedData = data?.filter(
-    (row) => row.nomination_status === NominationFormStatus.SUBMITTED
+  const endorsedData = useMemo(() => {
+    return data?.filter(
+      (row) => row.nomination_status === NominationFormStatus.ENDORSED
+    );
+  }, [data]);
+
+  const pendingData = useMemo(() => {
+    return data?.filter(
+      (row) => row.nomination_status === NominationFormStatus.PENDING
+    );
+  }, [data]);
+
+  const submittedData = useMemo(
+    () =>
+      data?.filter(
+        (row) => row.nomination_status === NominationFormStatus.SUBMITTED
+      ),
+    [data]
   );
 
   const tabPanelData: Omit<

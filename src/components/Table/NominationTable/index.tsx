@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+
 import { NominationFormStatus } from "@/enums";
 import { NominationDataTableData } from "@/interfaces";
 import { columns } from "../Components/Columns";
@@ -9,11 +11,20 @@ interface TableProps {
 }
 
 export default function NominationTable({ data }: TableProps) {
-  const incompleteData = data?.filter(
-    (row) => row.nomination_status === NominationFormStatus.INCOMPLETE
+  const incompleteData = useMemo(
+    () =>
+      data?.filter(
+        (row) => row.nomination_status === NominationFormStatus.INCOMPLETE
+      ),
+    [data]
   );
-  const completedData = data?.filter(
-    (row) => row.nomination_status !== NominationFormStatus.INCOMPLETE
+
+  const completedData = useMemo(
+    () =>
+      data?.filter(
+        (row) => row.nomination_status !== NominationFormStatus.INCOMPLETE
+      ),
+    [data]
   );
 
   const tabPanelData: Omit<

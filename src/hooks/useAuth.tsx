@@ -49,7 +49,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const response = await postAPI<LoginQueryData>("AuthenticationToken", data);
 
     const cookieUserRoles = getCookie("User_Role")?.toString();
-    const userRoles = cookieUserRoles?.split("-") as UserRole[];
+    const userRoles = cookieUserRoles?.includes("-")
+      ? (cookieUserRoles?.split("-") as UserRole[])
+      : ([cookieUserRoles] as UserRole[]);
 
     const committeeMembersData = await postAPI<CommitteeMemberListQueryData>(
       "RetrieveCommitteeMembers"

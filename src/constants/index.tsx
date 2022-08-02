@@ -1,7 +1,7 @@
 // development API url
-export const BASE_URL = "https://testicare.stoneforest.com.sg";
+// export const BASE_URL = "https://testicare.stoneforest.com.sg";
 // production API url
-// export const BASE_URL = "https://icare.rsmsingapore.sg";
+export const BASE_URL = "https://icare.rsmsingapore.sg";
 
 export const API_URL = `${BASE_URL}/api/Api/icare/crm/`;
 

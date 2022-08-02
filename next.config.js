@@ -16,6 +16,7 @@ const nextConfig = {
     storePicturesInWEBP: true,
     generateAndUseBlurImages: true,
   },
+  staticPageGenerationTimeout: 1000,
 };
 
 module.exports = nextConfig;

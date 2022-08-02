@@ -15,6 +15,8 @@ const nextConfig = {
   env: {
     storePicturesInWEBP: true,
     generateAndUseBlurImages: true,
+    FORGET_API_URL: process.env.FORGET_API_URL,
+    BASE_API_URL: process.env.BASE_API_URL,
   },
   staticPageGenerationTimeout: 1000,
 };

@@ -9,7 +9,7 @@ import CommitteeServiceLevelSelect from "../Common/CommitteeServiceLevelSelect";
 import FormSwitch from "../FormSwitch";
 import { upsertNominationFormCommitteeComments } from "@/lib/nominations";
 import { convertBooleanToServiceLevelWinner } from "@/utils";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import FeedbackSnackbar from "../Common/FeedbackSnackbar";
 import { useRouter } from "next/router";
 
@@ -46,24 +46,31 @@ export default function CommitteeForm({
   const [committeeErrorOpen, setCommitteeErrorOpen] = useState<boolean>(false);
   const [committeeLoading, setCommitteeLoading] = useState<boolean>(false);
 
-  const defaultValue = {
-    service_level:
-      service_level !== ServiceLevel.PENDING
-        ? service_level
-        : ServiceLevel.BASIC,
-    service_level_award: service_level_award,
-    is_champion_result: champion_status,
-    comments: comments,
-  };
+  const defaultValue = useMemo(() => {
+    return {
+      service_level:
+        service_level !== ServiceLevel.PENDING
+          ? service_level
+          : ServiceLevel.BASIC,
+      service_level_award: service_level_award,
+      is_champion_result: champion_status,
+      comments: comments,
+    };
+  }, [champion_status, comments, service_level, service_level_award]);
 
   const {
     control,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<CommitteeForm>({
     defaultValues: defaultValue,
     resolver: yupResolver(committeeSchema),
   });
+
+  useEffect(() => {
+    reset(defaultValue);
+  }, [defaultValue, reset]);
 
   const onSubmit = async (data: CommitteeForm) => {
     setCommitteeLoading(true);

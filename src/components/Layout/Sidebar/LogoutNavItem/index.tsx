@@ -21,7 +21,7 @@ export default function LogoutNavItem() {
         setLogoutSuccessOpen(true);
         setLogoutLoading(false);
         setTimeout(() => {
-          window.location.replace(BASE_URL);
+          window.location.replace(BASE_URL as string);
         }, 1500);
       }
     } catch (err) {

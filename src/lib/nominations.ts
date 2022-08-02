@@ -27,6 +27,7 @@ const callAPI = async <JSON = any>(
   method: string,
   body?: any
 ): Promise<JSON> => {
+  console.log(`url to call api from: ${API_URL}${path}`);
   const response = await axios({
     url: `${API_URL}${path}`,
     method: method,

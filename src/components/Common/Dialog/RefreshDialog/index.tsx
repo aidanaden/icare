@@ -20,7 +20,7 @@ export default function RefreshDialog() {
     try {
       const response = await logout();
       if (response?.status_code === 200) {
-        window.location.replace(BASE_URL);
+        window.location.replace(BASE_URL as string);
       }
     } catch (err) {
       console.error("error occurred while logging out: ", err);
@@ -66,7 +66,7 @@ export default function RefreshDialog() {
     try {
       const response = await logout();
       if (response?.status_code === 200) {
-        window.location.replace(BASE_URL);
+        window.location.replace(BASE_URL as string);
       }
     } catch (err) {
       console.error("error occurred while logging out: ", err);

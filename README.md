@@ -125,11 +125,11 @@ yarn
 
 ### Deployment
 
-- Development: When deploying the ICare web application to development, enter the development API server url in line 2 of the `src/constants/index.tsx` file and **ensure that line 4 is commented**.
+- Development: When deploying the ICare web application to development, enter the development API server url (can be found in `.env.example` file) in the variable `BASE_URL_API` variable in the `.env` file.
 
-- Production: When deploying the ICare web application to production, enter the production API server url in line 4 of the `src/constants/index.tsx` file and **ensure that line 2 is commented**.
+- Production: When deploying the ICare web application to production, enter the production API server url (can be found in `.env.example` file) in the variable `BASE_URL_API` variable in the `.env` file.
 
-After you've set up the API server url, run the command
+After you've set up the `BASE_URL_API` and `FORGET_API_URL` variables in the `.env` file, run the command
 
 ```
 yarn build

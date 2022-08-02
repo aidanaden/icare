@@ -1,4 +1,5 @@
 import type { NextPage } from "next";
+import { useEffect, useMemo } from "react";
 // import Head from "next/head";
 // import Image from "next/image";
 import Box from "@mui/material/Box";
@@ -24,7 +25,6 @@ import useAuth from "@/hooks/useAuth";
 import CenterBox from "@/components/Common/CenterBox";
 import ShadowBox from "@/components/Common/ShadowBox";
 import FallbackSpinner from "@/components/Common/FallbackSpinner";
-import { useMemo } from "react";
 
 const View: NextPage = () => {
   const { user } = useAuth();
@@ -37,7 +37,7 @@ const View: NextPage = () => {
       data?.committee_comment.filter(
         (comm) => comm.committee_id !== user?.staff_id
       ),
-    [data]
+    [data?.committee_comment, user?.staff_id]
   );
 
   const selfData = useMemo(
@@ -45,7 +45,7 @@ const View: NextPage = () => {
       data?.committee_comment.filter(
         (comm) => comm.committee_id === user?.staff_id
       ),
-    [data]
+    [data?.committee_comment, user?.staff_id]
   );
 
   if (user) {

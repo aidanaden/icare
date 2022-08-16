@@ -17,6 +17,7 @@ import { newNominationFormState } from "@/atoms/newNominationFormAtom";
 import { editNominationFormState } from "@/atoms/editNominationFormAtom";
 import { deleteFile } from "@/lib/nominations";
 import { useWatch } from "react-hook-form";
+import DetailText from "@/components/Common/DetailBox/DetailText";
 
 interface FileUploadSectionProps {
   case_id?: string;
@@ -78,6 +79,11 @@ export default function FileUploadButton({
       <Button variant="outlined" color="primary" onClick={() => setOpen(true)}>
         Upload supporting document(s)
       </Button>
+
+      <DetailText mb={1} isMultiLine={true} color="#8C9AA6">
+        If you have more than one file to upload, please select multiple files
+        at one go. New upload will overwrite the existing files.
+      </DetailText>
 
       <DropzoneDialog
         acceptedFiles={[

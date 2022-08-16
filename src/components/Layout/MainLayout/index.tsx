@@ -1,11 +1,12 @@
+import { Box, BoxProps, Container, Link, styled } from "@mui/material";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+
+import LoginLayout from "../LoginLayout/";
 import RefreshDialog from "@/components/Common/Dialog/RefreshDialog";
 import Navbar from "@/components/Layout/Navbar";
 import Sidebar from "@/components/Layout/Sidebar";
 import useAuth from "@/hooks/useAuth";
-import { Box, BoxProps, Container, styled } from "@mui/material";
-import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
-import LoginLayout from "../LoginLayout/";
 
 const MainLayoutRoot = styled("div")(({ theme }) => ({
   display: "flex",
@@ -65,6 +66,23 @@ export default function MainLayout({ children, ...other }: BoxProps) {
         </Box>
       ) : (
         <Box {...other}>
+          <Box
+            sx={{
+              zIndex: 40,
+              position: "fixed",
+              top: "4px",
+              right: "4px",
+              fontSize: "14px",
+            }}
+          >
+            <Link
+              href="https://icare.rsmsingapore.sg/video/iCARE%20Introduction%20Video.mp4"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Click here to watch Introduction Video
+            </Link>
+          </Box>
           <LoginLayout>{children}</LoginLayout>
         </Box>
       )}

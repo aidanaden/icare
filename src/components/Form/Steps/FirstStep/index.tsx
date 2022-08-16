@@ -165,15 +165,6 @@ export default function FirstStep({
             return { case_id: case_id, file_name: fname };
           });
         const files = await fetchFileStrings(fileDatas);
-        // const newNominationState = { ...getNominationFormState, files: files };
-        // console.log(
-        //   "old nomination state before file data: ",
-        //   getNominationFormState
-        // );
-        // console.log(
-        //   "new nomination state from file data: ",
-        //   newNominationState
-        // );
         setNominationFormState((currentState) => {
           return { ...currentState, files: files };
         });

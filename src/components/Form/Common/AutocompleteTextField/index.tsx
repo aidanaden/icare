@@ -55,6 +55,7 @@ export default function Asynchronous({
   );
   // console.log("filtered staff data from hook: ", filteredStaffData);
 
+  // handle search text change
   function handleChange(value: string) {
     setInputValue(value);
     debounceOnChange(value);
@@ -64,7 +65,10 @@ export default function Asynchronous({
   useEffect(() => {
     const fetchStaffData = async () => {
       setLoading(true);
-      const response = await fetchStaff(inputSearch, "");
+      const response = await fetchStaff(
+        inputSearch,
+        selectedDept?.includes("All") ? "" : selectedDept
+      );
       const filteredStaff = filterInvalidStaffRanksForNomination(
         response,
         user?.staff_id
@@ -78,7 +82,7 @@ export default function Asynchronous({
     if (open && inputSearch.length > 0) {
       fetchStaffData();
     }
-  }, [inputSearch, open, user?.staff_id]);
+  }, [inputSearch, open]);
 
   // fetch staff data when dept change
   useEffect(() => {
@@ -86,7 +90,7 @@ export default function Asynchronous({
       setLoading(true);
       const response = await fetchStaff(
         "",
-        selectedDept === "All" ? "" : selectedDept
+        selectedDept?.includes("All") ? "" : selectedDept
       );
       const filteredStaff = filterInvalidStaffRanksForNomination(
         response,
@@ -100,7 +104,7 @@ export default function Asynchronous({
     };
     // setInputValue("");
     fetchStaffData();
-  }, [selectedDept, user?.staff_id]);
+  }, [selectedDept]);
 
   // update nomination form state with selected staff data
   const handleOnChange = (e: any, value: StaffData | null) => {
@@ -143,6 +147,15 @@ export default function Asynchronous({
             setOpen(true);
           }}
           onClose={() => {
+            if (
+              selectedUser?.staff_name === "" &&
+              selectedUser.staff_name !== inputValue
+            ) {
+              // clear input value if input value
+              // was set from user typing in field
+              setInputValue("");
+              setInputSearch("");
+            }
             setOpen(false);
           }}
           isOptionEqualToValue={(option, value) =>

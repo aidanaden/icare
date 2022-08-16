@@ -7,6 +7,7 @@ import RefreshDialog from "@/components/Common/Dialog/RefreshDialog";
 import Navbar from "@/components/Layout/Navbar";
 import Sidebar from "@/components/Layout/Sidebar";
 import useAuth from "@/hooks/useAuth";
+import { VideoLibrary } from "@mui/icons-material";
 
 const MainLayoutRoot = styled("div")(({ theme }) => ({
   display: "flex",
@@ -66,7 +67,7 @@ export default function MainLayout({ children, ...other }: BoxProps) {
         </Box>
       ) : (
         <Box {...other}>
-          <Box
+          {/* <Box
             sx={{
               zIndex: 40,
               position: "fixed",
@@ -75,14 +76,8 @@ export default function MainLayout({ children, ...other }: BoxProps) {
               fontSize: "14px",
             }}
           >
-            <Link
-              href="https://icare.rsmsingapore.sg/video/iCARE%20Introduction%20Video.mp4"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Click here to watch Introduction Video
-            </Link>
-          </Box>
+            
+          </Box> */}
           <LoginLayout>{children}</LoginLayout>
         </Box>
       )}

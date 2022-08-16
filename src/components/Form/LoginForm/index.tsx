@@ -1,4 +1,4 @@
-import { Button, Stack } from "@mui/material";
+import { Button, Link, Stack, Typography } from "@mui/material";
 import { createRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -12,6 +12,8 @@ import ReCAPTCHA from "react-google-recaptcha";
 import { RECAPTCHA_API_KEY } from "@/constants";
 import PrimaryButton from "@/components/Common/PrimaryButton";
 import ForgetPasswordDialog from "@/components/Common/Dialog/ForgetPasswordDialog";
+import { VideoLibrary } from "@mui/icons-material";
+import CenterBox from "@/components/Common/CenterBox";
 
 interface LoginProps {
   staff_id: string;
@@ -97,6 +99,23 @@ export default function LoginForm() {
         </PrimaryButton>
         <ForgetPasswordDialog />
       </Stack>
+      <CenterBox
+        display={"flex"}
+        textAlign={"center"}
+        justifyContent={"center"}
+        mt={5}
+      >
+        <Link
+          href="https://icare.rsmsingapore.sg/video/iCARE%20Introduction%20Video.mp4"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Stack direction="row" spacing={1}>
+            <VideoLibrary />
+            <Typography>Introduction Video</Typography>
+          </Stack>
+        </Link>
+      </CenterBox>
       <FeedbackSnackbar
         successOpen={loginSuccessOpen}
         setSuccessOpen={setLoginSuccessOpen}

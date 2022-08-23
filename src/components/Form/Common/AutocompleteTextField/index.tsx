@@ -72,14 +72,14 @@ export default function Asynchronous({
       const filteredStaff = filterInvalidStaffRanksForNomination(
         response,
         user?.staff_id
-      );
+      )?.sort((a, b) => a.staff_name.localeCompare(b.staff_name));
       setLoading(false);
 
       if (filteredStaff) {
         setOptions(filteredStaff);
       }
     };
-    if (open && inputSearch.length > 0) {
+    if (open) {
       fetchStaffData();
     }
   }, [inputSearch, open]);
@@ -95,7 +95,7 @@ export default function Asynchronous({
       const filteredStaff = filterInvalidStaffRanksForNomination(
         response,
         user?.staff_id
-      );
+      )?.sort((a, b) => a.staff_name.localeCompare(b.staff_name));
       setLoading(false);
 
       if (filteredStaff) {
@@ -109,6 +109,7 @@ export default function Asynchronous({
   // update nomination form state with selected staff data
   const handleOnChange = (e: any, value: StaffData | null) => {
     if (!value) {
+      setInputSearch("");
       setInputValue("");
       const newFormData = {
         ...getNominationFormState,

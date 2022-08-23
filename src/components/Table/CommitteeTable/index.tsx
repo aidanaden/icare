@@ -90,6 +90,7 @@ export default function CommitteeTable({
       viewText="Vote"
       hasYear={true}
       hasBadge={true}
+      displayCommitteeServiceLevel={true}
       {...other}
     />
   );

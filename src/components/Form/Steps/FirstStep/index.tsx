@@ -79,6 +79,9 @@ export default function FirstStep({
   // }, [case_id, data?.attachment_list]);
 
   const { departmentData } = useStaffDepartments();
+  const sortedDepartmentData = departmentData?.department_list.sort((a, b) =>
+    a.localeCompare(b)
+  );
 
   const defaultValues = useMemo(() => {
     return {
@@ -307,7 +310,7 @@ export default function FirstStep({
                   <AutocompleteTextField control={control} disabled={isEdit} />
                   <FormDepartmentSelect
                     control={control}
-                    depts={departmentData?.department_list}
+                    depts={sortedDepartmentData}
                     disabled={isEdit}
                   />
                 </Stack>

@@ -14,6 +14,7 @@ export default function DepartmentSelect({
   disabled,
 }: DepartmentSelectProps) {
   const departmentTypeData: SelectValue[] = Object.values(depts ?? [])
+    .reverse()
     .concat("All")
     .map((dept) => {
       return { label: dept, value: dept };

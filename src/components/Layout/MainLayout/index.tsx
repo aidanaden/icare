@@ -7,7 +7,6 @@ import RefreshDialog from "@/components/Common/Dialog/RefreshDialog";
 import Navbar from "@/components/Layout/Navbar";
 import Sidebar from "@/components/Layout/Sidebar";
 import useAuth from "@/hooks/useAuth";
-import { VideoLibrary } from "@mui/icons-material";
 
 const MainLayoutRoot = styled("div")(({ theme }) => ({
   display: "flex",
@@ -47,6 +46,7 @@ export default function MainLayout({ children, ...other }: BoxProps) {
         <Box {...other}>
           <MainLayoutRoot>
             <Container
+              maxWidth="xl"
               sx={{
                 display: "flex",
                 flex: "1 1 auto",

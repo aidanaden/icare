@@ -1,4 +1,3 @@
-import StyledMenuItem from "@/components/Common/Menu/StyledMenuItem";
 import {
   FormControl,
   InputLabel,
@@ -7,6 +6,8 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import React, { Dispatch, SetStateAction } from "react";
+
+import StyledMenuItem from "@/components/Common/Menu/StyledMenuItem";
 
 export interface SelectProps<K> {
   header: string;

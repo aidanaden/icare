@@ -47,6 +47,7 @@ export interface DataTableTabPanelProps {
   hasYear?: boolean;
   hideNominator?: boolean;
   hasBadge?: boolean;
+  displayCommitteeServiceLevel?: boolean;
 }
 
 export default function DataTableTabPanel({
@@ -58,6 +59,7 @@ export default function DataTableTabPanel({
   hasYear,
   hideNominator,
   hasBadge,
+  displayCommitteeServiceLevel,
 }: DataTableTabPanelProps) {
   const { user } = useAuth();
   const [displayedData, setDisplayedData] = useState<
@@ -76,13 +78,12 @@ export default function DataTableTabPanel({
   // set up department filter
   const [departmentType, setDepartmentType] = useState<string>("All");
   const departmentValues = Array.from(
-    new Set(
-      data
-        ?.flatMap((data) => [data.nominee_department])
-        .concat("All")
-        .reverse()
-    )
-  );
+    new Set(data?.flatMap((data) => [data.nominee_department]))
+  )
+    .sort((a, b) => a.localeCompare(b))
+    .reverse()
+    .concat("All")
+    .reverse();
 
   // set up year filter
   const [getNominationYearState, setNominationYearState] =
@@ -95,14 +96,32 @@ export default function DataTableTabPanel({
   const [serviceLevel, setServiceLevel] = useState<string>("All");
   const serviceLevelValues = Array.from(
     new Set(
-      data
-        ?.flatMap((data) => [
-          ServiceLevel[data.quiz_service_level as ServiceLevel],
-        ])
-        .concat("All")
-        .reverse()
+      data?.flatMap((data) => {
+        if (displayCommitteeServiceLevel) {
+          if (data.committee_service_level_result) {
+            return [
+              ServiceLevel[data.committee_service_level_result as ServiceLevel],
+            ];
+          }
+          return "Waiting For Review";
+        }
+
+        return [ServiceLevel[data.quiz_service_level as ServiceLevel]];
+      })
     )
-  ).filter((v) => v !== undefined);
+  )
+    .filter((v) => v !== undefined)
+    .sort((a, b) => {
+      if (a === "Waiting For Review") {
+        return 1;
+      }
+      if (b === "Waiting For Review") {
+        return -1;
+      }
+      return -a.localeCompare(b);
+    })
+    .concat("All")
+    .reverse();
 
   // set up championship nominations
   const championNominations = data?.filter((d) => d.is_champion_result);
@@ -171,16 +190,33 @@ export default function DataTableTabPanel({
         ? row.nomination_date.slice(-2) === yearValue.slice(-2)
         : true;
 
-      const isServiceLevel = serviceLevelValue
+      const isServiceLevel = displayCommitteeServiceLevel
+        ? serviceLevelValue
+          ? // if service level value present, filter using provided service level
+            serviceLevelValue === "All"
+            ? true
+            : serviceLevelValue === "Waiting For Review"
+            ? !row.committee_service_level_result
+            : ServiceLevel[
+                row.committee_service_level_result as ServiceLevel
+              ] === serviceLevelValue
+          : // if service level value present, filter using previous service level
+          serviceLevel === "All"
+          ? true
+          : serviceLevel === "Waiting For Review"
+          ? !row.committee_service_level_result
+          : ServiceLevel[row.committee_service_level_result as ServiceLevel] ===
+            serviceLevel
+        : serviceLevelValue
         ? // if service level value present, filter using provided service level
           serviceLevelValue === "All"
           ? true
           : ServiceLevel[row.quiz_service_level as ServiceLevel] ===
             serviceLevelValue
         : // if service level value present, filter using previous service level
-        serviceLevel !== "All"
-        ? ServiceLevel[row.quiz_service_level as ServiceLevel] === serviceLevel
-        : true;
+        serviceLevel === "All"
+        ? true
+        : ServiceLevel[row.quiz_service_level as ServiceLevel] === serviceLevel;
 
       const isSearch =
         searchValue && searchValue !== ""
@@ -399,7 +435,15 @@ export default function DataTableTabPanel({
                               value={
                                 row.draft_status
                                   ? "Not Available"
-                                  : ServiceLevel[value as ServiceLevel]
+                                  : displayCommitteeServiceLevel
+                                  ? row.committee_service_level_result
+                                    ? ServiceLevel[
+                                        row.committee_service_level_result as ServiceLevel
+                                      ]
+                                    : "Waiting For Review"
+                                  : ServiceLevel[
+                                      row.quiz_service_level as ServiceLevel
+                                    ]
                               }
                               column={column}
                             />

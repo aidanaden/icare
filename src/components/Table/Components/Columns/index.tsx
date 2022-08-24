@@ -97,7 +97,7 @@ export const committeeColumns: readonly Column<NominationDataTableKeys>[] = [
     id: "committee_vote",
     label: "Champion Vote",
     align: "center",
-    minWidth: 200,
+    minWidth: 180,
   },
   {
     id: "nomination_date",

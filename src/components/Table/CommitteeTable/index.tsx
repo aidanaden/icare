@@ -22,10 +22,26 @@ export default function CommitteeTable({
     [data]
   );
 
+  const submittedData = useMemo(
+    () =>
+      data?.filter(
+        (row) => row.nomination_status === NominationFormStatus.SUBMITTED
+      ),
+    [data]
+  );
+
   const endorsedData = useMemo(
     () =>
       data?.filter(
         (row) => row.nomination_status === NominationFormStatus.ENDORSED
+      ),
+    [data]
+  );
+
+  const rejectedData = useMemo(
+    () =>
+      data?.filter(
+        (row) => row.nomination_status === NominationFormStatus.REJECTED
       ),
     [data]
   );
@@ -59,6 +75,16 @@ export default function CommitteeTable({
       headerLabel: NominationFormStatus.ALL.toString(),
       status: NominationFormStatus.ALL,
       data: data,
+    },
+    {
+      headerLabel: `${NominationFormStatus.SUBMITTED.toString()} to HOD`,
+      status: NominationFormStatus.SUBMITTED,
+      data: submittedData,
+    },
+    {
+      headerLabel: `${NominationFormStatus.REJECTED.toString()} by HOD`,
+      status: NominationFormStatus.REJECTED,
+      data: rejectedData,
     },
     {
       headerLabel: `${NominationFormStatus.ENDORSED.toString()} by HOD`,

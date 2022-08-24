@@ -121,7 +121,7 @@ export const CommitteeVoteTableCell = ({
         max={3}
         sx={{
           alignItems: "self-start",
-          justifyContent: "left",
+          justifyContent: "center",
         }}
       >
         {value

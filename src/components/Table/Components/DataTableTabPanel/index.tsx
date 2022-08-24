@@ -241,6 +241,7 @@ export default function DataTableTabPanel({
   // department filter effect
   useEffect(() => {
     setDisplayedData(applyFiltersToData({ departmentValue: departmentType }));
+    setPage(0);
   }, [departmentType]);
 
   // year filter effect
@@ -271,11 +272,13 @@ export default function DataTableTabPanel({
   // service level filter effect
   useEffect(() => {
     setDisplayedData(applyFiltersToData({ serviceLevelValue: serviceLevel }));
+    setPage(0);
   }, [serviceLevel]);
 
   // update displayed data if data changes
   useEffect(() => {
     setDisplayedData(applyFiltersToData({}));
+    setPage(0);
   }, [data]);
 
   return (
@@ -305,7 +308,7 @@ export default function DataTableTabPanel({
         )}
         {serviceLevelValues.length > 0 && (
           <Select
-            header="Quiz Service Level"
+            header="Service Level"
             values={serviceLevelValues}
             defaultValue={serviceLevel}
             setValueType={setServiceLevel}

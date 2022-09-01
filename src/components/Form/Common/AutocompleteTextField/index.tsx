@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Control, Controller, useWatch } from "react-hook-form";
 import { useRecoilState } from "recoil";
 import { useDebouncedCallback } from "use-debounce";
@@ -53,7 +53,6 @@ export default function Asynchronous({
     staffData,
     user?.staff_id
   );
-  // console.log("filtered staff data from hook: ", filteredStaffData);
 
   // handle search text change
   function handleChange(value: string) {
@@ -61,48 +60,29 @@ export default function Asynchronous({
     debounceOnChange(value);
   }
 
+  const fetchStaffData = useCallback(async () => {
+    setLoading(true);
+    const response = await fetchStaff(
+      inputSearch,
+      selectedDept?.includes("All") ? "" : selectedDept
+    );
+    const filteredStaff = filterInvalidStaffRanksForNomination(
+      response,
+      user?.staff_id
+    )?.sort((a, b) => a.staff_name.localeCompare(b.staff_name));
+    setOptions(filteredStaff ?? []);
+    setLoading(false);
+  }, [inputSearch, selectedDept, user?.staff_id]);
+
   // fetch staff data on search input change
   useEffect(() => {
-    const fetchStaffData = async () => {
-      setLoading(true);
-      const response = await fetchStaff(
-        inputSearch,
-        selectedDept?.includes("All") ? "" : selectedDept
-      );
-      const filteredStaff = filterInvalidStaffRanksForNomination(
-        response,
-        user?.staff_id
-      )?.sort((a, b) => a.staff_name.localeCompare(b.staff_name));
-      setLoading(false);
-
-      if (filteredStaff) {
-        setOptions(filteredStaff);
-      }
-    };
     if (open) {
       fetchStaffData();
     }
-  }, [inputSearch, open]);
+  }, [inputSearch]);
 
   // fetch staff data when dept change
   useEffect(() => {
-    const fetchStaffData = async () => {
-      setLoading(true);
-      const response = await fetchStaff(
-        "",
-        selectedDept?.includes("All") ? "" : selectedDept
-      );
-      const filteredStaff = filterInvalidStaffRanksForNomination(
-        response,
-        user?.staff_id
-      )?.sort((a, b) => a.staff_name.localeCompare(b.staff_name));
-      setLoading(false);
-
-      if (filteredStaff) {
-        setOptions(filteredStaff);
-      }
-    };
-    // setInputValue("");
     fetchStaffData();
   }, [selectedDept]);
 
@@ -119,6 +99,7 @@ export default function Asynchronous({
           staff_id: "",
           staff_name: "",
         },
+        department: "All",
       };
       setNominationFormState(newFormData);
       return;

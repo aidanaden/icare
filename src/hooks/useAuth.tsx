@@ -57,8 +57,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       "RetrieveCommitteeMembers"
     );
 
-    console.log({ currentFinancialYear: response.current_financial_year });
-
     localStorage.setItem("staff_id", staff_id);
     localStorage.setItem(
       "current_financial_year",

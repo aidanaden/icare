@@ -34,7 +34,7 @@ export default function RefreshDialog() {
   const handleRefresh = async () => {
     setRefreshLoading(true);
     try {
-      const response = await refreshToken();
+      await refreshToken();
       resetRefreshDialogInterval();
       resetLogoutInterval();
     } catch (err) {
@@ -45,18 +45,13 @@ export default function RefreshDialog() {
   };
 
   useInterval(async () => {
-    console.log("running refresh interval useInterval fn");
-
     if (mouseLastMoved < new Date(Date.now() - 1 * 60 * 1000)) {
-      // mouse last moved more than 5 mins ago
-      console.log("no activity detected in past 1 min, skipping refresh...");
+      // mouse last moved more than 1 min ago
       return;
     }
 
     try {
-      console.log(
-        "refreshing token due to activity detected within the last 1 min"
-      );
+      // refresh token, detected mouse moving within last 1 min
       await refreshToken();
       resetRefreshDialogInterval();
       resetLogoutInterval();
@@ -78,14 +73,9 @@ export default function RefreshDialog() {
   };
 
   const resetRefreshLogoutIntervals = () => {
-    console.log(
-      "resetting mouse last moved to: ",
-      new Date().toLocaleTimeString()
-    );
-    // if mouse last moved 5 mins ago, refresh token automatically
-    // every 15 mins + reset refresh dialog interval
+    // if mouse last moved 1 min ago, refresh token automatically + reset refresh dialog interval
     setMouseLastMoved(new Date());
-    // if mouse not moved for 5 mins or more, DO NOT reset refresh dialog interval
+    // if mouse not moved for 1 min or more, DO NOT reset refresh dialog interval
   };
 
   useEffect(() => {

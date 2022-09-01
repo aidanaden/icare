@@ -30,6 +30,7 @@ import { editNominationFormState } from "@/atoms/editNominationFormAtom";
 import { newNominationFormState } from "@/atoms/newNominationFormAtom";
 import FeedbackSnackbar from "../../Common/FeedbackSnackbar";
 import { DEFAULT_RESET_ERROR_MSG, DEFAULT_SAVE_ERROR_MSG } from "./constants";
+import { useRouter } from "next/router";
 
 interface FirstStepProp {
   recoilFormState: RecoilState<NominationFormSubmissionData>;
@@ -44,6 +45,7 @@ export default function FirstStep({
   case_id,
   isEdit,
 }: FirstStepProp) {
+  const router = useRouter();
   const { user } = useAuth();
   const [getNominationFormState, setNominationFormState] = useRecoilState(
     isEdit ? editNominationFormState : newNominationFormState
@@ -69,7 +71,11 @@ export default function FirstStep({
 
   // TODO: update nomination form state with data fetched
   // (to be used in autocomplete)
-  const { data } = useNominationDetails(case_id);
+  const pageCaseId: string | undefined = router.query.case_id as
+    | string
+    | undefined;
+  const currentCaseId = pageCaseId ?? case_id;
+  const { data } = useNominationDetails(currentCaseId);
 
   // const fileData = useMemo(async () => {
   //   if (data?.attachment_list && case_id) {
@@ -131,7 +137,7 @@ export default function FirstStep({
   useEffect(() => {
     const clearedData = {
       user:
-        isEdit && data
+        currentCaseId && data
           ? {
               staff_corporate_rank: "",
               staff_department: data?.nominee_department,
@@ -144,12 +150,12 @@ export default function FirstStep({
               staff_id: "",
               staff_name: "",
             },
-      department: isEdit && data ? data?.nominee_department : "All",
-      description: isEdit && data ? data?.nomination_reason : "",
+      department: currentCaseId && data ? data?.nominee_department : "All",
+      description: currentCaseId && data ? data?.nomination_reason : "",
     };
 
     setNominationFormState({
-      case_id: undefined,
+      case_id: currentCaseId,
       answers: new Map<string, string>(null),
       files: undefined,
       ...clearedData,
@@ -263,8 +269,6 @@ export default function FirstStep({
       ...data,
     };
 
-    console.log({ newFormData });
-
     if (!newFormData.user?.staff_id) {
       setSaveErrorSnackbarMsg("Please select a user before saving.");
       setSaveErrorSnackbarOpen(true);
@@ -286,6 +290,14 @@ export default function FirstStep({
             ...newFormData,
             case_id: response.case_id,
           };
+          router.replace(
+            {
+              pathname: `${router.asPath}`,
+              query: { case_id: response.case_id },
+            },
+            undefined,
+            { shallow: true }
+          );
           setNominationFormState(newFormState);
           setSaveSnackbarOpen(true);
         } else {

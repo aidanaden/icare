@@ -67,7 +67,8 @@ export default function SecondStep({
     useState<boolean>(false);
   const [submitLoading, setSubmitLoading] = useState<boolean>(false);
 
-  const [reRenderOnMount, setReRenderOnMount] = useState(false);
+  const pageId: string | undefined = router.query.case_id as string | undefined;
+  const caseId = pageId ?? case_id;
 
   const { data, error, loading } = useQuiz(
     getNominationFormState.user?.staff_id
@@ -115,7 +116,7 @@ export default function SecondStep({
     draftQuizResponseData,
     draftQuizResponseError,
     draftQuizResponseLoading,
-  } = useDraftQuizResponse(case_id);
+  } = useDraftQuizResponse(caseId);
 
   const draftQuizAnswerMap = useMemo(() => {
     const temp = new Map<string, string>();
@@ -237,7 +238,9 @@ export default function SecondStep({
           Complete the quiz and answer the questions as accurately as possible.
         </SectionSubtitle>
       </Box>
-      {data && (Object.keys(getValues()).length > 0 || !case_id) ? (
+      {data &&
+      draftQuizResponseData &&
+      (Object.keys(getValues()).length > 0 || !caseId) ? (
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack direction={"column"} spacing={3} mb={8}>
             {data?.qna_questions.map(({ quiz_question_name, answers }) => (

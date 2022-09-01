@@ -44,22 +44,26 @@ export default function RefreshDialog() {
     setRefreshDialogOpen(false);
   };
 
-  const resetRefreshInterval = useInterval(async () => {
-    if (mouseLastMoved < new Date(Date.now() - 30 * 1000)) {
-      // mouse last moved more than 30s ago
-      // console.log("no activity detected in past 30s, skipping refresh...");
+  useInterval(async () => {
+    console.log("running refresh interval useInterval fn");
+
+    if (mouseLastMoved < new Date(Date.now() - 1 * 60 * 1000)) {
+      // mouse last moved more than 5 mins ago
+      console.log("no activity detected in past 1 min, skipping refresh...");
       return;
     }
 
     try {
-      // console.log("refreshing token due to activity detected");
-      const response = await refreshToken();
+      console.log(
+        "refreshing token due to activity detected within the last 1 min"
+      );
+      await refreshToken();
       resetRefreshDialogInterval();
       resetLogoutInterval();
     } catch (err) {
       console.error("Token failed to refresh with error: ", err);
     }
-  }, 5 * 60 * 1000);
+  }, 1 * 60 * 1000);
 
   const handleClose = async () => {
     setRefreshDialogOpen(false);
@@ -74,16 +78,22 @@ export default function RefreshDialog() {
   };
 
   const resetRefreshLogoutIntervals = () => {
+    console.log(
+      "resetting mouse last moved to: ",
+      new Date().toLocaleTimeString()
+    );
     // if mouse last moved 5 mins ago, refresh token automatically
     // every 15 mins + reset refresh dialog interval
     setMouseLastMoved(new Date());
     // if mouse not moved for 5 mins or more, DO NOT reset refresh dialog interval
   };
 
-  window.addEventListener("mousemove", resetRefreshLogoutIntervals);
-  // useEffect(() => {
-  //   return window.removeEventListener("mousemove", resetRefreshLogoutIntervals);
-  // }, []);
+  useEffect(() => {
+    window.addEventListener("mousemove", resetRefreshLogoutIntervals);
+    return () => {
+      window.removeEventListener("mousemove", resetRefreshLogoutIntervals);
+    };
+  }, []);
 
   return (
     <Dialog open={refreshDialogOpen} onClose={handleClose}>

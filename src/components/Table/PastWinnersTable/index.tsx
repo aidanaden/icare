@@ -8,21 +8,25 @@ import useSWR from "swr";
 import { getYearsBetweenYearAndCurrent } from "@/utils";
 import ErrorFallback from "@/components/Common/ErrorFallback";
 import { ErrorBoundary } from "react-error-boundary";
+import { STARTING_YEAR } from "@/constants";
 
 function returnPreviousYear(year: string) {
   const numYear = parseInt(year) - 1;
+  if (numYear < parseInt(STARTING_YEAR)) {
+    return STARTING_YEAR;
+  }
   const strYear = numYear.toString();
   return strYear;
 }
 
 export default function PastWinnersTable() {
   const { user } = useAuth();
+  const currentFinancialYear =
+    user?.year ?? new Date().getFullYear().toString();
   const [year, setYear] = useState<string>(
-    returnPreviousYear(user?.year ?? new Date().getFullYear().toString())
+    returnPreviousYear(currentFinancialYear)
   );
-  const years = getYearsBetweenYearAndCurrent(
-    user ? user?.year : new Date().getFullYear().toString()
-  );
+  const years = getYearsBetweenYearAndCurrent(currentFinancialYear);
 
   const { data, error } = useSWR<WinnerHistoryQueryData>(
     [

@@ -53,11 +53,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       ? (cookieUserRoles?.split("-") as UserRole[])
       : ([cookieUserRoles] as UserRole[]);
 
-    console.log("cookie user roles: ", cookieUserRoles);
-    console.log("user roles: ", userRoles);
     const committeeMembersData = await postAPI<CommitteeMemberListQueryData>(
       "RetrieveCommitteeMembers"
     );
+
+    console.log({ currentFinancialYear: response.current_financial_year });
 
     localStorage.setItem("staff_id", staff_id);
     localStorage.setItem(

@@ -29,6 +29,7 @@ import FallbackSpinner from "@/components/Common/FallbackSpinner";
 import { editNominationFormState } from "@/atoms/editNominationFormAtom";
 import { newNominationFormState } from "@/atoms/newNominationFormAtom";
 import FeedbackSnackbar from "../../Common/FeedbackSnackbar";
+import { DEFAULT_RESET_ERROR_MSG, DEFAULT_SAVE_ERROR_MSG } from "./constants";
 
 interface FirstStepProp {
   recoilFormState: RecoilState<NominationFormSubmissionData>;
@@ -49,12 +50,19 @@ export default function FirstStep({
   );
 
   const [saveSnackbarOpen, setSaveSnackbarOpen] = useState<boolean>(false);
-  const [errorSnackbarOpen, setErrorSnackbarOpen] = useState<boolean>(false);
+  const [saveErrorSnackbarOpen, setSaveErrorSnackbarOpen] =
+    useState<boolean>(false);
+  const [saveErrorSnackbarMsg, setSaveErrorSnackbarMsg] = useState<string>(
+    DEFAULT_SAVE_ERROR_MSG
+  );
   const [saveButtonLoading, setSaveButtonLoading] = useState<boolean>(false);
 
   const [resetSnackbarOpen, setResetSnackbarOpen] = useState<boolean>(false);
   const [resetErrorSnackbarOpen, setResetErrorSnackbarOpen] =
     useState<boolean>(false);
+  const [resetErrorSnackbarMsg, setResetErrorSnackbarMsg] = useState<string>(
+    DEFAULT_RESET_ERROR_MSG
+  );
   const [resetButtonLoading, setResetButtonLoading] = useState<boolean>(false);
 
   const resetFormState = useResetRecoilState(recoilFormState);
@@ -255,6 +263,14 @@ export default function FirstStep({
       ...data,
     };
 
+    console.log({ newFormData });
+
+    if (!newFormData.user?.staff_id) {
+      setSaveErrorSnackbarMsg("Please select a user before saving.");
+      setSaveErrorSnackbarOpen(true);
+      return;
+    }
+
     if (user) {
       try {
         setSaveButtonLoading(true);
@@ -273,10 +289,10 @@ export default function FirstStep({
           setNominationFormState(newFormState);
           setSaveSnackbarOpen(true);
         } else {
-          setErrorSnackbarOpen(true);
+          setSaveErrorSnackbarOpen(true);
         }
       } catch (err) {
-        console.error(err);
+        setSaveErrorSnackbarOpen(true);
       }
     }
   };
@@ -367,6 +383,9 @@ export default function FirstStep({
                       marginRight: { md: "12px" },
                       color: "green",
                       borderColor: "green",
+                      "&:active": {
+                        borderColor: "green",
+                      },
                     }}
                     onClick={handleSave}
                     loading={saveButtonLoading}
@@ -395,9 +414,9 @@ export default function FirstStep({
           successOpen={saveSnackbarOpen}
           setSuccessOpen={setSaveSnackbarOpen}
           successMsg="Successfully saved nomination data to draft."
-          errorOpen={errorSnackbarOpen}
-          setErrorOpen={setErrorSnackbarOpen}
-          errorMsg="Error occurred while trying to save your nomination data! Please try again."
+          errorOpen={saveErrorSnackbarOpen}
+          setErrorOpen={setSaveErrorSnackbarOpen}
+          errorMsg={saveErrorSnackbarMsg}
         />
         <FeedbackSnackbar
           successOpen={resetSnackbarOpen}
@@ -405,7 +424,7 @@ export default function FirstStep({
           successMsg="Successfully reset nomination data."
           errorOpen={resetErrorSnackbarOpen}
           setErrorOpen={setResetErrorSnackbarOpen}
-          errorMsg="Error occurred while trying to reset your nomination data! Please try again."
+          errorMsg={resetErrorSnackbarMsg}
         />
       </Box>
     </Box>

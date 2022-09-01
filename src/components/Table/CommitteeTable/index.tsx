@@ -82,14 +82,14 @@ export default function CommitteeTable({
       data: submittedData,
     },
     {
-      headerLabel: `${NominationFormStatus.REJECTED.toString()} by HOD`,
-      status: NominationFormStatus.REJECTED,
-      data: rejectedData,
-    },
-    {
       headerLabel: `${NominationFormStatus.ENDORSED.toString()} by HOD`,
       status: NominationFormStatus.ENDORSED,
       data: endorsedData,
+    },
+    {
+      headerLabel: `${NominationFormStatus.REJECTED.toString()}`,
+      status: NominationFormStatus.REJECTED,
+      data: rejectedData,
     },
     {
       headerLabel: "Award Winners",

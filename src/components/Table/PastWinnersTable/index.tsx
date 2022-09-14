@@ -69,6 +69,11 @@ export default function PastWinnersTable() {
     },
   ];
 
+  // dont display past winner table if before 2023
+  if (new Date().getFullYear() < 2023) {
+    return <></>;
+  }
+
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <WinnerDataTable

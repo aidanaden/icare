@@ -34,7 +34,7 @@ const View: NextPage = () => {
 
   const otherData = useMemo(
     () =>
-      data?.committee_comment.filter(
+      data?.committee_comment?.filter(
         (comm) => comm.committee_id !== user?.staff_id
       ),
     [data?.committee_comment, user?.staff_id]
@@ -42,11 +42,23 @@ const View: NextPage = () => {
 
   const selfData = useMemo(
     () =>
-      data?.committee_comment.filter(
+      data?.committee_comment?.filter(
         (comm) => comm.committee_id === user?.staff_id
       ),
     [data?.committee_comment, user?.staff_id]
   );
+
+  const dataHasCommmitteDetails = useMemo(() => {
+    return (
+      !!data?.committee_comment &&
+      !!data?.committee_service_level_result &&
+      !!data?.committee_total_score &&
+      !!data?.is_service_level_winner &&
+      !!data.committee_service_level_result &&
+      !!data.is_champion_shortlist_result &&
+      !!data.is_champion_result
+    );
+  }, [data]);
 
   if (user) {
     return (
@@ -123,107 +135,115 @@ const View: NextPage = () => {
                 }
               />
             </Grid>
-            {user?.role.includes(UserRole.COMMITTEE) && (
-              <Grid item xs={12}>
-                <Stack direction={{ xs: "column", md: "row" }} spacing={3}>
-                  <Grid container spacing={3}>
-                    <Grid item xs={12}>
-                      <CommitteeDetails
-                        title="Committee Score"
-                        final_score={data.committee_total_score}
-                        final_service_level={
-                          data.committee_service_level_result
-                        }
-                        is_service_level_winner={data.is_service_level_winner}
-                        is_champion_shortlist_result={
-                          data.is_champion_shortlist_result
-                        }
-                        is_champion_result={data.is_champion_result}
-                        loading={loading}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      {user.staff_id !== data.hod_id ? (
-                        <CommitteeMemberDetails
-                          case_id={id as string}
-                          committee_id={user.staff_id}
-                          name={user.name}
-                          default_service_level={data.quiz_service_level}
-                          service_level={
-                            selfData && selfData.length > 0
-                              ? selfData[0].committee_service_level
-                              : ServiceLevel.PENDING
+            {user?.role.includes(UserRole.COMMITTEE) &&
+              dataHasCommmitteDetails && (
+                <Grid item xs={12}>
+                  <Stack direction={{ xs: "column", md: "row" }} spacing={3}>
+                    <Grid container spacing={3}>
+                      <Grid item xs={12}>
+                        <CommitteeDetails
+                          title="Committee Score"
+                          final_score={data.committee_total_score}
+                          final_service_level={
+                            data.committee_service_level_result
                           }
-                          service_level_award={
-                            selfData && selfData.length > 0
-                              ? selfData[0].service_level_winner_status
-                              : ServiceLevelWinner.PENDING
+                          is_service_level_winner={
+                            data?.is_service_level_winner
                           }
-                          champion_status={
-                            selfData && selfData.length > 0
-                              ? selfData[0].champion_status
-                              : false
+                          is_champion_shortlist_result={
+                            data?.is_champion_shortlist_result
                           }
-                          comments={
-                            selfData && selfData.length > 0
-                              ? selfData[0].committee_comments
-                              : ""
-                          }
-                          isEditable={true}
+                          is_champion_result={data?.is_champion_result}
+                          loading={loading}
                         />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        {user.staff_id !== data.hod_id ? (
+                          <CommitteeMemberDetails
+                            case_id={id as string}
+                            committee_id={user.staff_id}
+                            name={user.name}
+                            default_service_level={data.quiz_service_level}
+                            service_level={
+                              selfData && selfData.length > 0
+                                ? selfData[0].committee_service_level
+                                : ServiceLevel.PENDING
+                            }
+                            service_level_award={
+                              selfData && selfData.length > 0
+                                ? selfData[0].service_level_winner_status
+                                : ServiceLevelWinner.PENDING
+                            }
+                            champion_status={
+                              selfData && selfData.length > 0
+                                ? selfData[0].champion_status
+                                : false
+                            }
+                            comments={
+                              selfData && selfData.length > 0
+                                ? selfData[0].committee_comments
+                                : ""
+                            }
+                            isEditable={true}
+                          />
+                        ) : (
+                          <ShadowBox height={{ xs: "360px", md: "480px" }}>
+                            <CenterBox height="100%" fontWeight="bold" p={4}>
+                              You are the nominee&apos;s HOD, your vote is
+                              retracted.
+                            </CenterBox>
+                          </ShadowBox>
+                        )}
+                      </Grid>
+                      {otherData && otherData.length > 0 ? (
+                        otherData?.map((committeeData) => {
+                          if (committeeData.committee_id !== user.staff_id) {
+                            return (
+                              <Grid item xs={12} sm={6}>
+                                <CommitteeMemberDetails
+                                  key={committeeData.case_id}
+                                  case_id={id as string}
+                                  committee_id={committeeData.committee_id}
+                                  name={committeeData.committee_name}
+                                  default_service_level={
+                                    data.quiz_service_level
+                                  }
+                                  service_level={
+                                    committeeData.committee_service_level
+                                  }
+                                  service_level_award={
+                                    committeeData.service_level_winner_status
+                                  }
+                                  champion_status={
+                                    committeeData.champion_status
+                                  }
+                                  comments={committeeData.committee_comments}
+                                  isEditable={
+                                    committeeData.committee_id ===
+                                    user?.staff_id
+                                  }
+                                />
+                              </Grid>
+                            );
+                          }
+                        })
                       ) : (
-                        <ShadowBox height={{ xs: "360px", md: "480px" }}>
-                          <CenterBox height="100%" fontWeight="bold" p={4}>
-                            You are the nominee&apos;s HOD, your vote is
-                            retracted.
-                          </CenterBox>
-                        </ShadowBox>
+                        <Grid item xs={12} sm={6}>
+                          <ShadowBox
+                            height="100%"
+                            minHeight={{ xs: "360px", md: "480px" }}
+                          >
+                            <CenterBox height="100%" fontWeight="bold" p={4}>
+                              Waiting for the other committee member(s) to
+                              submit their vote...
+                            </CenterBox>
+                          </ShadowBox>
+                        </Grid>
                       )}
                     </Grid>
-                    {otherData && otherData.length > 0 ? (
-                      otherData?.map((committeeData) => {
-                        if (committeeData.committee_id !== user.staff_id) {
-                          return (
-                            <Grid item xs={12} sm={6}>
-                              <CommitteeMemberDetails
-                                key={committeeData.case_id}
-                                case_id={id as string}
-                                committee_id={committeeData.committee_id}
-                                name={committeeData.committee_name}
-                                default_service_level={data.quiz_service_level}
-                                service_level={
-                                  committeeData.committee_service_level
-                                }
-                                service_level_award={
-                                  committeeData.service_level_winner_status
-                                }
-                                champion_status={committeeData.champion_status}
-                                comments={committeeData.committee_comments}
-                                isEditable={
-                                  committeeData.committee_id === user?.staff_id
-                                }
-                              />
-                            </Grid>
-                          );
-                        }
-                      })
-                    ) : (
-                      <Grid item xs={12} sm={6}>
-                        <ShadowBox
-                          height="100%"
-                          minHeight={{ xs: "360px", md: "480px" }}
-                        >
-                          <CenterBox height="100%" fontWeight="bold" p={4}>
-                            Waiting for the other committee member(s) to submit
-                            their vote...
-                          </CenterBox>
-                        </ShadowBox>
-                      </Grid>
-                    )}
-                  </Grid>
-                </Stack>
-              </Grid>
-            )}
+                  </Stack>
+                </Grid>
+              )}
           </Grid>
         ) : (
           <FallbackSpinner />

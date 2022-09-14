@@ -6,9 +6,9 @@ interface CommitteeDetailProps {
   title: string;
   final_score?: number;
   final_service_level?: ServiceLevel;
-  is_service_level_winner: ServiceLevelWinner;
-  is_champion_shortlist_result: boolean;
-  is_champion_result: boolean;
+  is_service_level_winner?: ServiceLevelWinner;
+  is_champion_shortlist_result?: boolean;
+  is_champion_result?: boolean;
 }
 
 export default function index(props: CommitteeDetailProps) {

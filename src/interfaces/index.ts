@@ -100,14 +100,14 @@ export interface NominationDetailQueryData extends QueryData {
   endorsement_date: string;
   quiz_service_level: ServiceLevel;
   quiz_score: number;
-  committee_service_level_result: ServiceLevel;
-  committee_total_score: number;
+  committee_service_level_result?: ServiceLevel;
+  committee_total_score?: number;
   draft_status: boolean;
-  is_service_level_winner: ServiceLevelWinner;
-  is_champion_shortlist_result: boolean;
-  is_champion_result: boolean;
-  committee_comment: CommitteeMemberQueryData[];
-  total_champion_status: boolean;
+  is_service_level_winner?: ServiceLevelWinner;
+  is_champion_shortlist_result?: boolean;
+  is_champion_result?: boolean;
+  committee_comment?: CommitteeMemberQueryData[];
+  total_champion_status?: boolean;
   attachment_list?: string[];
 }
 

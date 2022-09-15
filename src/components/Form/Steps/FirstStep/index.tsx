@@ -1,5 +1,6 @@
-import { Box, Stack } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useRouter } from "next/router";
 import PrimaryButton from "@/components/Common/PrimaryButton";
 import SectionHeader from "@/components/Common/SectionHeader";
 import SectionSubtitle from "@/components/Common/SectionSubtitle";
@@ -20,7 +21,6 @@ import {
   fetchFileStrings,
   upsertNominationForm,
   useNominationDetails,
-  fetchNominationDetails,
   useStaffDepartments,
 } from "@/lib/nominations";
 import useAuth from "@/hooks/useAuth";
@@ -30,7 +30,7 @@ import { editNominationFormState } from "@/atoms/editNominationFormAtom";
 import { newNominationFormState } from "@/atoms/newNominationFormAtom";
 import FeedbackSnackbar from "../../Common/FeedbackSnackbar";
 import { DEFAULT_RESET_ERROR_MSG, DEFAULT_SAVE_ERROR_MSG } from "./constants";
-import { useRouter } from "next/router";
+import DetailSubHeader from "@/components/Common/DetailBox/DetailSubHeader";
 
 interface FirstStepProp {
   recoilFormState: RecoilState<NominationFormSubmissionData>;
@@ -76,6 +76,7 @@ export default function FirstStep({
     | undefined;
   const currentCaseId = pageCaseId ?? case_id;
   const { data } = useNominationDetails(currentCaseId);
+  const shouldLockField = isEdit || currentCaseId;
 
   // const fileData = useMemo(async () => {
   //   if (data?.attachment_list && case_id) {
@@ -175,11 +176,15 @@ export default function FirstStep({
 
   useEffect(() => {
     const setFileData = async () => {
-      if (data?.attachment_list && data.attachment_list.length > 0 && case_id) {
+      if (
+        data?.attachment_list &&
+        data.attachment_list.length > 0 &&
+        currentCaseId
+      ) {
         // fetch file data
         const fileDatas: FileFetchData[] | undefined =
           data?.attachment_list?.map((fname) => {
-            return { case_id: case_id, file_name: fname };
+            return { case_id: currentCaseId, file_name: fname };
           });
         const files = await fetchFileStrings(fileDatas);
         setNominationFormState((currentState) => {
@@ -282,7 +287,7 @@ export default function FirstStep({
           user?.staff_id,
           newFormData,
           true,
-          case_id ?? getNominationFormState.case_id
+          currentCaseId ?? getNominationFormState.case_id
         );
         setSaveButtonLoading(false);
         if (response.status_code === 200) {
@@ -320,7 +325,7 @@ export default function FirstStep({
         </SectionSubtitle>
       </Box>
       <Box minHeight={{ sm: "380px" }}>
-        {!case_id || data ? (
+        {!currentCaseId || data ? (
           <form onSubmit={handleSubmit(onSubmit)}>
             <Box
               display="flex"
@@ -335,16 +340,19 @@ export default function FirstStep({
                 mb={{ xs: 4 }}
               >
                 <Stack direction={{ xs: "column", sm: "row" }} spacing={3}>
-                  <AutocompleteTextField control={control} disabled={isEdit} />
+                  <AutocompleteTextField
+                    control={control}
+                    disabled={!!shouldLockField}
+                  />
                   <FormDepartmentSelect
                     control={control}
                     depts={sortedDepartmentData}
-                    disabled={isEdit}
+                    disabled={!!shouldLockField}
                   />
                 </Stack>
                 <SectionSubtitle>
                   Enter the reasons of why you&#39;re nominating this staff
-                  member.
+                  member
                 </SectionSubtitle>
                 <FormTextField
                   control={control}
@@ -354,8 +362,20 @@ export default function FirstStep({
                   multiLine={true}
                   placeholder="Enter description here..."
                 />
+                <Typography
+                  display="block"
+                  fontSize="12px"
+                  color={
+                    selectedDescription?.length &&
+                    selectedDescription.length > 10
+                      ? "red"
+                      : "#8C9AA6"
+                  }
+                >
+                  {selectedDescription?.length} / 20,000
+                </Typography>
                 <FileUploadButton
-                  case_id={case_id}
+                  case_id={currentCaseId}
                   isEdit={isEdit}
                   control={control}
                 />

@@ -82,7 +82,8 @@ export default function FileUploadButton({
 
       <DetailText mb={1} isMultiLine={true} color="#8C9AA6">
         If you have more than one file to upload, please select multiple files
-        at one go. New upload will overwrite the existing files.
+        at one go. New upload will overwrite the existing files. (max 10 MB
+        total size)
       </DetailText>
 
       <DropzoneDialog

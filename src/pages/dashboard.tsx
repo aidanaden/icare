@@ -254,30 +254,23 @@ const Dashboard: NextPage = () => {
               </ShadowBox>
             </Stack>
           </Grid>
-          <Grid item xs={12}>
-            <ShadowBox borderRadius="20px" px={3} py={4}>
-              <Stack
-                direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-                mb={4}
-              >
-                <Box>
-                  <SectionHeader>Past winners</SectionHeader>
-                  {/* <Typography
-                    variant="caption"
-                    display="block"
-                    gutterBottom
-                    color="#212b36"
-                    mt={1}
-                  >
-                    last 10 nominations
-                  </Typography> */}
-                </Box>
-              </Stack>
-              <PastWinnersTable />
-            </ShadowBox>
-          </Grid>
+          {new Date().getFullYear() >= 2023 && (
+            <Grid item xs={12}>
+              <ShadowBox borderRadius="20px" px={3} py={4}>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  mb={4}
+                >
+                  <Box>
+                    <SectionHeader>Past winners</SectionHeader>
+                  </Box>
+                </Stack>
+                <PastWinnersTable />
+              </ShadowBox>
+            </Grid>
+          )}
         </Grid>
       </Box>
     );

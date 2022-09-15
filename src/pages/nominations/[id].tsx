@@ -52,11 +52,7 @@ const View: NextPage = () => {
     return (
       !!data?.committee_comment &&
       !!data?.committee_service_level_result &&
-      !!data?.committee_total_score &&
-      !!data?.is_service_level_winner &&
-      !!data.committee_service_level_result &&
-      !!data.is_champion_shortlist_result &&
-      !!data.is_champion_result
+      !!data?.committee_total_score
     );
   }, [data]);
 

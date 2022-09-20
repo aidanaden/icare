@@ -76,7 +76,7 @@ export default function FirstStep({
     | undefined;
   const currentCaseId = pageCaseId ?? case_id;
   const { data } = useNominationDetails(currentCaseId);
-  const shouldLockField = isEdit || currentCaseId;
+  const isExistingCase = isEdit || currentCaseId;
 
   // const fileData = useMemo(async () => {
   //   if (data?.attachment_list && case_id) {
@@ -133,6 +133,9 @@ export default function FirstStep({
   const selectedUser = useWatch({ control, name: "user" });
   const selectedDepartment = useWatch({ control, name: "department" });
   const selectedDescription = useWatch({ control, name: "description" });
+  const shouldDisableButtons =
+    (selectedDescription && selectedDescription?.length > 20_000) ||
+    !selectedDescription;
 
   // always clear nomination form state on mount
   useEffect(() => {
@@ -236,7 +239,7 @@ export default function FirstStep({
     if (user) {
       // setResetButtonLoading(true);
 
-      const emptiedValues = isEdit
+      const emptiedValues = isExistingCase
         ? {
             description: "",
           }
@@ -342,12 +345,12 @@ export default function FirstStep({
                 <Stack direction={{ xs: "column", sm: "row" }} spacing={3}>
                   <AutocompleteTextField
                     control={control}
-                    disabled={!!shouldLockField}
+                    disabled={!!isExistingCase}
                   />
                   <FormDepartmentSelect
                     control={control}
                     depts={sortedDepartmentData}
-                    disabled={!!shouldLockField}
+                    disabled={!!isExistingCase}
                   />
                 </Stack>
                 <SectionSubtitle>
@@ -421,6 +424,7 @@ export default function FirstStep({
                     }}
                     onClick={handleSave}
                     loading={saveButtonLoading}
+                    disabled={shouldDisableButtons}
                   >
                     Save draft
                   </PrimaryButton>
@@ -432,6 +436,7 @@ export default function FirstStep({
                       textTransform: "capitalize",
                       width: { xs: "100%", sm: "auto" },
                     }}
+                    disabled={shouldDisableButtons}
                   >
                     Next
                   </PrimaryButton>

@@ -238,9 +238,9 @@ export default function SecondStep({
           Complete the quiz and answer the questions as accurately as possible.
         </SectionSubtitle>
       </Box>
-      {data &&
-      draftQuizResponseData &&
-      (Object.keys(getValues()).length > 0 || !caseId) ? (
+      {/* display quiz form if quiz form data fetched AND if form is new, if form
+      is not new then display after saved responses are fetched */}
+      {data && (Object.keys(getValues()).length > 0 || !caseId) ? (
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack direction={"column"} spacing={3} mb={8}>
             {data?.qna_questions.map(({ quiz_question_name, answers }) => (

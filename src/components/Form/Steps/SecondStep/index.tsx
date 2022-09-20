@@ -240,7 +240,10 @@ export default function SecondStep({
       </Box>
       {/* display quiz form if quiz form data fetched AND if form is new, if form
       is not new then display after saved responses are fetched */}
-      {data && (Object.keys(getValues()).length > 0 || !caseId) ? (
+      {data &&
+      (caseId
+        ? draftQuizResponseData && Object.keys(getValues()).length > 0
+        : true) ? (
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack direction={"column"} spacing={3} mb={8}>
             {data?.qna_questions.map(({ quiz_question_name, answers }) => (

@@ -82,11 +82,18 @@ const fetchNominationDetails = async (
 };
 
 const useNominationDetails = (case_id?: string) => {
-  const { data, error, mutate } = useSWR<NominationDetailQueryData>(
-    ["RetrieveNominationDetails", { case_id: case_id }],
-    postAPI
-  );
-  return { data: data, error: error, loading: !data && !error, mutate: mutate };
+  const { data, error, mutate, isValidating } =
+    useSWR<NominationDetailQueryData>(
+      ["RetrieveNominationDetails", { case_id: case_id }],
+      postAPI
+    );
+  return {
+    data: data,
+    error: error,
+    loading: !data && !error,
+    mutate: mutate,
+    isValidating,
+  };
 };
 
 const upsertNominationFormHODComments = async (hodData: HODQueryData) => {

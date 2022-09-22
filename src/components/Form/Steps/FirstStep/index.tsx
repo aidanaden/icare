@@ -75,7 +75,8 @@ export default function FirstStep({
     | string
     | undefined;
   const currentCaseId = pageCaseId ?? case_id;
-  const { data } = useNominationDetails(currentCaseId);
+  const { data, isValidating: isNominationDetailValidating } =
+    useNominationDetails(currentCaseId);
   const isExistingCase = isEdit || currentCaseId;
 
   // const fileData = useMemo(async () => {
@@ -298,14 +299,16 @@ export default function FirstStep({
             ...newFormData,
             case_id: response.case_id,
           };
-          router.replace(
-            {
-              pathname: `${router.asPath}`,
-              query: { case_id: response.case_id },
-            },
-            undefined,
-            { shallow: true }
-          );
+          if (!currentCaseId) {
+            router.replace(
+              {
+                pathname: `${router.asPath}`,
+                query: { case_id: response.case_id },
+              },
+              undefined,
+              { shallow: true }
+            );
+          }
           setNominationFormState(newFormState);
           setSaveSnackbarOpen(true);
         } else {
@@ -328,7 +331,7 @@ export default function FirstStep({
         </SectionSubtitle>
       </Box>
       <Box minHeight={{ sm: "380px" }}>
-        {!currentCaseId || data ? (
+        {!currentCaseId || (data && !isNominationDetailValidating) ? (
           <form onSubmit={handleSubmit(onSubmit)}>
             <Box
               display="flex"
@@ -370,12 +373,12 @@ export default function FirstStep({
                   fontSize="12px"
                   color={
                     selectedDescription?.length &&
-                    selectedDescription.length > 10
+                    selectedDescription.length > 20_000
                       ? "red"
                       : "#8C9AA6"
                   }
                 >
-                  {selectedDescription?.length} / 20,000
+                  {selectedDescription?.length.toLocaleString()} / 20,000
                 </Typography>
                 <FileUploadButton
                   case_id={currentCaseId}

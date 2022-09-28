@@ -31,6 +31,7 @@ export default function Asynchronous({
   const { user } = useAuth();
   const selectedUser = useWatch({ control, name: "user" });
   const selectedDept = useWatch({ control, name: "department" });
+  const selectedDescription = useWatch({ control, name: "description" });
 
   const [getNominationFormState, setNominationFormState] = useRecoilState(
     disabled ? editNominationFormState : newNominationFormState
@@ -112,7 +113,9 @@ export default function Asynchronous({
       ...getNominationFormState,
       user: selectedUser,
       department: selectedDept,
+      description: selectedDescription,
     };
+    console.log("new form data onchange: ", { newFormData });
     setNominationFormState(newFormData);
   };
 

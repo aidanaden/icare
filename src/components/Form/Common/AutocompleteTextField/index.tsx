@@ -115,7 +115,6 @@ export default function Asynchronous({
       department: selectedDept,
       description: selectedDescription,
     };
-    console.log("new form data onchange: ", { newFormData });
     setNominationFormState(newFormData);
   };
 

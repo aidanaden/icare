@@ -220,6 +220,7 @@ export default function FirstStep({
           staff_name: "",
         },
         department: selectedDepartment,
+        description: selectedDescription,
       });
     }
   }, [selectedDepartment]);
